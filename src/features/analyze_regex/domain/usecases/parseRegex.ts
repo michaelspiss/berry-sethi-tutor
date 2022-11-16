@@ -107,7 +107,7 @@ function buildRegexTreeRec(regex: string, startAt: number = 0, recLevel: number 
 }
 
 function getActiveNode(state: ParserState, treeRoot: RegexTreeConcatenation) {
-    return state.isAlterationParameter ? treeRoot.getLastChildIfAlteration()! : treeRoot;
+    return state.isAlterationParameter ? treeRoot.getLastChild() as RegexTreeAlteration : treeRoot;
 }
 
 function addTerminal(symbol: string, state: ParserState, treeRoot: RegexTreeConcatenation) {

@@ -100,18 +100,6 @@ export class RegexTreeAlteration extends RegexTreeGroup {
 }
 
 export class RegexTreeConcatenation extends RegexTreeGroup {
-    /**
-     * Returns the last child if it is of type RegexTreeAlteration.
-     * Otherwise, undefined is returned.
-     */
-    getLastChildIfAlteration() {
-        const lastChild = this.children.slice(-1)[0] ?? undefined;
-        if(lastChild instanceof RegexTreeAlteration) {
-            return lastChild;
-        }
-        return undefined;
-    }
-
     getPossibleStrings(): Set<string> {
         const possibleStringsPerChild: Set<string>[] = [];
 
