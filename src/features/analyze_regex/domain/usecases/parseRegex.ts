@@ -14,11 +14,6 @@ interface ParserState {
     position: number;
 
     /**
-     * Gets set to true either by escape via \ or any non-operator character
-     */
-    nextIsTerminal: boolean;
-
-    /**
      * Gets set to true after | operator until terminal
      */
     isAlterationParameter: boolean;
@@ -51,20 +46,12 @@ function buildRegexTreeRec(regex: string, startAt: number = 0, recLevel: number 
     const treeRoot = new RegexTreeConcatenation();
     let state: ParserState = {
         position: startAt,
-        nextIsTerminal: false,
         isAlterationParameter: false,
         lastInsertWasInAlteration: false,
     }
 
     outerWhile: while (state.position < regex.length) {
         const symbol = regex.at(state.position)!;
-
-        if (state.nextIsTerminal) {
-            addTerminal(symbol, state, treeRoot);
-            state.nextIsTerminal = false;
-            state.position++;
-            continue;
-        }
 
         switch (symbol) {
             case '?':
@@ -82,10 +69,12 @@ function buildRegexTreeRec(regex: string, startAt: number = 0, recLevel: number 
                 addAlteration(state, treeRoot);
                 break;
             case '\\':
-                state.position++;
+                if(++state.position < regex.length) {
+                    addTerminal(regex.at(state.position)!, state, treeRoot);
+                }
+                break;
             default:
-                state.nextIsTerminal = true;
-                state.position--;
+                addTerminal(symbol, state, treeRoot);
         }
 
         state.position++;
