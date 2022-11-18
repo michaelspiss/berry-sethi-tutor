@@ -5,7 +5,7 @@ import {
     RegexTreeQuantifier,
     RegexTreeTerminal
 } from "../models/regexTree";
-import RegexError from "@/analyze_regex/domain/models/regexError";
+import RegexError, {RegexErrors} from "@/analyze_regex/domain/models/regexError";
 
 interface ParserState {
     /**
@@ -81,21 +81,11 @@ function buildRegexTreeRec(regex: string, startAt: number = 0, recLevel: number 
     }
 
     if(state.isAlterationParameter) {
-        // TODO: write error message
-        throw new RegexError(
-            "Alteration is missing its second parameter",
-            "",
-            state.position - 1,
-        )
+        throw RegexErrors.alterationMissingSecondParameter(state.position - 1)
     }
 
     if (state.position >= regex.length && recLevel !== 0) {
-        // TODO: write error message
-        throw new RegexError(
-            "Missing closing parenthesis for",
-            "",
-            state.position - 1,
-        );
+        throw RegexErrors.groupMissingClosingParenthesis(state.position - 1)
     }
 
     // remove top-level concatenation if it only has one child
@@ -119,12 +109,7 @@ function addTerminal(symbol: string, state: ParserState, treeRoot: RegexTreeConc
 
 function setQuantifier(symbol: RegexQuantifier, state: ParserState, treeRoot: RegexTreeConcatenation) {
     if (state.isAlterationParameter) {
-        // TODO: write error message
-        throw new RegexError(
-            "Quantifier cannot be applied to alteration operator",
-            "message with hint",
-            state.position,
-        );
+        throw RegexErrors.cannotApplyQuantifierToAlteration(state.position);
     }
 
     let activeGroup: RegexTreeGroup = treeRoot;
@@ -134,21 +119,11 @@ function setQuantifier(symbol: RegexQuantifier, state: ParserState, treeRoot: Re
     const nodeToQuantify = activeGroup.popChild();
 
     if (nodeToQuantify === undefined) {
-        // TODO: write error message
-        throw new RegexError(
-            "Quantifier requires node to quantify",
-            "message with hint",
-            state.position,
-        );
+        throw RegexErrors.quantifierRequiresNode(state.position);
     }
 
     if (nodeToQuantify instanceof RegexTreeQuantifier) {
-        // TODO: write error message
-        throw new RegexError(
-            "Cannot quantify quantifier",
-            "mesage with hint",
-            state.position,
-        );
+        throw RegexErrors.cannotQuantifyQuantifier(state.position);
     }
 
     activeGroup.pushChild(new RegexTreeQuantifier(symbol, nodeToQuantify));
@@ -156,24 +131,14 @@ function setQuantifier(symbol: RegexQuantifier, state: ParserState, treeRoot: Re
 
 function addAlteration(state: ParserState, treeRoot: RegexTreeConcatenation) {
     if (state.isAlterationParameter) {
-        // TODO: write error message
-        throw new RegexError(
-            "Missing terminal between this and previous alteration operator",
-            "message with hint",
-            state.position,
-        )
+        throw RegexErrors.alterationMissingSecondParameter(state.position - 1)
     }
 
     if (!state.lastInsertWasInAlteration) {
         let latestNode = treeRoot.popChild();
 
         if (latestNode === undefined) {
-            // TODO: write error message
-            throw new RegexError(
-                "Alteration is missing its first parameter",
-                "helpful hint here",
-                state.position,
-            );
+            throw RegexErrors.alterationMissingFirstParameter(state.position)
         }
 
         const alteration = new RegexTreeAlteration();
@@ -198,11 +163,6 @@ function addGroup(regex: string, state: ParserState, treeRoot: RegexTreeConcaten
 
 function closeGroup(state: ParserState, recLevel: number) {
     if (recLevel === 0) {
-        // TODO: write error message
-        throw new RegexError(
-            "Closing group that has never been opened",
-            "",
-            state.position,
-        );
+        throw RegexErrors.groupMissingOpeningParenthesis(state.position);
     }
 }
