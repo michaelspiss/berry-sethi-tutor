@@ -7,7 +7,7 @@ import {
 
 describe('single item getPossibleStrings', () => {
    test('Terminal returns itself', () => {
-      const tree = new RegexTreeTerminal("a");
+      const tree = new RegexTreeTerminal("a", 0);
 
       const possibleStrings = tree.getPossibleStrings();
       expect(possibleStrings.size).toBe(1)
@@ -16,8 +16,8 @@ describe('single item getPossibleStrings', () => {
 
    test('concatenation concatenates two terminals', () => {
       const tree = new RegexTreeConcatenation();
-      tree.pushChild(new RegexTreeTerminal("a"))
-      tree.pushChild(new RegexTreeTerminal("b"))
+      tree.pushChild(new RegexTreeTerminal("a", 0))
+      tree.pushChild(new RegexTreeTerminal("b", 0))
 
       const possibleStrings = tree.getPossibleStrings();
       expect(possibleStrings.size).toBe(1)
@@ -26,8 +26,8 @@ describe('single item getPossibleStrings', () => {
 
    test('alteration can be any of two values', () => {
       const tree = new RegexTreeAlteration();
-      tree.pushChild(new RegexTreeTerminal("a"));
-      tree.pushChild(new RegexTreeTerminal("b"));
+      tree.pushChild(new RegexTreeTerminal("a", 0));
+      tree.pushChild(new RegexTreeTerminal("b", 0));
 
       const possibleStrings = tree.getPossibleStrings();
       expect(possibleStrings.size).toBe(2);
@@ -36,7 +36,7 @@ describe('single item getPossibleStrings', () => {
    });
 
    test('quantifier + contains one or more', () => {
-      const tree = new RegexTreeQuantifier("+", new RegexTreeTerminal("a"));
+      const tree = new RegexTreeQuantifier("+", new RegexTreeTerminal("a", 0));
 
       const possibleStrings = tree.getPossibleStrings();
       expect(possibleStrings.size).toBe(2);
@@ -45,7 +45,7 @@ describe('single item getPossibleStrings', () => {
    });
 
    test('quantifier * contains zero or more', () => {
-      const tree = new RegexTreeQuantifier("*", new RegexTreeTerminal("a"));
+      const tree = new RegexTreeQuantifier("*", new RegexTreeTerminal("a", 0));
 
       const possibleStrings = tree.getPossibleStrings();
       expect(possibleStrings.size).toBe(3);
@@ -55,7 +55,7 @@ describe('single item getPossibleStrings', () => {
    });
 
    test('quantifier ? contains zero or one', () => {
-      const tree = new RegexTreeQuantifier("?", new RegexTreeTerminal("a"));
+      const tree = new RegexTreeQuantifier("?", new RegexTreeTerminal("a", 0));
 
       const possibleStrings = tree.getPossibleStrings();
       expect(possibleStrings.size).toBe(2);

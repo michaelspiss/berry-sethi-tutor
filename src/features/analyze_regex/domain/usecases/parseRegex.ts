@@ -5,7 +5,7 @@ import {
     RegexTreeQuantifier,
     RegexTreeTerminal
 } from "../models/regexTree";
-import RegexError, {RegexErrors} from "@/analyze_regex/domain/models/regexError";
+import {RegexErrors} from "@/analyze_regex/domain/models/regexError";
 
 interface ParserState {
     /**
@@ -23,16 +23,22 @@ interface ParserState {
      * This helps with implicit group handling
      */
     lastInsertWasInAlteration: boolean;
+
+    /**
+     * Each terminal gets a unique ascending, zero-based id
+     */
+    terminalIndex: number;
 }
 
 interface RegexRecBuilderReturn {
     tree: RegexTreeItem,
     position: number,
+    terminalIndex: number,
 }
 
 
 export default function parseRegex(regex: string): RegexTreeItem {
-    return buildRegexTreeRec(regex, 0, 0).tree;
+    return buildRegexTreeRec(regex).tree;
 }
 
 /**
@@ -40,14 +46,16 @@ export default function parseRegex(regex: string): RegexTreeItem {
  * @param regex
  * @param startAt
  * @param recLevel
+ * @param terminalIndex
  * @throws {RegexError}
  */
-function buildRegexTreeRec(regex: string, startAt: number = 0, recLevel: number = 0): RegexRecBuilderReturn {
+function buildRegexTreeRec(regex: string, startAt: number = 0, recLevel: number = 0, terminalIndex: number = 0): RegexRecBuilderReturn {
     const treeRoot = new RegexTreeConcatenation();
     let state: ParserState = {
         position: startAt,
         isAlterationParameter: false,
         lastInsertWasInAlteration: false,
+        terminalIndex: terminalIndex,
     }
 
     outerWhile: while (state.position < regex.length) {
@@ -90,10 +98,10 @@ function buildRegexTreeRec(regex: string, startAt: number = 0, recLevel: number 
 
     // remove top-level concatenation if it only has one child
     if (treeRoot.children.length === 1) {
-        return {tree: treeRoot.children[0], position: state.position};
+        return {tree: treeRoot.children[0], position: state.position, terminalIndex: state.terminalIndex};
     }
 
-    return {tree: treeRoot, position: state.position};
+    return {tree: treeRoot, position: state.position, terminalIndex: state.terminalIndex};
 }
 
 function getActiveNode(state: ParserState, treeRoot: RegexTreeConcatenation) {
@@ -102,7 +110,8 @@ function getActiveNode(state: ParserState, treeRoot: RegexTreeConcatenation) {
 
 function addTerminal(symbol: string, state: ParserState, treeRoot: RegexTreeConcatenation) {
     const activeNode = getActiveNode(state, treeRoot);
-    activeNode.pushChild(new RegexTreeTerminal(symbol));
+    activeNode.pushChild(new RegexTreeTerminal(symbol, state.terminalIndex));
+    state.terminalIndex++;
     state.lastInsertWasInAlteration = state.isAlterationParameter;
     state.isAlterationParameter = false;
 }
@@ -152,11 +161,12 @@ function addAlteration(state: ParserState, treeRoot: RegexTreeConcatenation) {
 }
 
 function addGroup(regex: string, state: ParserState, treeRoot: RegexTreeConcatenation, recLevel: number) {
-    const group = buildRegexTreeRec(regex, state.position + 1, recLevel + 1);
+    const group = buildRegexTreeRec(regex, state.position + 1, recLevel + 1, state.terminalIndex);
     const activeNode = getActiveNode(state, treeRoot);
     activeNode.pushChild(group.tree);
 
     state.position = group.position;
+    state.terminalIndex = group.terminalIndex;
     state.lastInsertWasInAlteration = state.isAlterationParameter;
     state.isAlterationParameter = false;
 }

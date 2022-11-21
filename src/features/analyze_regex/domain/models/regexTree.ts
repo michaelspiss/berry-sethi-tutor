@@ -33,10 +33,12 @@ export abstract class RegexTreeGroup extends RegexTreeItem {
 
 export class RegexTreeTerminal extends RegexTreeItem {
     readonly symbol: string;
+    readonly index: number;
 
-    constructor(symbol: string) {
+    constructor(symbol: string, index: number) {
         super();
         this.symbol = symbol;
+        this.index = index;
     }
 
     getPossibleStrings(): Set<string> {

@@ -11,6 +11,7 @@ describe('single regex items', () => {
     test('terminal only', () => {
         const tree = parseRegex("a");
         expect(tree).instanceof(RegexTreeTerminal);
+        expect((tree as RegexTreeTerminal).index).toBe(0);
     })
 
     test('quantifier ? only', () => {
@@ -44,7 +45,9 @@ describe('single regex items', () => {
         expect((tree as RegexTreeAlteration).children[0]).toBeInstanceOf(RegexTreeTerminal);
         expect((tree as RegexTreeAlteration).children[1]).toBeInstanceOf(RegexTreeTerminal);
         expect(((tree as RegexTreeAlteration).children[0] as RegexTreeTerminal).symbol).toBe("a");
+        expect(((tree as RegexTreeAlteration).children[0] as RegexTreeTerminal).index).toBe(0);
         expect(((tree as RegexTreeAlteration).children[1] as RegexTreeTerminal).symbol).toBe("b");
+        expect(((tree as RegexTreeAlteration).children[1] as RegexTreeTerminal).index).toBe(1);
     })
 
     test('concatenation only', () => {
@@ -54,7 +57,9 @@ describe('single regex items', () => {
         expect((tree as RegexTreeConcatenation).children[0]).toBeInstanceOf(RegexTreeTerminal);
         expect((tree as RegexTreeConcatenation).children[1]).toBeInstanceOf(RegexTreeTerminal);
         expect(((tree as RegexTreeConcatenation).children[0] as RegexTreeTerminal).symbol).toBe("a");
+        expect(((tree as RegexTreeConcatenation).children[0] as RegexTreeTerminal).index).toBe(0);
         expect(((tree as RegexTreeConcatenation).children[1] as RegexTreeTerminal).symbol).toBe("b");
+        expect(((tree as RegexTreeConcatenation).children[1] as RegexTreeTerminal).index).toBe(1);
     })
 })
 
@@ -70,7 +75,9 @@ describe('group', () => {
         expect(concatenation.children[0]).toBeInstanceOf(RegexTreeTerminal);
         expect(concatenation.children[1]).toBeInstanceOf(RegexTreeTerminal);
         expect((concatenation.children[0] as RegexTreeTerminal).symbol).toBe("a");
+        expect((concatenation.children[0] as RegexTreeTerminal).index).toBe(0);
         expect((concatenation.children[1] as RegexTreeTerminal).symbol).toBe("b");
+        expect((concatenation.children[1] as RegexTreeTerminal).index).toBe(1);
     })
 
     test('alteration with quantifier', () => {
@@ -84,7 +91,9 @@ describe('group', () => {
         expect(alteration.children[0]).toBeInstanceOf(RegexTreeTerminal);
         expect(alteration.children[1]).toBeInstanceOf(RegexTreeTerminal);
         expect((alteration.children[0] as RegexTreeTerminal).symbol).toBe("a");
+        expect((alteration.children[0] as RegexTreeTerminal).index).toBe(0);
         expect((alteration.children[1] as RegexTreeTerminal).symbol).toBe("b");
+        expect((alteration.children[1] as RegexTreeTerminal).index).toBe(1);
     })
 
     test('alteration with quantified subgroup', () => {
@@ -94,6 +103,7 @@ describe('group', () => {
         expect(alteration.children.length).toBe(2);
         expect(alteration.children[0]).toBeInstanceOf(RegexTreeTerminal);
         expect((alteration.children[0] as RegexTreeTerminal).symbol).toBe("a");
+        expect((alteration.children[0] as RegexTreeTerminal).index).toBe(0);
         expect(alteration.children[1]).toBeInstanceOf(RegexTreeQuantifier);
         const quantifier = alteration.children[1] as RegexTreeQuantifier;
         expect(quantifier.symbol).toBe("?");
@@ -103,7 +113,9 @@ describe('group', () => {
         expect(alteration2.children[0]).toBeInstanceOf(RegexTreeTerminal);
         expect(alteration2.children[1]).toBeInstanceOf(RegexTreeTerminal);
         expect((alteration2.children[0] as RegexTreeTerminal).symbol).toBe("a");
+        expect((alteration2.children[0] as RegexTreeTerminal).index).toBe(1);
         expect((alteration2.children[1] as RegexTreeTerminal).symbol).toBe("b");
+        expect((alteration2.children[1] as RegexTreeTerminal).index).toBe(2);
     })
 })
 
@@ -113,6 +125,7 @@ describe('escaping', () => {
         expect(tree).toBeInstanceOf(RegexTreeTerminal);
         const terminal = tree as RegexTreeTerminal;
         expect(terminal.symbol).toBe("a");
+        expect(terminal.index).toBe(0);
     })
 
     test('can escape operator', () => {
@@ -120,6 +133,7 @@ describe('escaping', () => {
         expect(tree).toBeInstanceOf(RegexTreeTerminal);
         const terminal = tree as RegexTreeTerminal;
         expect(terminal.symbol).toBe("|");
+        expect(terminal.index).toBe(0);
     })
 
     test('ignores backslash if last character in string', () => {
@@ -127,6 +141,7 @@ describe('escaping', () => {
         expect(tree).toBeInstanceOf(RegexTreeTerminal);
         const terminal = tree as RegexTreeTerminal;
         expect(terminal.symbol).toBe("a");
+        expect(terminal.index).toBe(0);
     })
 })
 
