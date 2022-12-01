@@ -16,7 +16,7 @@ export default function LectureConventions() {
         <Accordion.Item value={"conventions"}>
             <Accordion.Control icon={<ThemeIcon color={"yellow"} variant={"light"}
             ><IconAlertCircle size={16}/></ThemeIcon>}><Text color={"yellow"}
-                                                             weight="bold">Conventions</Text></Accordion.Control>
+                                                             weight="bold">Lecture Conventions</Text></Accordion.Control>
             <Accordion.Panel>
                 The lecture uses the following conventions for regular expressions, which
                 also apply to this tool:
