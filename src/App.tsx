@@ -1,12 +1,10 @@
 import {AppShell, Center, Header, MantineProvider, Navbar} from '@mantine/core';
-import RegexInputScreen from "@/layout/presentation/screens/RegexInputScreen";
 import mantineThemeOther from "./configuration/mantineThemeOther";
 import useAppStateStore from "@/layout/stores/appStateStore";
 import StepsProgress from "@/layout/presentation/StepsProgress";
-
+import RegexInputScreen from "@/analyze_regex/presentation/screens/RegexInputScreen";
 
 export default function App() {
-    const regex = useAppStateStore((state) => state.regex);
     const solveStep = useAppStateStore((state) => state.solveStep);
 
     return (
@@ -19,11 +17,11 @@ export default function App() {
                 </Header>
             }
             navbar={
-                !regex ? undefined : <Navbar width={{base: 240}} p={"xs"}>
+                solveStep === -1 ? undefined : <Navbar width={{base: 240}} p={"xs"}>
                     <StepsProgress activeStep={solveStep} />
                 </Navbar>
             }>
-                {!regex ? <RegexInputScreen /> : null}
+                {solveStep === -1 ? <RegexInputScreen /> : null}
             </AppShell>
         </MantineProvider>
     );
