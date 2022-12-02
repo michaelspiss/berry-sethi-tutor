@@ -1,5 +1,5 @@
 import {Box, createStyles, Textarea} from "@mantine/core";
-import {useEventListener} from "@mantine/hooks";
+import {getHotkeyHandler, useEventListener} from "@mantine/hooks";
 import useAppStateStore from "@/layout/stores/appStateStore";
 import RegexHighlighter from "@/analyze_regex/presentation/RegexHighlighter";
 
@@ -43,6 +43,7 @@ const useStyles = createStyles(() => ({
 interface RegexInputProps {
     errorPosition?: number,
     resetErrorPos: () => void,
+    onEnter: () => void
 }
 
 /**
@@ -62,8 +63,12 @@ export default function RegexInput(props: RegexInputProps) {
     })
 
     return <Box className={classes.wrapper}>
-        <Textarea placeholder={"Regex"} autosize classNames={{root: classes.inputRoot, input: classes.input}}
-                  ref={inputRef} value={regexValue}/>
+        <Textarea placeholder={"Regex"}
+                  autosize
+                  classNames={{root: classes.inputRoot, input: classes.input}}
+                  onKeyDown={getHotkeyHandler([['Enter', props.onEnter]])}
+                  ref={inputRef}
+                  value={regexValue}/>
         <RegexHighlighter regex={regexValue} className={classes.highlighter} errorPosition={props.errorPosition} />
     </Box>
 }

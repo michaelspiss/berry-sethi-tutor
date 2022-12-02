@@ -18,7 +18,7 @@ export default function RegexInputScreen() {
     const [isLoading, setIsLoading] = useState(false);
     const [error, setError] = useState<RegexError | null>(null);
 
-    const submitRef = useEventListener('submit', (event) => {
+    const formRef = useEventListener('submit', (event) => {
         event.preventDefault();
         const regex = useAppStateStore.getState().regex;
 
@@ -48,13 +48,16 @@ export default function RegexInputScreen() {
                withBorder={true}
                style={{width: theme.spacing.xl * 40}}
                mb={theme.other.headerHeight}>
-            <form ref={submitRef}>
+            <form ref={formRef}>
                 <Group grow style={{alignItems: "stretch", paddingBottom: 16}}>
                     <RegexInput errorPosition={!error ? undefined : error.position}
                                 resetErrorPos={() => {
                                     if(error !== null && error?.position !== -1) {
                                         setError(new RegexError(error!.title, error!.message, -1))
                                     }
+                                }}
+                                onEnter={() => {
+                                    formRef.current.dispatchEvent(new Event("submit", {cancelable: true}));
                                 }} />
                     <Button style={{flexGrow: 0}} type={"submit"} loading={isLoading}>Start</Button>
                 </Group>
