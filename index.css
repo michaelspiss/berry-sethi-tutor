@@ -5,3 +5,16 @@ html {
 body, #root {
     min-height: 100%;
 }
+
+.react-flow .react-flow__handle {
+    width: 11px;
+    height: 11px;
+}
+
+.react-flow .react-flow__handle-top {
+    top: -6px;
+}
+
+.react-flow .react-flow__handle-bottom {
+    bottom: -6px;
+}

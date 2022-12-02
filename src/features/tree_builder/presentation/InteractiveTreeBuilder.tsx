@@ -64,11 +64,34 @@ export default function InteractiveTreeBuilder(): React.ReactElement {
 
         const id = getId();
 
+        setNodes((nodes) => nodes.map((node) => {
+            if(node.selected) {
+                return {
+                    ...node,
+                    selected: false,
+                }
+            }
+            return node
+        }));
+
         const newNode = {
             id: id,
             position,
-            data: {label: id},
+            data: {
+                label: "",
+                deleteNode: () => setNodes((nodes) => nodes.filter((node) => node.id !== id)),
+                setLabel: (newLabel: string) => setNodes((nodes) => nodes.map((node) => {
+                    if(node.id === id) {
+                        node.data = {
+                            ...node.data,
+                            label: newLabel,
+                        }
+                    }
+                    return node;
+                })),
+            },
             type: type,
+            selected: true,
             className: cx(classes.node, type === 'operator' ? classes.operatorNode : classes.terminalNode)
         }
 
@@ -85,6 +108,7 @@ export default function InteractiveTreeBuilder(): React.ReactElement {
         onDragOver={onDragOver}
         onDrop={onDrop}
         nodeTypes={nodeTypes}
+        selectNodesOnDrag={false}
         fitView>
         <Background/>
         <Controls/>

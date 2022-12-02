@@ -1,29 +1,56 @@
-import {Handle, NodeProps, Position} from "reactflow";
-import {
-    IconAsterisk,
-    IconCircleDot,
-    IconDots,
-    IconHomeDot,
-    IconMinusVertical, IconPlus,
-    IconPoint, IconQuestionMark,
-    IconRotateDot
-} from "@tabler/icons";
+import {Handle, NodeProps, NodeToolbar, Position} from "reactflow";
+import {IconAsterisk, IconMinusVertical, IconPlus, IconQuestionMark} from "@tabler/icons";
 import useNodeStyles from "@/tree_builder/presentation/useNodeStyles";
+import {Stack} from "@mantine/core";
 
 export default function OperatorNode(props: NodeProps) {
     const {classes} = useNodeStyles();
 
+    const switchOperator = (operator: string) => {
+        props.data.setLabel(operator);
+    }
+
+    let icon;
+    switch (props.data.label) {
+        case '*':
+            icon = <IconAsterisk/>
+            break;
+        case '+':
+            icon = <IconPlus/>
+            break;
+        case '?':
+            icon = <IconQuestionMark/>
+            break;
+        case '|':
+            icon = <IconMinusVertical/>
+            break;
+        case '.':
+            icon = <div style={{height: 10, width: 10, background: "black", borderRadius: "50%"}}/>
+            break;
+        default:
+            icon = null
+    }
+
     return (
         <>
+            <NodeToolbar nodeId={props.id} isVisible={props.selected} position={Position.Left}>
+                <Stack className={"nodrag"}>
+                    <button onClick={() => switchOperator("*")}>Make *</button>
+                    <button onClick={() => switchOperator("?")}>Make ?</button>
+                </Stack>
+            </NodeToolbar>
+            <NodeToolbar nodeId={props.id} isVisible={props.selected} position={Position.Right}>
+                <Stack className={"nodrag"}>
+                    <button onClick={() => switchOperator("+")}>Make +</button>
+                    <button onClick={() => switchOperator("|")}>Make |</button>
+                    <button onClick={() => props.data.deleteNode()}>Delete node</button>
+                </Stack>
+            </NodeToolbar>
             <Handle type={"target"} position={Position.Top} />
             <div className={classes.nodeContent}>
-                {/*<IconAsterisk />*/}
-                {/*<IconMinusVertical />*/}
-                {/*<div style={{height: 10, width: 10, background: "black", borderRadius: "50%"}} />*/}
-                {/*<IconPlus />*/}
-                {/*<IconQuestionMark />*/}
+                {icon}
             </div>
-            <Handle type={"source"} position={Position.Bottom} />
+            <Handle type={"source"} position={Position.Bottom}/>
         </>
     )
 }
