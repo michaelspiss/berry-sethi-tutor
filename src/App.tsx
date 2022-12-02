@@ -6,6 +6,7 @@ import RegexInputScreen from "@/analyze_regex/presentation/screens/RegexInputScr
 import InteractiveTreeBuilder from "@/tree_builder/presentation/InteractiveTreeBuilder";
 import {IconArrowBack} from "@tabler/icons";
 import RegexHighlighter from "@/analyze_regex/presentation/RegexHighlighter";
+import {ReactFlowProvider} from "reactflow";
 
 export default function App() {
     const solveStep = useAppStateStore((state) => state.solveStep);
@@ -15,36 +16,38 @@ export default function App() {
         <MantineProvider withGlobalStyles withNormalizeCSS theme={{
             other: mantineThemeOther,
         }}>
-            <AppShell padding={0}
-                      header={
-                          <Header height={mantineThemeOther.headerHeight} px={"xs"}>
-                              <Group position={"apart"}>
-                                  <Center style={{height: mantineThemeOther.headerHeight}} inline>
-                                      {solveStep === -1 ? null :
-                                          <ActionIcon onClick={() => useAppStateStore.setState({solveStep: -1})}>
-                                              <IconArrowBack size={16}/>
-                                          </ActionIcon>
+            <ReactFlowProvider>
+                <AppShell padding={0}
+                          header={
+                              <Header height={mantineThemeOther.headerHeight} px={"xs"}>
+                                  <Group position={"apart"}>
+                                      <Center style={{height: mantineThemeOther.headerHeight}} inline>
+                                          {solveStep === -1 ? null :
+                                              <ActionIcon onClick={() => useAppStateStore.setState({solveStep: -1})}>
+                                                  <IconArrowBack size={16}/>
+                                              </ActionIcon>
+                                          }
+                                          <span>Berry Sethi Tutor</span>
+                                      </Center>
+                                      {solveStep === -1 ? null : <>
+                                          <Center style={{height: mantineThemeOther.headerHeight}}>{
+                                              <RegexHighlighter regex={regexValue}/>
+                                          }</Center>
+                                          <Center style={{height: mantineThemeOther.headerHeight}}>buttons</Center>
+                                      </>
                                       }
-                                      <span>Berry Sethi Tutor</span>
-                                  </Center>
-                                  {solveStep === -1 ? null : <>
-                                      <Center style={{height: mantineThemeOther.headerHeight}}>{
-                                          <RegexHighlighter regex={regexValue}/>
-                                      }</Center>
-                                      <Center style={{height: mantineThemeOther.headerHeight}}>buttons</Center>
-                                  </>
-                                  }
-                              </Group>
+                                  </Group>
 
-                          </Header>
-                      }
-                      navbar={
-                          solveStep === -1 ? undefined : <Navbar width={{base: 240}} p={"xs"}>
-                              <StepsProgress activeStep={solveStep}/>
-                          </Navbar>
-                      }>
-                {solveStep === -1 ? <RegexInputScreen/> : <InteractiveTreeBuilder/>}
-            </AppShell>
+                              </Header>
+                          }
+                          navbar={
+                              solveStep === -1 ? undefined : <Navbar width={{base: 240}} p={"xs"}>
+                                  <StepsProgress activeStep={solveStep}/>
+                              </Navbar>
+                          }>
+                    {solveStep === -1 ? <RegexInputScreen/> : <InteractiveTreeBuilder/>}
+                </AppShell>
+            </ReactFlowProvider>
         </MantineProvider>
     );
 }
