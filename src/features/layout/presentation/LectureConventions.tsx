@@ -23,7 +23,7 @@ export default function LectureConventions() {
                 <List>
                     <List.Item>Every letter is its own terminal</List.Item>
                     <List.Item>The following operators are supported: <code>*?+|</code>, groups and concatenation</List.Item>
-                    <List.Item>The concatenation operator is binary and implicit between two terminals</List.Item>
+                    <List.Item>The concatenation operator is binary and implicit</List.Item>
                 </List>
             </Accordion.Panel>
         </Accordion.Item>
