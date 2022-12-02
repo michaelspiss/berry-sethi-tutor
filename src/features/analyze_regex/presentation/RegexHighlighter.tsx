@@ -28,31 +28,33 @@ export default function RegexHighlighter(props: RegexHighlighterProps) {
     const {classes, cx} = useStyles();
     const theme = useMantineTheme();
     const errorPos = props.errorPosition ?? -1;
-    let formattedRegex: ReturnType<typeof segmentRegexString> = [];
-
-    useMemo(() => {
-        formattedRegex = segmentRegexString(props.regex, errorPos);
-    }, [props.regex, errorPos])
+    let formattedRegex: ReturnType<typeof segmentRegexString> = useMemo(
+        () => segmentRegexString(props.regex, errorPos),
+        [props.regex, errorPos]
+    );
 
     return <pre className={cx(classes.wrapper, props.className)}>{(formattedRegex).map(item => {
         switch (item.type) {
             case 'quantifier':
-                return <span key={item.key} style={{color:theme.colors.blue[8], fontWeight: "bold"}}>{item.symbols}</span>
+                return <span key={item.key}
+                             style={{color: theme.colors.blue[8], fontWeight: "bold"}}>{item.symbols}</span>
             case 'error':
                 return <span key={item.key} style={{
-                    color:theme.colors.red[6],
+                    color: theme.colors.red[6],
                     textDecorationLine: "underline",
                     textDecorationSkipInk: "none",
                     textDecorationThickness: 9
                 }}>{item.symbols}</span>
             case 'escaped':
-                return <span key={item.key} style={{color:theme.colors.orange[6]}}>{item.symbols}</span>
+                return <span key={item.key} style={{color: theme.colors.orange[6]}}>{item.symbols}</span>
             case 'group':
-                return <span key={item.key} style={{color:theme.colors.gray[6], fontWeight: "bold"}}>{item.symbols}</span>
+                return <span key={item.key}
+                             style={{color: theme.colors.gray[6], fontWeight: "bold"}}>{item.symbols}</span>
             case 'alteration':
-                return <span key={item.key} style={{color:theme.colors.green[8], fontWeight: "bold"}}>{item.symbols}</span>
+                return <span key={item.key}
+                             style={{color: theme.colors.green[8], fontWeight: "bold"}}>{item.symbols}</span>
             case 'terminal':
-                return <span key={item.key} style={{color:theme.colors.gray[9]}}>{item.symbols}</span>
+                return <span key={item.key} style={{color: theme.colors.gray[9]}}>{item.symbols}</span>
         }
     })}</pre>
 }

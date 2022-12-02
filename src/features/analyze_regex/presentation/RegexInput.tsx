@@ -42,6 +42,7 @@ const useStyles = createStyles(() => ({
 
 interface RegexInputProps {
     errorPosition?: number,
+    resetErrorPos: () => void,
 }
 
 /**
@@ -55,6 +56,7 @@ export default function RegexInput(props: RegexInputProps) {
     const inputRef = useEventListener('input', () => {
         const newRegexValue = inputRef.current!.value.trim().replaceAll("\r\n", "").replaceAll("\n", "");
         if(newRegexValue !== regexValue) {
+            props.resetErrorPos();
             useAppStateStore.setState({regex: newRegexValue});
         }
     })

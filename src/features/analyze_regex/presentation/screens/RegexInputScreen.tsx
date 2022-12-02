@@ -50,7 +50,12 @@ export default function RegexInputScreen() {
                mb={theme.other.headerHeight}>
             <form ref={submitRef}>
                 <Group grow style={{alignItems: "stretch", paddingBottom: 16}}>
-                    <RegexInput errorPosition={!error ? undefined : error.position} />
+                    <RegexInput errorPosition={!error ? undefined : error.position}
+                                resetErrorPos={() => {
+                                    if(error !== null && error?.position !== -1) {
+                                        setError(new RegexError(error!.title, error!.message, -1))
+                                    }
+                                }} />
                     <Button style={{flexGrow: 0}} type={"submit"} loading={isLoading}>Start</Button>
                 </Group>
             </form>
