@@ -93,7 +93,7 @@ function buildRegexTreeRec(regex: string, startAt: number = 0, recLevel: number 
     }
 
     if (state.position >= regex.length && recLevel !== 0) {
-        throw RegexErrors.groupMissingClosingParenthesis(state.position - 1)
+        throw RegexErrors.groupMissingClosingParenthesis(startAt - 1)
     }
 
     // remove top-level concatenation if it only has one child
