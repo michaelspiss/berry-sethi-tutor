@@ -14,9 +14,17 @@ import React, {DragEventHandler, useCallback, useRef, useState} from "react";
 
 import 'reactflow/dist/style.css'
 import TreeElementsPanel from "@/tree_builder/presentation/TreeElementsPanel";
+import OperatorNode from "@/tree_builder/presentation/OperatorNode";
+import TerminalNode from "@/tree_builder/presentation/TerminalNode";
+import useNodeStyles from "@/tree_builder/presentation/useNodeStyles";
 
 function getId() {
     return `node_${+new Date()}`
+}
+
+const nodeTypes = {
+    operator: OperatorNode,
+    terminal: TerminalNode
 }
 
 /**
@@ -28,6 +36,7 @@ export default function InteractiveTreeBuilder(): React.ReactElement {
     const [edges, setEdges, onEdgesChange] = useEdgesState([]);
     const reactFlowWrapper = useRef<HTMLDivElement>(null);
     const [reactFlowInstance, setReactFlowInstance] = useState<ReactFlowInstance|null>(null);
+    const {classes, cx} = useNodeStyles();
 
     const onConnect = useCallback((params: Edge | Connection) =>
             setEdges((edges) => addEdge(params, edges)),
@@ -49,8 +58,8 @@ export default function InteractiveTreeBuilder(): React.ReactElement {
         }
 
         const position = reactFlowInstance.project({
-            x: event.clientX - reactFlowBounds.left,
-            y: event.clientY - reactFlowBounds.top,
+            x: event.clientX - reactFlowBounds.left - 40,
+            y: event.clientY - reactFlowBounds.top - 40,
         });
 
         const id = getId();
@@ -59,7 +68,8 @@ export default function InteractiveTreeBuilder(): React.ReactElement {
             id: id,
             position,
             data: {label: id},
-            type: 'default'
+            type: type,
+            className: cx(classes.node, type === 'operator' ? classes.operatorNode : classes.terminalNode)
         }
 
         setNodes((nodes) => nodes.concat(newNode));
@@ -74,6 +84,7 @@ export default function InteractiveTreeBuilder(): React.ReactElement {
         onInit={setReactFlowInstance}
         onDragOver={onDragOver}
         onDrop={onDrop}
+        nodeTypes={nodeTypes}
         fitView>
         <Background/>
         <Controls/>
