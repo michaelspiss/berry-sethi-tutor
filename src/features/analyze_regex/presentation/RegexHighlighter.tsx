@@ -43,7 +43,8 @@ export default function RegexHighlighter(props: RegexHighlighterProps) {
                     color: theme.colors.red[6],
                     textDecorationLine: "underline",
                     textDecorationSkipInk: "none",
-                    textDecorationThickness: 9
+                    textDecorationThickness: 2,
+                    textUnderlinePosition: "under",
                 }}>{item.symbols}</span>
             case 'escaped':
                 return <span key={item.key} style={{color: theme.colors.orange[6]}}>{item.symbols}</span>
