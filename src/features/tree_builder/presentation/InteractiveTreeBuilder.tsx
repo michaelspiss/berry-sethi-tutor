@@ -1,13 +1,12 @@
 import 'reactflow/dist/style.css';
 import {
-    addEdge,
+    addEdge, applyEdgeChanges,
     Background,
     Connection,
     Controls,
-    Edge,
+    Edge, EdgeChange,
     Panel,
     ReactFlow, ReactFlowInstance,
-    useEdgesState,
     useNodesState
 } from "reactflow";
 import React, {DragEventHandler, useCallback, useRef, useState} from "react";
@@ -17,6 +16,8 @@ import TreeElementsPanel from "@/tree_builder/presentation/TreeElementsPanel";
 import OperatorNode from "@/tree_builder/presentation/OperatorNode";
 import TerminalNode from "@/tree_builder/presentation/TerminalNode";
 import useNodeStyles from "@/tree_builder/presentation/useNodeStyles";
+import steps from "@/tree_builder/domain/steps";
+import useAppStateStore from "@/layout/stores/appStateStore";
 
 function getId() {
     return `node_${+new Date()}`
@@ -33,22 +34,31 @@ const nodeTypes = {
  */
 export default function InteractiveTreeBuilder(): React.ReactElement {
     const [nodes, setNodes, onNodesChange] = useNodesState([]);
-    const [edges, setEdges, onEdgesChange] = useEdgesState([]);
+    const [edges, setEdges] = useState<Edge[]>([]);
     const reactFlowWrapper = useRef<HTMLDivElement>(null);
-    const [reactFlowInstance, setReactFlowInstance] = useState<ReactFlowInstance|null>(null);
+    const [reactFlowInstance, setReactFlowInstance] = useState<ReactFlowInstance | null>(null);
     const {classes, cx} = useNodeStyles();
+    const solveStep = useAppStateStore((state) => state.solveStep);
 
     const onConnect = useCallback((params: Edge | Connection) =>
-            setEdges((edges) => addEdge(params, edges)),
-        [],
+        setEdges((edges) => addEdge({
+            ...params,
+            id: solveStep + "_" + params.source + "_" + params.target
+        }, edges)), [],
     );
 
-    const onDragOver : DragEventHandler = useCallback((event) => {
+    const onEdgesChange = useCallback((changes: EdgeChange[]) =>
+        // TODO: prevent changes to edges from a previous step
+            setEdges((edges) => applyEdgeChanges(changes, edges)),
+        [setEdges, solveStep]
+    );
+
+    const onDragOver: DragEventHandler = useCallback((event) => {
         event.preventDefault();
         event.dataTransfer.dropEffect = 'move';
     }, []);
 
-    const onDrop : DragEventHandler = useCallback((event) => {
+    const onDrop: DragEventHandler = useCallback((event) => {
         event.preventDefault();
         const reactFlowBounds = reactFlowWrapper.current?.getBoundingClientRect();
         const type = event.dataTransfer.getData('application/berrysethitutor');
@@ -65,7 +75,7 @@ export default function InteractiveTreeBuilder(): React.ReactElement {
         const id = getId();
 
         setNodes((nodes) => nodes.map((node) => {
-            if(node.selected) {
+            if (node.selected) {
                 return {
                     ...node,
                     selected: false,
@@ -81,7 +91,7 @@ export default function InteractiveTreeBuilder(): React.ReactElement {
                 label: "",
                 deleteNode: () => setNodes((nodes) => nodes.filter((node) => node.id !== id)),
                 setLabel: (newLabel: string) => setNodes((nodes) => nodes.map((node) => {
-                    if(node.id === id) {
+                    if (node.id === id) {
                         node.data = {
                             ...node.data,
                             label: newLabel,
@@ -109,11 +119,14 @@ export default function InteractiveTreeBuilder(): React.ReactElement {
         onDrop={onDrop}
         nodeTypes={nodeTypes}
         selectNodesOnDrag={false}
+        nodesDraggable={steps[solveStep].canMoveNodes}
+        nodesConnectable={steps[solveStep].canConnectNodes}
+        nodesFocusable={steps[solveStep].canEditNodes}
         fitView>
         <Background/>
         <Controls/>
         <Panel position={"bottom-center"}>
-            <TreeElementsPanel/>
+            {steps[solveStep].canEditNodes ? <TreeElementsPanel/> : null}
         </Panel>
     </ReactFlow></div>
 }

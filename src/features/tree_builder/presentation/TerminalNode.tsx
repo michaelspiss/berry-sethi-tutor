@@ -1,13 +1,17 @@
 import {Handle, NodeProps, NodeToolbar, Position} from "reactflow";
 import useNodeStyles from "@/tree_builder/presentation/useNodeStyles";
 import {Stack} from "@mantine/core";
+import useAppStateStore from "@/layout/stores/appStateStore";
+import steps from "@/tree_builder/domain/steps";
 
 export default function TerminalNode(props: NodeProps) {
     const {classes} = useNodeStyles();
+    const solveStep = useAppStateStore((state) => state.solveStep);
+    const canEditNodes = steps[solveStep].canEditNodes
 
     return (
         <>
-            <NodeToolbar nodeId={props.id} isVisible={props.selected} position={Position.Left}>
+            <NodeToolbar nodeId={props.id} isVisible={canEditNodes && props.selected} position={Position.Left}>
                 <Stack className={"nodrag"}>
                     <button onClick={() => {
                         // TODO: make prettier
@@ -20,7 +24,7 @@ export default function TerminalNode(props: NodeProps) {
                     }}>Set terminal</button>
                 </Stack>
             </NodeToolbar>
-            <NodeToolbar nodeId={props.id} isVisible={props.selected} position={Position.Right}>
+            <NodeToolbar nodeId={props.id} isVisible={canEditNodes && props.selected} position={Position.Right}>
                 <Stack className={"nodrag"}>
                     <button onClick={() => props.data.deleteNode()}>Delete node</button>
                 </Stack>

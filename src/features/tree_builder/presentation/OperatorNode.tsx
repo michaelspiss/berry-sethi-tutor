@@ -2,9 +2,13 @@ import {Handle, NodeProps, NodeToolbar, Position} from "reactflow";
 import {IconAsterisk, IconMinusVertical, IconPlus, IconQuestionMark} from "@tabler/icons";
 import useNodeStyles from "@/tree_builder/presentation/useNodeStyles";
 import {Stack} from "@mantine/core";
+import useAppStateStore from "@/layout/stores/appStateStore";
+import steps from "@/tree_builder/domain/steps";
 
 export default function OperatorNode(props: NodeProps) {
     const {classes} = useNodeStyles();
+    const solveStep = useAppStateStore((state) => state.solveStep);
+    const canEditNodes = steps[solveStep].canEditNodes;
 
     const switchOperator = (operator: string) => {
         props.data.setLabel(operator);
@@ -33,13 +37,13 @@ export default function OperatorNode(props: NodeProps) {
 
     return (
         <>
-            <NodeToolbar nodeId={props.id} isVisible={props.selected} position={Position.Left}>
+            <NodeToolbar nodeId={props.id} isVisible={canEditNodes && props.selected} position={Position.Left}>
                 <Stack className={"nodrag"}>
                     <button onClick={() => switchOperator("*")}>Make *</button>
                     <button onClick={() => switchOperator("?")}>Make ?</button>
                 </Stack>
             </NodeToolbar>
-            <NodeToolbar nodeId={props.id} isVisible={props.selected} position={Position.Right}>
+            <NodeToolbar nodeId={props.id} isVisible={canEditNodes && props.selected} position={Position.Right}>
                 <Stack className={"nodrag"}>
                     <button onClick={() => switchOperator("+")}>Make +</button>
                     <button onClick={() => switchOperator("|")}>Make |</button>

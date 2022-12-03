@@ -21,6 +21,8 @@ export default function SolveButton() {
             return node;
         }))
         reactFlow.setEdges(result.edges);
-        useAppStateStore.setState({solveStep: solveStep + 1})
+        useAppStateStore.setState({solveStep: solveStep + 1});
+        const to = setTimeout(() => reactFlow.fitView(), 100);
+        return () => clearTimeout(to);
     }}>Solve</Button>
 }
