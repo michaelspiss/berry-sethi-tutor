@@ -15,5 +15,6 @@ export default function SolveButton() {
         const result = steps[solveStep].solver(reactFlow.getNodes(), reactFlow.getEdges());
         reactFlow.setNodes(result.nodes);
         reactFlow.setEdges(result.edges);
+        useAppStateStore.setState({solveStep: solveStep + 1})
     }}>Solve</Button>
 }
