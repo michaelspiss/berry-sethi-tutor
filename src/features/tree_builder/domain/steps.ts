@@ -14,6 +14,7 @@ interface StepDescription {
     canMoveNodes: boolean,
     canEditNodes: boolean,
     canConnectNodes: boolean,
+    canSourceConnectToSource: boolean,
 }
 
 export interface ValidatorResult {
@@ -45,6 +46,7 @@ const steps: StepDescription[] = [
         canMoveNodes: true,
         canEditNodes: true,
         canConnectNodes: true,
+        canSourceConnectToSource: false,
     }, {
         // Step 2: Draw possible steps
         validator: null,
@@ -53,6 +55,7 @@ const steps: StepDescription[] = [
         canMoveNodes: false,
         canEditNodes: false,
         canConnectNodes: true,
+        canSourceConnectToSource: true,
     }
 ]
 

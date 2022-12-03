@@ -1,12 +1,16 @@
 import 'reactflow/dist/style.css';
 import {
-    addEdge, applyEdgeChanges,
+    addEdge,
+    applyEdgeChanges,
     Background,
     Connection,
+    ConnectionMode,
     Controls,
-    Edge, EdgeChange,
+    Edge,
+    EdgeChange,
     Panel,
-    ReactFlow, ReactFlowInstance,
+    ReactFlow,
+    ReactFlowInstance,
     useNodesState
 } from "reactflow";
 import React, {DragEventHandler, useCallback, useRef, useState} from "react";
@@ -40,14 +44,15 @@ export default function InteractiveTreeBuilder(): React.ReactElement {
     const {classes, cx} = useNodeStyles();
     const solveStep = useAppStateStore((state) => state.solveStep);
 
-    const onConnect = useCallback((params: Edge | Connection) =>
+    const onConnect = useCallback((params: Edge | Connection) => {
         setEdges((edges) => addEdge({
             ...params,
-            id: params.source + "-" + params.target,
+            id: params.source + "-" + params.target + params.sourceHandle + params.targetHandle,
             data: {
                 step: solveStep,
             }
-        }, edges)), [solveStep, setEdges],
+        }, edges))
+        }, [edges, solveStep, setEdges],
     );
 
     const onEdgesChange = useCallback((changes: EdgeChange[]) =>
@@ -125,6 +130,10 @@ export default function InteractiveTreeBuilder(): React.ReactElement {
         nodesDraggable={steps[solveStep].canMoveNodes}
         nodesConnectable={steps[solveStep].canConnectNodes}
         nodesFocusable={steps[solveStep].canEditNodes}
+        connectionMode={steps[solveStep].canSourceConnectToSource ? ConnectionMode.Loose : ConnectionMode.Strict}
+        deleteKeyCode={['Backspace', 'Delete']}
+        selectionKeyCode={null}
+        multiSelectionKeyCode={null}
         fitView>
         <Background/>
         <Controls/>

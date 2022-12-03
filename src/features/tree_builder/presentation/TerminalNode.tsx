@@ -32,7 +32,19 @@ export default function TerminalNode(props: NodeProps) {
             </NodeToolbar>
             <Handle type={"target"}
                     position={Position.Top}
-                    style={solveStep === 0 ? undefined : {pointerEvents: "none", visibility: "hidden"}}/>
+                    style={solveStep === 0 ? undefined : {pointerEvents: "none", visibility: "hidden"}}
+                    id={"step1t"}
+            />
+            <Handle type={"source"}
+                    position={Position.Left}
+                    style={solveStep === 1 ? undefined : {pointerEvents: "none", visibility: "hidden"}}
+                    id={"step2l"}
+            />
+            <Handle type={"source"}
+                    position={Position.Right}
+                    style={solveStep === 1 ? undefined : {pointerEvents: "none", visibility: "hidden"}}
+                    id={"step2r"}
+            />
             <div className={classes.nodeContent}>
                 {props.data.label}
             </div>

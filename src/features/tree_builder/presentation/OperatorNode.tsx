@@ -52,13 +52,27 @@ export default function OperatorNode(props: NodeProps) {
             </NodeToolbar>
             <Handle type={"target"}
                     position={Position.Top}
-                    style={solveStep === 0 ? undefined : {pointerEvents: "none", visibility: "hidden"}}/>
+                    style={solveStep === 0 ? undefined : {pointerEvents: "none", visibility: "hidden"}}
+                    id={"step1t"}
+            />
+            <Handle type={"source"}
+                    position={Position.Left}
+                    style={solveStep === 1 ? undefined : {pointerEvents: "none", visibility: "hidden"}}
+                    id={"step2l"}
+            />
             <div className={classes.nodeContent}>
                 {icon}
             </div>
             <Handle type={"source"}
                     position={Position.Bottom}
-                    style={solveStep === 0 ? undefined : {pointerEvents: "none", visibility: "hidden"}}/>
+                    style={solveStep === 0 ? undefined : {pointerEvents: "none", visibility: "hidden"}}
+                    id={"step1b"}
+            />
+            <Handle type={"source"}
+                    position={Position.Right}
+                    style={solveStep === 1 ? undefined : {pointerEvents: "none", visibility: "hidden"}}
+                    id={"step2r"}
+            />
         </>
     )
 }
