@@ -8,7 +8,7 @@ export default function SolveButton() {
     const reactFlow = useReactFlow();
 
     if(reactFlow === null) {
-        return;
+        return null;
     }
 
     return <Button color="green" onClick={() => {
