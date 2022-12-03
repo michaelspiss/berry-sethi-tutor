@@ -7,6 +7,8 @@ import InteractiveTreeBuilder from "@/tree_builder/presentation/InteractiveTreeB
 import {IconArrowBack} from "@tabler/icons";
 import RegexHighlighter from "@/analyze_regex/presentation/RegexHighlighter";
 import {ReactFlowProvider} from "reactflow";
+import SolveButton from "@/tree_builder/presentation/SolveButton";
+import VerifyTreeButton from "@/tree_builder/presentation/VerifyTreeButton";
 
 export default function App() {
     const solveStep = useAppStateStore((state) => state.solveStep);
@@ -33,7 +35,12 @@ export default function App() {
                                           <Center style={{height: mantineThemeOther.headerHeight}}>{
                                               <RegexHighlighter regex={regexValue}/>
                                           }</Center>
-                                          <Center style={{height: mantineThemeOther.headerHeight}}>buttons</Center>
+                                          <Center style={{height: mantineThemeOther.headerHeight}}>
+                                              <Group>
+                                                  <VerifyTreeButton />
+                                                  <SolveButton />
+                                              </Group>
+                                          </Center>
                                       </>
                                       }
                                   </Group>
