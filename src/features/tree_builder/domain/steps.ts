@@ -31,6 +31,7 @@ function makeEdgesStaticCleanUp(edges: Edge[]) {
     edges.map((edge) => {
         edge.focusable = false;
         edge.interactionWidth = 0;
+        edge.style = {pointerEvents: "none"};
         return edge
     });
 }

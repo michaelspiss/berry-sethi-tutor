@@ -16,12 +16,13 @@ export default function TerminalNode(props: NodeProps) {
                     <button onClick={() => {
                         // TODO: make prettier
                         const character = window.prompt("Please enter a character");
-                        if(!character || character.length !== 1) {
+                        if (!character || character.length !== 1) {
                             alert("Please enter exactly one character.");
                             return;
                         }
                         props.data.setLabel(character);
-                    }}>Set terminal</button>
+                    }}>Set terminal
+                    </button>
                 </Stack>
             </NodeToolbar>
             <NodeToolbar nodeId={props.id} isVisible={canEditNodes && props.selected} position={Position.Right}>
@@ -29,7 +30,9 @@ export default function TerminalNode(props: NodeProps) {
                     <button onClick={() => props.data.deleteNode()}>Delete node</button>
                 </Stack>
             </NodeToolbar>
-            <Handle type={"target"} position={Position.Top} style={solveStep === 0 ? undefined : {pointerEvents: "none"}} />
+            <Handle type={"target"}
+                    position={Position.Top}
+                    style={solveStep === 0 ? undefined : {pointerEvents: "none", visibility: "hidden"}}/>
             <div className={classes.nodeContent}>
                 {props.data.label}
             </div>
