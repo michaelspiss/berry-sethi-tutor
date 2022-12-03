@@ -38,7 +38,7 @@ function buildTreeFromModel(model: RegexTreeItem, parent?: string): SolverResult
         data: {
             label: symbol,
         },
-        type: 'default', // TODO: change back to variable type
+        type: type,
     });
 
     if (parent !== undefined) {
