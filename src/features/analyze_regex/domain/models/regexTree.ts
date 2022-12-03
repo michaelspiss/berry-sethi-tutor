@@ -2,6 +2,8 @@ export type RegexQuantifier = '?' | '*' | '+';
 
 export abstract class RegexTreeItem {
     abstract getPossibleStrings(): Set<string>
+
+    abstract getItemAsSymbol(): string
 }
 
 export abstract class RegexTreeGroup extends RegexTreeItem {
@@ -43,6 +45,10 @@ export class RegexTreeTerminal extends RegexTreeItem {
 
     getPossibleStrings(): Set<string> {
         return new Set([this.symbol])
+    }
+
+    getItemAsSymbol(): string {
+        return this.symbol;
     }
 }
 
@@ -86,6 +92,10 @@ export class RegexTreeQuantifier extends RegexTreeItem {
         // else: symbol == "+" -> no empty string
         return new Set([...possibleChildStrings, ...concatenatedChildStrings]);
     }
+
+    getItemAsSymbol(): string {
+        return this.symbol;
+    }
 }
 
 
@@ -98,6 +108,10 @@ export class RegexTreeAlteration extends RegexTreeGroup {
         });
 
         return new Set(possibleStrings);
+    }
+
+    getItemAsSymbol(): string {
+        return "|";
     }
 }
 
@@ -121,5 +135,9 @@ export class RegexTreeConcatenation extends RegexTreeGroup {
         }
 
         return new Set(concatenations);
+    }
+
+    getItemAsSymbol(): string {
+        return ".";
     }
 }
