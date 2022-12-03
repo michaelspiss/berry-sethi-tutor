@@ -43,9 +43,12 @@ function buildTreeFromModel(model: RegexTreeItem, parent?: string): SolverResult
 
     if (parent !== undefined) {
         syntaxTreeData.edges.push({
-            id: "0_" + parent + "_" + id, // first step -> 0_...
+            id: parent + "-" + id,
             source: parent,
             target: id,
+            data: {
+                step: 0,
+            }
         })
     }
 

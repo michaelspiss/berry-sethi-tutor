@@ -15,11 +15,12 @@ export default function SolveButton() {
 
     return <Button color="green" onClick={() => {
         const result = steps[solveStep].solver(reactFlow.getNodes(), reactFlow.getEdges());
-        // Add styling to nodes before set
-        reactFlow.setNodes(result.nodes.map((node) => {
+        const styledNodes = result.nodes.map((node) => {
             node.className = cx(classes.node, node.type === 'operator' ? classes.operatorNode : classes.terminalNode)
             return node;
-        }))
+        });
+        steps[solveStep].cleanup(styledNodes, result.edges);
+        reactFlow.setNodes(styledNodes);
         reactFlow.setEdges(result.edges);
         useAppStateStore.setState({solveStep: solveStep + 1});
         const to = setTimeout(() => reactFlow.fitView(), 100);

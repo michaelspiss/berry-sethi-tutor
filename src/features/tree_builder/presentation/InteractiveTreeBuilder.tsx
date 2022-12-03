@@ -43,8 +43,11 @@ export default function InteractiveTreeBuilder(): React.ReactElement {
     const onConnect = useCallback((params: Edge | Connection) =>
         setEdges((edges) => addEdge({
             ...params,
-            id: solveStep + "_" + params.source + "_" + params.target
-        }, edges)), [],
+            id: params.source + "-" + params.target,
+            data: {
+                step: solveStep,
+            }
+        }, edges)), [solveStep, setEdges],
     );
 
     const onEdgesChange = useCallback((changes: EdgeChange[]) =>
