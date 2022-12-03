@@ -29,7 +29,7 @@ export default function TerminalNode(props: NodeProps) {
                     <button onClick={() => props.data.deleteNode()}>Delete node</button>
                 </Stack>
             </NodeToolbar>
-            <Handle type={"target"} position={Position.Top} />
+            <Handle type={"target"} position={Position.Top} style={solveStep === 0 ? undefined : {pointerEvents: "none"}} />
             <div className={classes.nodeContent}>
                 {props.data.label}
             </div>
