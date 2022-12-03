@@ -12,9 +12,17 @@ body, #root {
 }
 
 .react-flow .react-flow__handle-top {
-    top: -6px;
+    top: -8px;
 }
 
 .react-flow .react-flow__handle-bottom {
-    bottom: -6px;
+    bottom: -8px;
+}
+
+.react-flow .react-flow__handle-left {
+    left: -8px;
+}
+
+.react-flow .react-flow__handle-right {
+    right: -8px;
 }
