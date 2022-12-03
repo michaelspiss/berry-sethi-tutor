@@ -41,6 +41,7 @@ export default function OperatorNode(props: NodeProps) {
                 <Stack className={"nodrag"}>
                     <button onClick={() => switchOperator("*")}>Make *</button>
                     <button onClick={() => switchOperator("?")}>Make ?</button>
+                    <button onClick={() => switchOperator(".")}>Make .</button>
                 </Stack>
             </NodeToolbar>
             <NodeToolbar nodeId={props.id} isVisible={canEditNodes && props.selected} position={Position.Right}>
