@@ -1,5 +1,6 @@
 import useAppStateStore from "@/layout/stores/appStateStore";
 import DefaultError from "@/layout/presentation/DefaultError";
+import {ScrollArea} from "@mantine/core";
 
 export default function VerificationErrors() {
     const errors = useAppStateStore((state) => state.verificationErrors);
@@ -8,10 +9,10 @@ export default function VerificationErrors() {
         return null;
     }
 
-    return <>
+    return <ScrollArea maw={"25vw"} h={"100%"}>
         {errors.map((error) => {
-            return <DefaultError title={error.title} message={<>error.message</>} />
+            return <DefaultError title={error.title} message={error.message} />
         })}
-    </>
+    </ScrollArea>
 
 }

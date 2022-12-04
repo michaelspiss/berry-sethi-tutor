@@ -26,3 +26,8 @@ body, #root {
 .react-flow .react-flow__handle-right {
     right: -8px;
 }
+
+.react-flow .react-flow__panel {
+    margin: 0;
+    padding: 15px;
+}
