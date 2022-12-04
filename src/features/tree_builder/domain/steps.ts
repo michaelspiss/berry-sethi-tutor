@@ -41,8 +41,7 @@ function makeEdgesStaticCleanUp(edges: Edge[]) {
     });
 }
 
-// TODO: remove Partial<T> once data for every step exists
-const steps: Partial<StepDescription>[] = [
+const steps: StepDescription[] = [
     {
         // Step 1
         title: "Create syntax tree",
