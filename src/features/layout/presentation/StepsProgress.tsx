@@ -1,4 +1,5 @@
 import {createStyles, Stepper} from "@mantine/core";
+import steps from "@/tree_builder/domain/steps";
 
 const useStyles = createStyles((theme) => ({
     step: {
@@ -53,13 +54,13 @@ export default function StepsProgress(props: ProgressProps) {
     const {classes} = useStyles();
 
     return <Stepper active={props.activeStep} orientation={"vertical"} classNames={classes} size={"sm"}>
-        <Stepper.Step label={"Create Syntax tree"} />
-        <Stepper.Step label={"Draw possible steps"} />
-        <Stepper.Step label={"Enumerate leaves"} />
-        <Stepper.Step label={"Set empty attributes"} />
-        <Stepper.Step label={"Collect may-set of first reached states"} />
-        <Stepper.Step label={"Collect may-set of next reached read states per subtree"} />
-        <Stepper.Step label={"Collect may-set of last reached read states per subtree"} />
-        <Stepper.Step label={"Create automaton"}/>
+        <Stepper.Step label={steps[0].title} />
+        <Stepper.Step label={steps[1].title} />
+        <Stepper.Step label={steps[2].title} />
+        <Stepper.Step label={steps[3].title} />
+        <Stepper.Step label={steps[4].title} />
+        <Stepper.Step label={steps[5].title} />
+        <Stepper.Step label={steps[6].title} />
+        <Stepper.Step label={steps[7].title} />
     </Stepper>
 };
