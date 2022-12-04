@@ -1,11 +1,8 @@
 import {Edge, Node} from "reactflow";
 import {SolverResult} from "@/tree_builder/domain/steps";
 import useAppStateStore from "@/layout/stores/appStateStore";
-import {
-    RegexTreeGroup,
-    RegexTreeItem,
-    RegexTreeQuantifier
-} from "@/analyze_regex/domain/models/regexTree";
+import {RegexTreeGroup, RegexTreeItem, RegexTreeQuantifier} from "@/analyze_regex/domain/models/regexTree";
+import operatorSymbols from "@/tree_builder/domain/operatorSymbols";
 
 export default function solveSyntaxTree(nodes: Node[], edges: Edge[]): SolverResult {
     const model = useAppStateStore.getState().regexModel;
@@ -28,7 +25,7 @@ function buildTreeFromModel(model: RegexTreeItem, parent?: string): SolverResult
         });
     }
 
-    const type = ['*', '?', '|', '+', '.'].includes(symbol) ? 'operator' : 'terminal';
+    const type = operatorSymbols.includes(symbol) ? 'operator' : 'terminal';
 
     syntaxTreeData.nodes.push({
         id: id,

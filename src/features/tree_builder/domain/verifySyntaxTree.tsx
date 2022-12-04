@@ -4,6 +4,7 @@ import {terminalLengthIsValid} from "@/tree_builder/presentation/TerminalNode";
 import {Code} from "@mantine/core";
 import useAppStateStore from "@/layout/stores/appStateStore";
 import RegexHighlighter from "@/analyze_regex/presentation/RegexHighlighter";
+import operatorSymbols from "@/tree_builder/domain/operatorSymbols";
 
 /**
  * Checks whether there is only exactly one element without parents, which is then identified as root node and returned
@@ -65,10 +66,7 @@ function allNodesHaveValidLabels(nodes: Node[], errors: VerificationError[]) {
         });
     }
 
-    // FIXME: replace . with ·, to prevent issues when . is used as terminal
-    const operators = ['*', '|', '?', '+', '.'];
-
-    const operatorsWithWrongType = nodes.filter((node) => node.type === "operator" && !operators.includes(node.data.label));
+    const operatorsWithWrongType = nodes.filter((node) => node.type === "operator" && !operatorSymbols.includes(node.data.label));
     if (operatorsWithWrongType.length !== 0) {
         errors.push({
             title: 'Graph contains unknown operators',
@@ -86,13 +84,13 @@ function allNodesHaveValidLabels(nodes: Node[], errors: VerificationError[]) {
         })
     }
 
-    const terminalsWithOperatorLabel = nodes.filter(node => node.type === "terminal" && operators.includes(node.data.label));
+    const terminalsWithOperatorLabel = nodes.filter(node => node.type === "terminal" && operatorSymbols.includes(node.data.label));
     if (terminalsWithOperatorLabel.length !== 0) {
         errors.push({
             title: "Terminal symbol is an operator",
             causes: terminalsWithOperatorLabel.map(node => node.id),
             message: <>At least one of your terminals contain an operator. If you were going for the character itself,
-                try escaping it (e.g. \+ instead of +). Reserved characters are: {operators.join(', ')}</>
+                try escaping it (e.g. \+ instead of +). Reserved characters are: {operatorSymbols.join(', ')}</>
         })
     }
 }
@@ -104,7 +102,7 @@ function getCorrectChildCountForOperator(operator: string) {
         case '*':
             return 1;
         case '|':
-        case '.':
+        case '·':
             return 2;
     }
 }
@@ -181,7 +179,7 @@ function allTerminalsExistAndAreInCorrectOrder(nodes: Node[], edges: Edge[], err
     } else if (!terminalsInCorrectOrder) {
         errors.push({
             title: "Graph's terminals are in incorrect order",
-            message: <>The regex requires the terminals to be in the following order: {modelTerminals.join(",")}. Your
+            message: <>The regex requires the terminals to be in the following order: {modelTerminals.join(", ")}. Your
                 graph's regex provides them like this: {graphTerminals.join(", ")}</>
         })
     }

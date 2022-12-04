@@ -160,6 +160,6 @@ export class RegexTreeConcatenation extends RegexTreeGroup {
     }
 
     getItemAsSymbol(): string {
-        return ".";
+        return "·";
     }
 }

@@ -28,7 +28,7 @@ export default function OperatorNode(props: NodeProps) {
         case '|':
             icon = <IconMinusVertical/>
             break;
-        case '.':
+        case '·':
             icon = <div style={{height: 6, width: 6, background: "black", borderRadius: "50%"}}/>
             break;
         default:
@@ -41,7 +41,7 @@ export default function OperatorNode(props: NodeProps) {
                 <Stack className={"nodrag"}>
                     <button onClick={() => switchOperator("*")}>Make *</button>
                     <button onClick={() => switchOperator("?")}>Make ?</button>
-                    <button onClick={() => switchOperator(".")}>Make ·</button>
+                    <button onClick={() => switchOperator("·")}>Make ·</button>
                 </Stack>
             </NodeToolbar>
             <NodeToolbar nodeId={props.id} isVisible={canEditNodes && props.selected} position={Position.Right}>
