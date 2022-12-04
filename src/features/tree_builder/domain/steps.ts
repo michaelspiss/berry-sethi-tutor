@@ -1,11 +1,11 @@
-import validateSyntaxTree from "@/tree_builder/domain/validateSyntaxTree";
+import verifySyntaxTree from "@/tree_builder/domain/verifySyntaxTree";
 import {Edge, Node} from "reactflow";
 import solveSyntaxTree from "@/tree_builder/domain/solveSyntaxTree";
 import layOutSyntaxTree from "@/tree_builder/domain/layOutSyntaxTree";
 
 interface StepDescription {
     title: string,
-    validator: (nodes: Node[], edges: Edge[]) => ValidatorResult,
+    verifier: (nodes: Node[], edges: Edge[]) => VerificationResult,
     solver: (nodes: Node[], edges: Edge[]) => SolverResult,
     /**
      * Called if either validator returns true or solver is run
@@ -19,10 +19,10 @@ interface StepDescription {
     canSourceConnectToSource: boolean,
 }
 
-export interface ValidatorResult {
+export interface VerificationResult {
     nodes: Node[],
     edges: Edge[],
-    isValid: boolean,
+    errors: string[],
 }
 
 export interface SolverResult {
@@ -44,7 +44,7 @@ const steps: Partial<StepDescription>[] = [
     {
         // Step 1
         title: "Create syntax tree",
-        validator: validateSyntaxTree,
+        verifier: verifySyntaxTree,
         solver: solveSyntaxTree,
         cleanup: (nodes, edges) => {
             layOutSyntaxTree(nodes, edges);
