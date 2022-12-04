@@ -3,7 +3,15 @@ export type RegexQuantifier = '?' | '*' | '+';
 export abstract class RegexTreeItem {
     abstract getPossibleStrings(): Set<string>
 
+    /**
+     * Returns the corresponding character representation for a node
+     */
     abstract getItemAsSymbol(): string
+
+    /**
+     * Returns all terminals in the order they are expected in the regular expression
+     */
+    abstract getTerminals(): string[]
 }
 
 export abstract class RegexTreeGroup extends RegexTreeItem {
@@ -31,6 +39,12 @@ export abstract class RegexTreeGroup extends RegexTreeItem {
     getLastChild() {
         return this.children.slice(-1)[0];
     }
+
+    getTerminals(): string[] {
+        const terminals : string[] = [];
+        this.children.forEach((child) => terminals.push(...child.getTerminals()))
+        return terminals;
+    }
 }
 
 export class RegexTreeTerminal extends RegexTreeItem {
@@ -49,6 +63,10 @@ export class RegexTreeTerminal extends RegexTreeItem {
 
     getItemAsSymbol(): string {
         return this.symbol;
+    }
+
+    getTerminals(): string[] {
+        return [this.symbol];
     }
 }
 
@@ -95,6 +113,10 @@ export class RegexTreeQuantifier extends RegexTreeItem {
 
     getItemAsSymbol(): string {
         return this.symbol;
+    }
+
+    getTerminals(): string[] {
+        return this.child.getTerminals();
     }
 }
 
