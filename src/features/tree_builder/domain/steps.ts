@@ -21,10 +21,19 @@ interface StepDescription {
     canSourceConnectToSource: boolean,
 }
 
+export interface VerificationError {
+    title: string,
+    message: React.ReactElement,
+    /**
+     * Node or edge ids which caused the error
+     */
+    causes?: string[],
+}
+
 export interface VerificationResult {
     nodes: Node[],
     edges: Edge[],
-    errors?: NonEmptyArray<{ title: string, message: React.ReactElement }>,
+    errors?: NonEmptyArray<VerificationError>,
 }
 
 export interface SolverResult {
