@@ -124,7 +124,7 @@ describe('escaping', () => {
         const tree = parseRegex("\\a");
         expect(tree).toBeInstanceOf(RegexTreeTerminal);
         const terminal = tree as RegexTreeTerminal;
-        expect(terminal.symbol).toBe("a");
+        expect(terminal.symbol).toBe("\\a");
         expect(terminal.index).toBe(0);
     })
 
@@ -132,7 +132,7 @@ describe('escaping', () => {
         const tree = parseRegex("\\|");
         expect(tree).toBeInstanceOf(RegexTreeTerminal);
         const terminal = tree as RegexTreeTerminal;
-        expect(terminal.symbol).toBe("|");
+        expect(terminal.symbol).toBe("\\|");
         expect(terminal.index).toBe(0);
     })
 
@@ -140,7 +140,7 @@ describe('escaping', () => {
         const tree = parseRegex("\\a\\");
         expect(tree).toBeInstanceOf(RegexTreeTerminal);
         const terminal = tree as RegexTreeTerminal;
-        expect(terminal.symbol).toBe("a");
+        expect(terminal.symbol).toBe("\\a");
         expect(terminal.index).toBe(0);
     })
 })

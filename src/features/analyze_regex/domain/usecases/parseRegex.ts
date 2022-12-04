@@ -1,6 +1,8 @@
 import {
     RegexQuantifier,
-    RegexTreeAlteration, RegexTreeConcatenation, RegexTreeGroup,
+    RegexTreeAlteration,
+    RegexTreeConcatenation,
+    RegexTreeGroup,
     RegexTreeItem,
     RegexTreeQuantifier,
     RegexTreeTerminal
@@ -78,7 +80,7 @@ function buildRegexTreeRec(regex: string, startAt: number = 0, recLevel: number 
                 break;
             case '\\':
                 if(++state.position < regex.length) {
-                    addTerminal(regex.at(state.position)!, state, treeRoot);
+                    addTerminal("\\" + regex.at(state.position)!, state, treeRoot);
                 }
                 break;
             default:
