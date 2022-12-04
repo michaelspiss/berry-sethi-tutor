@@ -1,4 +1,4 @@
-import {ActionIcon, AppShell, Center, Group, Header, MantineProvider, Navbar} from '@mantine/core';
+import {ActionIcon, AppShell, Center, Group, Header, MantineProvider, Navbar, ScrollArea} from '@mantine/core';
 import mantineThemeOther from "./configuration/mantineThemeOther";
 import useAppStateStore from "@/layout/stores/appStateStore";
 import StepsProgress from "@/layout/presentation/StepsProgress";
@@ -52,7 +52,9 @@ export default function App() {
                           }
                           navbar={
                               solveStep === -1 ? undefined : <Navbar width={{base: 240}} p={"xs"}>
-                                  <StepsProgress activeStep={solveStep}/>
+                                  <ScrollArea>
+                                      <StepsProgress activeStep={solveStep}/>
+                                  </ScrollArea>
                               </Navbar>
                           }>
                     {solveStep === -1 ? <RegexInputScreen/> : <InteractiveTreeBuilder/>}
