@@ -1,7 +1,8 @@
 import {describe, expect, test} from "vitest";
 import {
    RegexTreeAlteration,
-   RegexTreeConcatenation, RegexTreeQuantifier,
+   RegexTreeConcatenation,
+   RegexTreeQuantifier,
    RegexTreeTerminal
 } from "../../../../src/features/analyze_regex/domain/models/regexTree";
 
@@ -62,5 +63,46 @@ describe('single item getPossibleStrings', () => {
       expect(possibleStrings.has("")).toBeTruthy();
       expect(possibleStrings.has("a")).toBeTruthy();
    });
+})
 
+describe("getRegex", () => {
+   test('terminal', () => {
+      const tree = new RegexTreeTerminal("a", 0);
+      expect(tree.getRegex()).toBe("a");
+   })
+
+   test('quantifier', () => {
+      const tree = new RegexTreeQuantifier("*", new RegexTreeTerminal("a", 0));
+      expect(tree.getRegex()).toBe("a*");
+   })
+
+   test("alteration", () => {
+      const tree = new RegexTreeAlteration([
+          new RegexTreeTerminal("a", 0),
+          new RegexTreeTerminal("b", 0),
+          new RegexTreeTerminal("c", 0),
+      ])
+      expect(tree.getRegex()).toBe("a|b|c");
+   })
+
+   test('concatenation', () => {
+      const tree = new RegexTreeConcatenation([
+         new RegexTreeTerminal("a", 0),
+         new RegexTreeTerminal("b", 0),
+         new RegexTreeTerminal("c", 0),
+      ])
+      expect(tree.getRegex()).toBe("abc");
+   })
+
+   test('grouping in alteration', () => {
+      const tree = new RegexTreeAlteration([
+          new RegexTreeQuantifier("?",
+          new RegexTreeConcatenation([
+              new RegexTreeTerminal("a", 0),
+              new RegexTreeTerminal("b", 0),
+          ]),),
+          new RegexTreeTerminal("c", 0),
+      ])
+      expect(tree.getRegex()).toBe("(ab)?|c")
+   })
 })

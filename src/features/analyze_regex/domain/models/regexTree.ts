@@ -12,6 +12,11 @@ export abstract class RegexTreeItem {
      * Returns all terminals in the order they are expected in the regular expression
      */
     abstract getTerminals(): string[]
+
+    /**
+     * Creates a regular expression string from the tree
+     */
+    abstract getRegex(): string
 }
 
 export abstract class RegexTreeGroup extends RegexTreeItem {
@@ -73,6 +78,10 @@ export class RegexTreeTerminal extends RegexTreeItem {
     getTerminals(): string[] {
         return [this.symbol];
     }
+
+    getRegex(): string {
+        return this.symbol;
+    }
 }
 
 /**
@@ -123,6 +132,14 @@ export class RegexTreeQuantifier extends RegexTreeItem {
     getTerminals(): string[] {
         return this.child.getTerminals();
     }
+
+    getRegex(): string {
+        let childRegex = this.child.getRegex();
+        if(this.child instanceof RegexTreeGroup) {
+            childRegex = "(" + childRegex + ")";
+        }
+        return childRegex + this.symbol;
+    }
 }
 
 
@@ -143,6 +160,16 @@ export class RegexTreeAlteration extends RegexTreeGroup {
 
     getItemAsSymbol(): string {
         return "|";
+    }
+
+    getRegex(): string {
+        return this.children.map(child => {
+            let childRegex = child.getRegex();
+            if(child instanceof RegexTreeConcatenation) {
+                childRegex = "(" + childRegex + ")";
+            }
+            return childRegex;
+        }).join("|")
     }
 }
 
@@ -174,5 +201,9 @@ export class RegexTreeConcatenation extends RegexTreeGroup {
 
     getItemAsSymbol(): string {
         return "·";
+    }
+
+    getRegex(): string {
+        return this.children.map(child => child.getRegex()).join("");
     }
 }
