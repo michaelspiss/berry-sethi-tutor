@@ -2,11 +2,6 @@ import {createStyles, useMantineTheme} from "@mantine/core";
 import {useMemo} from "react";
 import segmentRegexString from "@/analyze_regex/domain/usecases/segmentRegexString";
 
-interface RegexHighlighterProps {
-    regex: string,
-    className?: string
-}
-
 const useStyles = createStyles(() => ({
     wrapper: {
         margin: 0,
@@ -15,9 +10,10 @@ const useStyles = createStyles(() => ({
 }))
 
 interface RegexHighlighterProps {
+    regex: string,
+    className?: string,
     errorPosition?: number,
 }
-
 
 /**
  * Displays the regex in an easy-to-read, color formatted way
