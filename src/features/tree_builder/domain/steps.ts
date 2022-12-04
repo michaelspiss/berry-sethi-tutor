@@ -1,6 +1,7 @@
 import validateSyntaxTree from "@/tree_builder/domain/validateSyntaxTree";
 import {Edge, Node} from "reactflow";
 import solveSyntaxTree from "@/tree_builder/domain/solveSyntaxTree";
+import layOutSyntaxTree from "@/tree_builder/domain/layOutSyntaxTree";
 
 interface StepDescription {
     title: string,
@@ -45,7 +46,10 @@ const steps: Partial<StepDescription>[] = [
         title: "Create syntax tree",
         validator: validateSyntaxTree,
         solver: solveSyntaxTree,
-        cleanup: (_, edges) => makeEdgesStaticCleanUp(edges),
+        cleanup: (nodes, edges) => {
+            layOutSyntaxTree(nodes, edges);
+            makeEdgesStaticCleanUp(edges);
+        },
         canMoveNodes: true,
         canEditNodes: true,
         canConnectNodes: true,
