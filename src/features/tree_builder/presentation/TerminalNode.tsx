@@ -4,6 +4,13 @@ import {Stack} from "@mantine/core";
 import useAppStateStore from "@/layout/stores/appStateStore";
 import steps from "@/tree_builder/domain/steps";
 
+export function terminalLengthIsValid(terminal: string) {
+    if(terminal.length === 1) return true;
+    if(terminal.length !== 2) return false;
+    return terminal[0] === "\\";
+
+}
+
 export default function TerminalNode(props: NodeProps) {
     const {classes} = useNodeStyles();
     const solveStep = useAppStateStore((state) => state.solveStep);
@@ -15,12 +22,12 @@ export default function TerminalNode(props: NodeProps) {
                 <Stack className={"nodrag"}>
                     <button onClick={() => {
                         // TODO: make prettier
-                        const character = window.prompt("Please enter a character");
-                        if (!character || character.length !== 1) {
-                            alert("Please enter exactly one character.");
+                        const terminal = window.prompt("Please enter a single or escaped (e.g. \\*) character");
+                        if (!terminal || !terminalLengthIsValid(terminal)) {
+                            alert("Please enter exactly one, or an escaped character.");
                             return;
                         }
-                        props.data.setLabel(character);
+                        props.data.setLabel(terminal);
                     }}>Set terminal
                     </button>
                 </Stack>
