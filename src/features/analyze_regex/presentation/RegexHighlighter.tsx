@@ -13,6 +13,7 @@ interface RegexHighlighterProps {
     regex: string,
     className?: string,
     errorPosition?: number,
+    inline?: boolean
 }
 
 /**
@@ -29,7 +30,7 @@ export default function RegexHighlighter(props: RegexHighlighterProps) {
         [props.regex, errorPos]
     );
 
-    return <pre className={cx(classes.wrapper, props.className)}>{(formattedRegex).map(item => {
+    return <pre className={cx(classes.wrapper, props.className)} style={!props.inline ? undefined : {display: "inline"}}>{(formattedRegex).map(item => {
         switch (item.type) {
             case 'quantifier':
                 return <span key={item.key}
