@@ -2,6 +2,8 @@ import verifySyntaxTree from "@/tree_builder/domain/verifySyntaxTree";
 import {Edge, Node} from "reactflow";
 import solveSyntaxTree from "@/tree_builder/domain/solveSyntaxTree";
 import layOutSyntaxTree from "@/tree_builder/domain/layOutSyntaxTree";
+import React from "react";
+import {NonEmptyArray} from "../../../configuration/helperTypes";
 
 interface StepDescription {
     title: string,
@@ -22,7 +24,7 @@ interface StepDescription {
 export interface VerificationResult {
     nodes: Node[],
     edges: Edge[],
-    errors: string[],
+    errors?: NonEmptyArray<{ title: string, message: React.ReactElement }>,
 }
 
 export interface SolverResult {

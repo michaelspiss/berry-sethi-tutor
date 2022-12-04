@@ -1,5 +1,6 @@
 import create from "zustand";
 import {RegexTreeItem} from "@/analyze_regex/domain/models/regexTree";
+import React from "react";
 
 interface AppState {
     /**
@@ -14,6 +15,10 @@ interface AppState {
      * The zero-indexed step the user is at in the tutorial. Negative 1 to show regex input screen
      */
     solveStep: number,
+    /**
+     * Displays error messages below the verify/solve buttons if set
+     */
+    verificationErrors?: {title: string, message: React.ReactElement}[],
 }
 
 const useAppStateStore = create<AppState>(() => ({

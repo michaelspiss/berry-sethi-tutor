@@ -25,7 +25,10 @@ export default function App() {
                                   <Group position={"apart"}>
                                       <Center style={{height: mantineThemeOther.headerHeight}} inline>
                                           {solveStep === -1 ? null :
-                                              <ActionIcon onClick={() => useAppStateStore.setState({solveStep: -1})}>
+                                              <ActionIcon onClick={() => useAppStateStore.setState({
+                                                  solveStep: -1,
+                                                  verificationErrors: undefined
+                                              })}>
                                                   <IconArrowBack size={16}/>
                                               </ActionIcon>
                                           }

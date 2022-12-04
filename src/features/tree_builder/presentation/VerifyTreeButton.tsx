@@ -9,14 +9,16 @@ export default function VerifyTreeButton() {
 
     return <Button onClick={() => {
         const result = steps[solveStep].verifier(reactFlow.getNodes(), reactFlow.getEdges());
-        if(result.errors.length === 0) {
+        if(!result.errors) {
             steps[solveStep].cleanup(result.nodes, result.edges);
             reactFlow.setNodes(result.nodes);
             reactFlow.setEdges(result.edges);
-            useAppStateStore.setState({solveStep: solveStep + 1});
+            useAppStateStore.setState({solveStep: solveStep + 1, verificationErrors: undefined});
             const to = setTimeout(() => reactFlow.fitView(), 100);
             return () => clearTimeout(to);
             // TODO: display positive feedback
+        } else {
+            useAppStateStore.setState({verificationErrors: result.errors});
         }
     }}>Verify</Button>
 }

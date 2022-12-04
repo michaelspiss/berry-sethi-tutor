@@ -1,12 +1,12 @@
-import {Alert, Button, Center, Group, Paper, useMantineTheme} from "@mantine/core";
+import {Button, Center, Group, Paper, Title, useMantineTheme} from "@mantine/core";
 import LectureConventions from "@/layout/presentation/LectureConventions";
 import {useEventListener} from "@mantine/hooks";
 import {useState} from "react";
 import parseRegex from "@/analyze_regex/domain/usecases/parseRegex";
 import RegexError from "@/analyze_regex/domain/models/regexError";
 import useAppStateStore from "@/layout/stores/appStateStore";
-import {IconAlertCircle} from "@tabler/icons";
 import RegexInput from "@/analyze_regex/presentation/RegexInput";
+import DefaultError from "@/layout/presentation/DefaultError";
 
 /**
  * Displays a screen which allows the user to input a custom regular expression for the tutor to use.
@@ -49,6 +49,7 @@ export default function RegexInputScreen() {
                style={{width: theme.spacing.xl * 40}}
                mb={theme.other.headerHeight}>
             <form ref={formRef}>
+                <Title order={6}>Input regular expression</Title>
                 <Group grow style={{alignItems: "stretch", paddingBottom: 16}}>
                     <RegexInput errorPosition={!error ? undefined : error.position}
                                 resetErrorPos={() => {
@@ -62,14 +63,7 @@ export default function RegexInputScreen() {
                     <Button style={{flexGrow: 0}} type={"submit"} loading={isLoading}>Start</Button>
                 </Group>
             </form>
-            {
-                !error ? null : <Alert icon={<IconAlertCircle size={16}/>}
-                                       color={"red"}
-                                       title={error.title}
-                                       mb={"md"}>
-                    {error.message}
-                </Alert>
-            }
+            { !error ? null : <DefaultError title={error.title} message={error.message} /> }
             <LectureConventions/>
         </Paper>
     </Center>

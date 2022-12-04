@@ -22,6 +22,7 @@ import TerminalNode from "@/tree_builder/presentation/TerminalNode";
 import useNodeStyles from "@/tree_builder/presentation/useNodeStyles";
 import steps from "@/tree_builder/domain/steps";
 import useAppStateStore from "@/layout/stores/appStateStore";
+import VerificationErrors from "@/tree_builder/presentation/VerificationErrors";
 
 function getId() {
     return `node_${+new Date()}`
@@ -133,10 +134,12 @@ export default function InteractiveTreeBuilder(): React.ReactElement {
         connectionMode={steps[solveStep].canSourceConnectToSource ? ConnectionMode.Loose : ConnectionMode.Strict}
         deleteKeyCode={['Backspace', 'Delete']}
         selectionKeyCode={null}
-        multiSelectionKeyCode={null}
-        fitView>
+        multiSelectionKeyCode={null}>
         <Background/>
         <Controls/>
+        <Panel position={"top-right"}>
+            <VerificationErrors />
+        </Panel>
         <Panel position={"bottom-center"}>
             {steps[solveStep].canEditNodes ? <TreeElementsPanel/> : null}
         </Panel>
