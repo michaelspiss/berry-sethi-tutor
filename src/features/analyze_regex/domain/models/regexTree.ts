@@ -15,7 +15,12 @@ export abstract class RegexTreeItem {
 }
 
 export abstract class RegexTreeGroup extends RegexTreeItem {
-    readonly children: RegexTreeItem[] = [];
+    readonly children: RegexTreeItem[];
+
+    protected constructor(children?: RegexTreeItem[]) {
+        super();
+        this.children = children ?? []
+    }
 
     /**
      * Adds a new treeItem to the end of the array
@@ -122,6 +127,10 @@ export class RegexTreeQuantifier extends RegexTreeItem {
 
 
 export class RegexTreeAlteration extends RegexTreeGroup {
+    constructor(children?: RegexTreeItem[]) {
+        super(children);
+    }
+
     getPossibleStrings(): Set<string> {
         const possibleStrings: string[] = [];
 
@@ -138,6 +147,10 @@ export class RegexTreeAlteration extends RegexTreeGroup {
 }
 
 export class RegexTreeConcatenation extends RegexTreeGroup {
+    constructor(children?: RegexTreeItem[]) {
+        super(children);
+    }
+
     getPossibleStrings(): Set<string> {
         const possibleStringsPerChild: Set<string>[] = [];
 
