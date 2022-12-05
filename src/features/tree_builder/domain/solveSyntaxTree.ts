@@ -18,6 +18,7 @@ function buildTreeFromModel(model: RegexTreeItem, parent?: string): SolverResult
     if (model instanceof RegexTreeQuantifier) {
         syntaxTreeData = buildTreeFromModel(model.child, id);
     } else if (model instanceof RegexTreeGroup) {
+        // TODO: make operators binary
         model.children.forEach((child) => {
             const childData = buildTreeFromModel(child, id);
             syntaxTreeData.nodes = syntaxTreeData.nodes.concat(childData.nodes);

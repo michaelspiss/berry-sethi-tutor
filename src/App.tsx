@@ -36,7 +36,7 @@ export default function App() {
                                       </Center>
                                       {solveStep === -1 ? null : <>
                                           <Center style={{height: mantineThemeOther.headerHeight}}>{
-                                              <RegexHighlighter regex={regexValue}/>
+                                              <RegexHighlighter regex={regexValue}/> // TODO: display "simplify" button/link, if model.getRegex() !== regex and in step 1 (for when the user accidentally groups too much)
                                           }</Center>
                                           <Center style={{height: mantineThemeOther.headerHeight}}>
                                               <Group>

@@ -1,4 +1,4 @@
-import {Edge, getOutgoers, Node} from "reactflow";
+import {Edge, getIncomers, getOutgoers, Node} from "reactflow";
 
 /**
  * Positions nodes so that they can be read
@@ -6,58 +6,63 @@ import {Edge, getOutgoers, Node} from "reactflow";
  * @param edges
  */
 export default function layOutSyntaxTree(nodes: Node[], edges: Edge[]) {
-    // root node is added last, at least one node exists
-    const rootNode = nodes.slice(-1)[0]!
+    const rootNode = nodes.filter((node) => getIncomers(node, nodes, edges).length === 0)[0];
     const nodeHeight = 40;
     const nodeWidth = 40;
     const gapHeight = 40;
     const gapWidth = 40;
 
-    layoutYRecursive(nodes, edges, rootNode, nodeHeight, gapHeight, 0);
-    layoutXRecursive(nodes, edges, rootNode, nodeWidth, gapWidth, 0);
+    layoutYRecursive(rootNode, nodes, edges, nodeHeight, gapHeight, 0);
+
+    const terminals = nodes.filter((node) => node.type === "terminal");
+    for(let i = 0; i < terminals.length; i++) {
+        terminals[i].position.x = i * (nodeWidth + gapWidth);
+    }
+    for(let i = 0; i < terminals.length; i++) {
+        layoutXRecursive(terminals[i], nodes, edges, nodeWidth, gapWidth, i * (nodeWidth + gapWidth));
+    }
 }
 
 /**
  * Adjusts the y coordinate of all nodes
+ * @param activeNode
  * @param nodes
  * @param edges
- * @param activeNode
  * @param nodeHeight
  * @param gapHeight
  * @param height the last item's height
  */
-function layoutYRecursive(nodes: Node[], edges: Edge[], activeNode: Node, nodeHeight: number, gapHeight: number, height: number) {
+function layoutYRecursive(activeNode: Node, nodes: Node[], edges: Edge[], nodeHeight: number, gapHeight: number, height: number) {
     const newHeight = height + nodeHeight + gapHeight;
     const children = getOutgoers(activeNode, nodes, edges);
     children.forEach((child) => {
         child.position.y = newHeight;
-        layoutYRecursive(nodes, edges, child, nodeHeight, gapHeight, newHeight);
+        layoutYRecursive(child, nodes, edges, nodeHeight, gapHeight, newHeight);
     })
 }
 
 /**
- * Adjusts the x coordinate of all nodes
+ *Adjusts the x coordinate of all nodes based on their children. Terminals need to be laid out first.
+ * @param activeNode
  * @param nodes
  * @param edges
- * @param activeNode
  * @param nodeWidth
  * @param gapWidth
- * @param x this item's x coordinate
+ * @param offset
  */
-function layoutXRecursive(nodes: Node[], edges: Edge[], activeNode: Node, nodeWidth: number, gapWidth: number, x: number) {
-    activeNode.position.x = x;
+function layoutXRecursive(activeNode: Node, nodes: Node[], edges: Edge[], nodeWidth: number, gapWidth: number, offset: number) {
     const children = getOutgoers(activeNode, nodes, edges);
-    const childCount = children.length;
-    const childrenWidthSum = childCount * nodeWidth + (childCount - 1) * gapWidth;
-    const childrenXStart = childrenWidthSum/2 - nodeWidth/2;
-
-    if(childCount === 1) {
-        layoutXRecursive(nodes, edges, children[0], nodeWidth, gapWidth, x);
+    let x = offset;
+    if(children.length !== 0) {
+        const smallestX = Math.min(...children.map((node) => node.position.x));
+        const largestX = Math.max(...children.map((node) => node.position.x));
+        const childBoxSpan = largestX - smallestX;
+        x = smallestX + Math.abs(childBoxSpan / 2);
+    }
+    activeNode.position.x = x;
+    const parents = getIncomers(activeNode, nodes, edges);
+    if(parents.length === 0) {
         return;
     }
-
-    for(let i = 0; i < children.length; i++) {
-        let childX = x - childrenXStart + (nodeWidth + gapWidth) * i;
-        layoutXRecursive(nodes, edges, children[i], nodeWidth, gapWidth, childX);
-    }
+    layoutXRecursive(parents[0], nodes, edges, nodeWidth, gapWidth, x);
 }
