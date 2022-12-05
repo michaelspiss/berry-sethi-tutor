@@ -5,6 +5,7 @@ import {Code} from "@mantine/core";
 import useAppStateStore from "@/layout/stores/appStateStore";
 import RegexHighlighter from "@/analyze_regex/presentation/RegexHighlighter";
 import operatorSymbols from "@/tree_builder/domain/operatorSymbols";
+import graphToTreeModel from "@/tree_builder/domain/step1/graphToTreeModel";
 
 /**
  * Checks whether there is only exactly one element without parents, which is then identified as root node and returned
@@ -162,7 +163,7 @@ function orderNodesByHorizontalPositionRec(rootNode: Node, nodes: Node[], edges:
     })
 }
 
-function allTerminalsExistAndAreInCorrectOrder(nodes: Node[], edges: Edge[], errors: VerificationError[]) {
+function allTerminalsExistAndAreInCorrectOrder(rootNode: Node, nodes: Node[], edges: Edge[], errors: VerificationError[]) {
     const model = useAppStateStore.getState().regexModel;
     const graphTerminals = nodes.filter((node) => getOutgoers(node, nodes, edges).length === 0).map(node => node.data.label);
     const modelTerminals = model!.getTerminals();
@@ -171,23 +172,22 @@ function allTerminalsExistAndAreInCorrectOrder(nodes: Node[], edges: Edge[], err
     const terminalsInCorrectOrder = graphTerminals.toString() === modelTerminals.toString();
 
     if (!allTerminalsExist) {
+        const graphRegex = graphToTreeModel(rootNode, nodes, edges).getRegex();
         errors.push({
             title: "Graph is missing terminals",
             message: <>The regex requires the terminals {modelTerminals.join(", ")}. Your graph only
-                provides {graphTerminals.join(", ")}. Try adjusting the terminals.</>,
+                provides {graphTerminals.join(", ")}. Try adjusting the terminals. Your graph currently evaluates
+                to <RegexHighlighter regex={graphRegex} inline/></>,
         });
     } else if (!terminalsInCorrectOrder) {
+        const graphRegex = graphToTreeModel(rootNode, nodes, edges).getRegex();
         errors.push({
             title: "Graph's terminals are in incorrect order",
             message: <>The regex requires the terminals to be in the following order: {modelTerminals.join(", ")}. Your
-                graph's regex provides them like this: {graphTerminals.join(", ")}</>
+                graph's regex provides them like this: {graphTerminals.join(", ")}. Your graph currently evaluates
+                to <RegexHighlighter regex={graphRegex} inline/></>
         })
     }
-}
-
-function graphToRegexString(rootNode: Node, nodes: Node[], edges: Edge[]) {
-    // TODO
-    return "";
 }
 
 export default function verifySyntaxTree(nodes: Node[], edges: Edge[]): VerificationResult {
@@ -211,18 +211,18 @@ export default function verifySyntaxTree(nodes: Node[], edges: Edge[]): Verifica
     }
 
     if (errors.length === 0) {
-        allTerminalsExistAndAreInCorrectOrder(nodes, edges, errors);
+        allTerminalsExistAndAreInCorrectOrder(rootNode, nodes, edges, errors);
     }
 
     if (errors.length === 0) {
-        const regex = useAppStateStore.getState().regex;
-        const stringFromGraph = graphToRegexString(rootNode, nodes, edges);
-        if (stringFromGraph !== regex) {
+        const modelRegex = useAppStateStore.getState().regexModel!.getRegex();
+        const graphRegex = graphToTreeModel(rootNode, nodes, edges).getRegex();
+        if (modelRegex !== graphRegex) {
             errors.push({
                 title: "Graph does not match target regex",
-                message: <>The graph evaluates to regular expression <RegexHighlighter regex={stringFromGraph}
-                                                                                           inline/>, but does not match
-                    the target <RegexHighlighter regex={regex} inline/></>
+                message: <>The graph evaluates to regular expression <RegexHighlighter regex={graphRegex}
+                                                                                       inline/>, which does not match
+                    the target <RegexHighlighter regex={modelRegex} inline/></>
             })
         }
     }
