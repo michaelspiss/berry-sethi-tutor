@@ -58,7 +58,7 @@ export default function OperatorNode(props: NodeProps) {
             />
             <Handle type={"source"}
                     position={Position.Left}
-                    style={solveStep === 1 ? undefined : {pointerEvents: "none", visibility: "hidden"}}
+                    style={solveStep !== 0 ? undefined : {pointerEvents: "none", visibility: "hidden"}}
                     id={"step2l"}
             />
             <div className={classes.nodeContent}>
@@ -71,7 +71,7 @@ export default function OperatorNode(props: NodeProps) {
             />
             <Handle type={"source"}
                     position={Position.Right}
-                    style={solveStep === 1 ? undefined : {pointerEvents: "none", visibility: "hidden"}}
+                    style={solveStep !== 0 ? undefined : {pointerEvents: "none", visibility: "hidden"}}
                     id={"step2r"}
             />
         </>
