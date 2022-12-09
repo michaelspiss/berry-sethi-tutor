@@ -4,6 +4,7 @@ import solveSyntaxTree from "@/tree_builder/domain/step1/solveSyntaxTree";
 import layOutSyntaxTree from "@/tree_builder/domain/layOutSyntaxTree";
 import React from "react";
 import {NonEmptyArray} from "../../../configuration/helperTypes";
+import solvePossiblePaths from "@/tree_builder/domain/step2/solvePossiblePaths";
 
 interface StepDescription {
     title: string,
@@ -68,6 +69,7 @@ const steps: StepDescription[] = [
         // Step 2
         title: "Draw possible paths",
         cleanup: (_, edges) => makeEdgesStaticCleanUp(edges),
+        solver: solvePossiblePaths,
         canMoveNodes: false,
         canEditNodes: false,
         canConnectNodes: true,
