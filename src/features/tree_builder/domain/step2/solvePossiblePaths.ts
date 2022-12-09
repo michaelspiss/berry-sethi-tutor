@@ -13,8 +13,9 @@ function addEdge(edges: Edge[], sourceId: string, sourceHandle: string, targetId
         sourceHandle: sourceHandle,
         target: targetId,
         targetHandle: targetHandle,
-        markerStart: MarkerType.Arrow,
-        markerEnd: MarkerType.ArrowClosed,
+        markerEnd: {
+            type: MarkerType.ArrowClosed,
+        },
         data: {
             step: 1,
         }
