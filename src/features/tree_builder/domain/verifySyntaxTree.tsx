@@ -117,7 +117,7 @@ function allOperatorsHaveTheCorrectAmountOfChildren(nodes: Node[], edges: Edge[]
         errors.push({
             title: "Graph contains nodes with incorrect amounts of children",
             causes: nodesWithIncorrectAmountOfChildren.map(node => node.id),
-            message: <>Quantifiers must only have one child, whereas alteration and concatenation operators must have
+            message: <>Quantifiers must have exactly one child, whereas alteration and concatenation operators must have
                 exactly two, as per the lecture conventions.</>
         });
     }
