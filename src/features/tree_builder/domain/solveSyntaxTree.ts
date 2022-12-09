@@ -9,6 +9,76 @@ export default function solveSyntaxTree(nodes: Node[], edges: Edge[]): SolverRes
     return buildTreeFromModel(model!);
 }
 
+/**
+ * Adds a new node to the nodes array
+ * @param nodes
+ * @param id
+ * @param symbol
+ * @param type
+ */
+function addNode(nodes: Node[], id: string, symbol: string, type: string) {
+    nodes.push({
+        id: id,
+        position: {x: 0, y: 0},
+        data: {
+            label: symbol,
+        },
+        type: type,
+    })
+}
+
+/**
+ * Adds a new edge to the edges array
+ * @param edges
+ * @param parentId
+ * @param childId
+ */
+function addEdge(edges: Edge[], parentId: string, childId: string) {
+    edges.push({
+        id: parentId + "-" + childId + "step1b_step1t",
+        source: parentId,
+        target: childId,
+        sourceHandle: "step1b",
+        targetHandle: "step1t",
+        data: {
+            step: 0,
+        }
+    })
+}
+
+/**
+ * Splits an n-ary operator group into binary representation.
+ * @param group
+ * @param id
+ */
+function getGroupAsBinaryTree(group: RegexTreeGroup, id: string): SolverResult {
+    const groupSymbol = group.getItemAsSymbol();
+    const treeData : SolverResult = {nodes: [], edges: []};
+
+    for (let i = 0; i < group.children.length - 2; i++) {
+        addNode(treeData.nodes, id + "." + i, groupSymbol, "operator");
+    }
+
+    const groupNodeIds = [id].concat(treeData.nodes.map(node => node.id));
+
+    for (let i = 0; i < groupNodeIds.length - 1; i++) {
+        addEdge(treeData.edges, groupNodeIds[i], groupNodeIds[i + 1]);
+    }
+
+    for (let i = 0; i < group.children.length; i++) {
+        const childTree = buildTreeFromModel(group.children[i], groupNodeIds[i] ?? groupNodeIds.pop());
+        treeData.nodes = treeData.nodes.concat(childTree.nodes);
+        treeData.edges = treeData.edges.concat(childTree.edges);
+    }
+
+    return treeData;
+}
+
+/**
+ * Returns the graph which can be built from the model.
+ * @param model
+ * @param parent
+ */
 function buildTreeFromModel(model: RegexTreeItem, parent?: string): SolverResult {
     const id = `node_${Math.random()}`;
     const symbol = model.getItemAsSymbol();
@@ -18,38 +88,16 @@ function buildTreeFromModel(model: RegexTreeItem, parent?: string): SolverResult
     if (model instanceof RegexTreeQuantifier) {
         syntaxTreeData = buildTreeFromModel(model.child, id);
     } else if (model instanceof RegexTreeGroup) {
-        // TODO: make operators binary
-        model.children.forEach((child) => {
-            const childData = buildTreeFromModel(child, id);
-            syntaxTreeData.nodes = syntaxTreeData.nodes.concat(childData.nodes);
-            syntaxTreeData.edges = syntaxTreeData.edges.concat(childData.edges);
-        });
+        syntaxTreeData = getGroupAsBinaryTree(model, id);
     }
 
     const type = operatorSymbols.includes(symbol) ? 'operator' : 'terminal';
 
-    syntaxTreeData.nodes.push({
-        id: id,
-        position: {x: 0, y: 0},
-        data: {
-            label: symbol,
-        },
-        type: type,
-    });
+    addNode(syntaxTreeData.nodes, id, symbol, type);
 
     if (parent !== undefined) {
-        syntaxTreeData.edges.push({
-            id: parent + "-" + id + "step1b_step1t",
-            source: parent,
-            target: id,
-            sourceHandle: "step1b",
-            targetHandle: "step1t",
-            data: {
-                step: 0,
-            }
-        })
+        addEdge(syntaxTreeData.edges, parent, id);
     }
 
     return syntaxTreeData;
 }
-
