@@ -66,7 +66,7 @@ const steps: StepDescription[] = [
         canSourceConnectToSource: false,
     }, {
         // Step 2
-        title: "Draw possible steps",
+        title: "Draw possible paths",
         cleanup: (_, edges) => makeEdgesStaticCleanUp(edges),
         canMoveNodes: false,
         canEditNodes: false,
