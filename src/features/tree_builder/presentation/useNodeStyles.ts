@@ -25,12 +25,22 @@ const useNodeStyles = createStyles((theme) => ({
         textAlign: "center",
         flexWrap: "wrap",
         lineHeight: 40,
-        overflow: "hidden",
     },
     operatorNode: {
         borderRadius: "50%"
     },
-    terminalNode: {}
+    terminalSubscript: {
+        border: `2px solid ${theme.colors.gray[9]}`,
+        position: "absolute",
+        bottom: -10,
+        right: -10,
+        height: 20,
+        width: 20,
+        background: theme.colors.gray[0],
+        color: theme.colors.gray[9],
+        lineHeight: "15px",
+        fontSize: "12px",
+    }
 }));
 
 export default useNodeStyles

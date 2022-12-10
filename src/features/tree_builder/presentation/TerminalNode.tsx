@@ -53,7 +53,8 @@ export default function TerminalNode(props: NodeProps) {
                     id={"step2r"}
             />
             <div className={classes.nodeContent}>
-                {props.data.label}
+                {props.data.terminalIndex !== undefined ? props.data.terminalIndex : props.data.label}
+                {props.data.terminalIndex === undefined ? null : <div className={classes.terminalSubscript}>{props.data.label}</div>}
             </div>
         </>
     )
