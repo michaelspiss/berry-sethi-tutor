@@ -14,8 +14,6 @@ import {
     useNodesState
 } from "reactflow";
 import React, {DragEventHandler, useCallback, useRef, useState} from "react";
-
-import 'reactflow/dist/style.css'
 import TreeElementsPanel from "@/tree_builder/presentation/TreeElementsPanel";
 import OperatorNode from "@/tree_builder/presentation/OperatorNode";
 import TerminalNode from "@/tree_builder/presentation/TerminalNode";
@@ -111,7 +109,7 @@ export default function InteractiveTreeBuilder(): React.ReactElement {
             },
             type: type,
             selected: true,
-            className: cx(classes.node, type === 'operator' ? classes.operatorNode : classes.terminalNode)
+            className: cx(classes.node, type === 'operator' && classes.operatorNode)
         }
 
         setNodes((nodes) => nodes.concat(newNode));
