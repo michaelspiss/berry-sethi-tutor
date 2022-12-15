@@ -16,9 +16,10 @@ interface AppState {
      */
     solveStep: number,
     /**
-     * Displays error messages below the verify/solve buttons if set
+     * Displays error messages below the verify/solve buttons if set. Optionally provides an array of
+     * edge/node ids which caused the error.
      */
-    verificationErrors?: {title: string, message: React.ReactElement}[],
+    verificationErrors?: {title: string, message: React.ReactElement, causes?: string[]}[],
 }
 
 const useAppStateStore = create<AppState>(() => ({
