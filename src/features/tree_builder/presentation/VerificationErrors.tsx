@@ -9,7 +9,7 @@ export default function VerificationErrors() {
         return null;
     }
 
-    return <ScrollArea maw={"25vw"} h={"100%"}>
+    return <ScrollArea maw={"25vw"} mah={"100%"} mr={"md"}>
         {errors.map((error) => {
             return <DefaultError title={error.title} message={error.message} causes={error.causes}/>
         })}

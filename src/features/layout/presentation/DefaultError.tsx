@@ -19,7 +19,7 @@ export default function DefaultError(props: { title: string, message: React.Reac
             }
         }));
         reactFlow.setEdges(edges => edges.map(edge => {
-            if(!props.causes?.includes(edge.id)) {
+            if (!props.causes?.includes(edge.id)) {
                 return edge;
             }
             return {
@@ -32,7 +32,7 @@ export default function DefaultError(props: { title: string, message: React.Reac
     }
     const hideCauses = () => {
         reactFlow.setNodes(nodes => nodes.map(node => {
-            if(!props.causes?.includes(node.id)) {
+            if (!props.causes?.includes(node.id)) {
                 return node;
             }
             return {
@@ -41,7 +41,7 @@ export default function DefaultError(props: { title: string, message: React.Reac
             }
         }));
         reactFlow.setEdges(edges => edges.map(edge => {
-            if(!props.causes?.includes(edge.id)) {
+            if (!props.causes?.includes(edge.id)) {
                 return edge;
             }
             return {
@@ -51,13 +51,13 @@ export default function DefaultError(props: { title: string, message: React.Reac
         }))
     }
 
-    return <div onMouseEnter={!!props.causes ? showCauses : undefined}
-                onMouseLeave={!!props.causes ? hideCauses : undefined}>
-        <Alert title={props.title}
-               icon={<IconAlertCircle size={16}/>}
-               color={"red"}
-               mb={"md"}>
-            {props.message}
-        </Alert>
-    </div>;
+    return <Alert title={props.title}
+                  icon={<IconAlertCircle size={16}/>}
+                  color={"red"}
+                  mt={"md"}
+                  onMouseEnter={!!props.causes ? showCauses : undefined}
+                  onMouseLeave={!!props.causes ? hideCauses : undefined}
+    >
+        {props.message}
+    </Alert>;
 }
