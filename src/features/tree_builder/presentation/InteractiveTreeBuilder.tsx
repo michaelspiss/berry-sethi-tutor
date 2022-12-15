@@ -8,6 +8,7 @@ import {
     Controls,
     Edge,
     EdgeChange,
+    MarkerType,
     Panel,
     ReactFlow,
     ReactFlowInstance,
@@ -44,18 +45,21 @@ export default function InteractiveTreeBuilder(): React.ReactElement {
     const solveStep = useAppStateStore((state) => state.solveStep);
 
     const onConnect = useCallback((params: Edge | Connection) => {
-        setEdges((edges) => addEdge({
-            ...params,
-            id: params.source + "-" + params.target + params.sourceHandle + params.targetHandle,
-            data: {
-                step: solveStep,
-            }
-        }, edges))
+            setEdges((edges) => addEdge({
+                ...params,
+                id: params.source + "-" + params.target + params.sourceHandle + params.targetHandle,
+                data: {
+                    step: solveStep,
+                },
+                markerEnd: solveStep !== 1 ? undefined : {
+                    type: MarkerType.ArrowClosed,
+                },
+            }, edges))
         }, [edges, solveStep, setEdges],
     );
 
     const onEdgesChange = useCallback((changes: EdgeChange[]) =>
-        // TODO: prevent changes to edges from a previous step
+            // TODO: prevent changes to edges from a previous step
             setEdges((edges) => applyEdgeChanges(changes, edges)),
         [setEdges, solveStep]
     );
@@ -136,7 +140,7 @@ export default function InteractiveTreeBuilder(): React.ReactElement {
         <Background/>
         <Controls/>
         <Panel position={"top-right"} style={{height: "100%", paddingBottom: 0}}>
-            <VerificationErrors />
+            <VerificationErrors/>
         </Panel>
         <Panel position={"bottom-center"}>
             {steps[solveStep].canEditNodes ? <TreeElementsPanel/> : null}
