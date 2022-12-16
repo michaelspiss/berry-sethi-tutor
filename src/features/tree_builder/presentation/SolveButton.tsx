@@ -19,7 +19,7 @@ export default function SolveButton() {
             node.className = cx(classes.node, node.type === 'operator' ? classes.operatorNode : classes.terminalNode)
             return node;
         });
-        steps[solveStep].cleanup(styledNodes, result.edges);
+        steps[solveStep].cleanup?.apply(null, [styledNodes, result.edges]);
         reactFlow.setNodes(styledNodes);
         reactFlow.setEdges(result.edges);
         useAppStateStore.setState({solveStep: solveStep + 1, verificationErrors: undefined});
