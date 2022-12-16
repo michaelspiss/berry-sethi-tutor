@@ -16,7 +16,7 @@ export default function SolveButton() {
     return <Button color="green" onClick={() => {
         const result = steps[solveStep].solver(reactFlow.getNodes(), reactFlow.getEdges());
         const styledNodes = result.nodes.map((node) => {
-            node.className = cx(classes.node, node.type === 'operator' ? classes.operatorNode : classes.terminalNode)
+            node.className = cx(classes.node, node.type === 'operator' && classes.operatorNode)
             return node;
         });
         steps[solveStep].cleanup?.apply(null, [styledNodes, result.edges]);
