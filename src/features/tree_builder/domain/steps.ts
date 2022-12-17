@@ -7,7 +7,7 @@ import {NonEmptyArray} from "../../../configuration/helperTypes";
 import solvePossiblePaths from "@/tree_builder/domain/step2/solvePossiblePaths";
 import verifyPossiblePaths from "@/tree_builder/domain/step2/verifyPossiblePaths";
 import solveEnumerateLeaves from "@/tree_builder/domain/step3/solveEnumerateLeaves";
-import solveCanBeEmpty from "@/tree_builder/domain/step1/step4/solveCanBeEmpty";
+import solveCanBeEmpty from "@/tree_builder/domain/step4/solveCanBeEmpty";
 
 interface StepDescription {
     title: string,
