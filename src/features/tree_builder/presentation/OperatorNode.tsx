@@ -4,6 +4,7 @@ import useNodeStyles from "@/tree_builder/presentation/useNodeStyles";
 import {Stack} from "@mantine/core";
 import useAppStateStore from "@/layout/stores/appStateStore";
 import steps from "@/tree_builder/domain/steps";
+import NodeAttributes from "@/tree_builder/presentation/NodeAttributes";
 
 export default function OperatorNode(props: NodeProps) {
     const {classes} = useNodeStyles();
@@ -61,6 +62,7 @@ export default function OperatorNode(props: NodeProps) {
                     style={solveStep !== 0 ? undefined : {pointerEvents: "none", visibility: "hidden"}}
                     id={"step2l"}
             />
+            <NodeAttributes data={props.data} />
             <div className={classes.nodeContent}>
                 {icon}
             </div>

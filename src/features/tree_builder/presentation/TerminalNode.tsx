@@ -3,6 +3,7 @@ import useNodeStyles from "@/tree_builder/presentation/useNodeStyles";
 import {Stack} from "@mantine/core";
 import useAppStateStore from "@/layout/stores/appStateStore";
 import steps from "@/tree_builder/domain/steps";
+import NodeAttributes from "@/tree_builder/presentation/NodeAttributes";
 
 export function terminalLengthIsValid(terminal: string) {
     if(terminal.length === 1) return true;
@@ -52,6 +53,7 @@ export default function TerminalNode(props: NodeProps) {
                     style={solveStep !== 0 ? undefined : {pointerEvents: "none", visibility: "hidden"}}
                     id={"step2r"}
             />
+            <NodeAttributes data={props.data} />
             <div className={classes.nodeContent}>
                 {props.data.terminalIndex !== undefined ? props.data.terminalIndex : props.data.label}
                 {props.data.terminalIndex === undefined ? null : <div className={classes.terminalSubscript}>{props.data.label}</div>}

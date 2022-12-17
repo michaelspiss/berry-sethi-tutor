@@ -6,6 +6,8 @@ import React from "react";
 import {NonEmptyArray} from "../../../configuration/helperTypes";
 import solvePossiblePaths from "@/tree_builder/domain/step2/solvePossiblePaths";
 import verifyPossiblePaths from "@/tree_builder/domain/step2/verifyPossiblePaths";
+import solveEnumerateLeaves from "@/tree_builder/domain/step3/solveEnumerateLeaves";
+import solveCanBeEmpty from "@/tree_builder/domain/step1/step4/solveCanBeEmpty";
 
 interface StepDescription {
     title: string,
@@ -79,6 +81,7 @@ const steps: StepDescription[] = [
     }, {
         // Step 3
         title: "Enumerate leaves",
+        solver: solveEnumerateLeaves,
         canMoveNodes: false,
         canEditNodes: false,
         canConnectNodes: false,
@@ -86,6 +89,7 @@ const steps: StepDescription[] = [
     }, {
         // Step 4
         title: "Set empty attributes",
+        solver: solveCanBeEmpty,
         canMoveNodes: false,
         canEditNodes: false,
         canConnectNodes: false,
