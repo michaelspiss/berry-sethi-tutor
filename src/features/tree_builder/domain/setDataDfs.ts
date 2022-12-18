@@ -18,7 +18,7 @@ export default function setDataDfs(nodes: Node[], edges: Edge[], callback: SetDa
 }
 
 function setDataDfsRec(node: Node, nodes: Node[], edges: Edge[], callback: SetDataCallback) {
-    const children = getOutgoers(node, nodes, edges);
+    const children = getOutgoers(node, nodes, edges).sort((nodeA, nodeB) => nodeA.position.x - nodeB.position.x);
     children.forEach(child => setDataDfsRec(child, nodes, edges, callback));
     node.data = {
         ...node.data,
