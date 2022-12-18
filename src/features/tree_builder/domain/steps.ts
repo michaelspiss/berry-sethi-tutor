@@ -8,6 +8,7 @@ import solvePossiblePaths from "@/tree_builder/domain/step2/solvePossiblePaths";
 import verifyPossiblePaths from "@/tree_builder/domain/step2/verifyPossiblePaths";
 import solveEnumerateLeaves from "@/tree_builder/domain/step3/solveEnumerateLeaves";
 import solveCanBeEmpty from "@/tree_builder/domain/step4/solveCanBeEmpty";
+import solveFirstReachedStates from "@/tree_builder/domain/step5/solveFirstReachedStates";
 
 interface StepDescription {
     title: string,
@@ -97,6 +98,7 @@ const steps: StepDescription[] = [
     }, {
         // Step 5
         title: "Collect may-set of first reached states",
+        solver: solveFirstReachedStates,
         canMoveNodes: false,
         canEditNodes: false,
         canConnectNodes: false,
