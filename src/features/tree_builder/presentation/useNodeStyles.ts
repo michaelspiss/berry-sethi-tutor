@@ -32,8 +32,8 @@ const useNodeStyles = createStyles((theme) => ({
     terminalSubscript: {
         border: `2px solid ${theme.colors.gray[9]}`,
         position: "absolute",
-        bottom: -10,
-        right: -10,
+        bottom: -14,
+        right: 8,
         height: 20,
         width: 20,
         background: theme.colors.gray[0],

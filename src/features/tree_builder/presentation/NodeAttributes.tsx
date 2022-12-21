@@ -9,22 +9,22 @@ const useStyles = createStyles((theme) => ({
         zIndex: 10,
     },
     topLeft: {
-        top: -14,
-        right: 42,
+        top: -10,
+        right: 40,
         textAlign: "right",
     },
     bottomLeft: {
-        right: 36,
-        bottom: -14,
+        right: 38,
+        bottom: -10,
         textAlign: "right",
     },
     topRight: {
         left: 38,
-        top: -14,
+        top: -10,
     },
     bottomRight: {
         left: 38,
-        bottom: -14,
+        bottom: -10,
     }
 }));
 
@@ -35,8 +35,8 @@ export default function NodeAttributes(props: {data: {[key: string]: any}}) {
         {props.data.canBeEmpty === undefined ? null
             : <div className={cx(classes.attribute, classes.topLeft)}>
             {props.data.canBeEmpty
-                ? <span style={{color: theme.colors.green[7]}}>t</span>
-                : <span style={{color: theme.colors.red[7]}}>f</span>}
+                ? <span style={{color: theme.colors.green[7]}}>t&nbsp;</span>
+                : <span style={{color: theme.colors.red[7]}}>f&nbsp;</span>}
             </div>}
         {props.data.firstReached === undefined ? null
             : <div className={cx(classes.attribute, classes.bottomLeft)} style={{color: theme.colors.blue[7]}}>
@@ -47,7 +47,7 @@ export default function NodeAttributes(props: {data: {[key: string]: any}}) {
                 {"{" + props.data.nextReached.join(",") + "}"}
             </div> }
         {props.data.lastReached === undefined ? null
-            : <div className={cx(classes.attribute, classes.bottomRight)} style={{color: theme.colors.teal[9]}}>
+            : <div className={cx(classes.attribute, classes.bottomRight)} style={{color: theme.colors.yellow[9]}}>
                 {"{" + props.data.lastReached.join(",") + "}"}
             </div> }
     </>

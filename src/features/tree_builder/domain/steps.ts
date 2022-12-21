@@ -10,6 +10,7 @@ import solveEnumerateLeaves from "@/tree_builder/domain/step3/solveEnumerateLeav
 import solveCanBeEmpty from "@/tree_builder/domain/step4/solveCanBeEmpty";
 import solveFirstReachedStates from "@/tree_builder/domain/step5/solveFirstReachedStates";
 import solveNextReachedStates from "@/tree_builder/domain/step6/solveNextReachedStates";
+import solveLastReached from "@/tree_builder/domain/step7/solveLastReached";
 
 interface StepDescription {
     title: string,
@@ -115,6 +116,7 @@ const steps: StepDescription[] = [
     }, {
         // Step 7
         title: "Collect may-set of last reached read states per subtree",
+        solver: solveLastReached,
         canMoveNodes: false,
         canEditNodes: false,
         canConnectNodes: false,
