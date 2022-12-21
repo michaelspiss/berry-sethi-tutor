@@ -138,7 +138,7 @@ export default function InteractiveTreeBuilder(): React.ReactElement {
         selectionKeyCode={null}
         multiSelectionKeyCode={null}>
         <Background/>
-        <Controls/>
+        <Controls showInteractive={false} />
         <Panel position={"top-right"} style={{height: "100%", paddingBottom: 0}}>
             <VerificationErrors/>
         </Panel>
