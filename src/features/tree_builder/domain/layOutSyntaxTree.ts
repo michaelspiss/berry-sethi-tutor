@@ -12,11 +12,13 @@ export default function layOutSyntaxTree(nodes: Node[], edges: Edge[]) {
     const gapHeight = 40;
     const gapWidth = 40;
 
+    rootNode.position = {x: 0, y: 0};
+
     layoutYRecursive(rootNode, nodes, edges, nodeHeight, gapHeight, 0);
 
     const terminals = nodes.filter((node) => node.type === "terminal");
     for(let i = 0; i < terminals.length; i++) {
-        terminals[i].position.x = i * (nodeWidth + gapWidth);
+        terminals[i].position = { y: terminals[i].position.y, x: i * (nodeWidth + gapWidth)};
     }
     for(let i = 0; i < terminals.length; i++) {
         layoutXRecursive(terminals[i], nodes, edges, nodeWidth, gapWidth, i * (nodeWidth + gapWidth));
@@ -36,7 +38,7 @@ function layoutYRecursive(activeNode: Node, nodes: Node[], edges: Edge[], nodeHe
     const newHeight = height + nodeHeight + gapHeight;
     const children = getOutgoers(activeNode, nodes, edges);
     children.forEach((child) => {
-        child.position.y = newHeight;
+        child.position = {x: child.position.x, y: newHeight};
         layoutYRecursive(child, nodes, edges, nodeHeight, gapHeight, newHeight);
     })
 }
@@ -59,7 +61,7 @@ function layoutXRecursive(activeNode: Node, nodes: Node[], edges: Edge[], nodeWi
         const childBoxSpan = largestX - smallestX;
         x = smallestX + Math.abs(childBoxSpan / 2);
     }
-    activeNode.position.x = x;
+    activeNode.position = {y: activeNode.position.y, x: x};
     const parents = getIncomers(activeNode, nodes, edges);
     if(parents.length === 0) {
         return;
