@@ -88,7 +88,7 @@ const steps: StepDescription[] = [
         canMoveNodes: false,
         canEditNodes: false,
         canConnectNodes: false,
-        canSourceConnectToSource: false,
+        canSourceConnectToSource: true,
     }, {
         // Step 4
         title: "Set empty attributes",
@@ -96,7 +96,7 @@ const steps: StepDescription[] = [
         canMoveNodes: false,
         canEditNodes: false,
         canConnectNodes: false,
-        canSourceConnectToSource: false,
+        canSourceConnectToSource: true,
     }, {
         // Step 5
         title: "Collect may-set of first reached states",
@@ -104,7 +104,7 @@ const steps: StepDescription[] = [
         canMoveNodes: false,
         canEditNodes: false,
         canConnectNodes: false,
-        canSourceConnectToSource: false,
+        canSourceConnectToSource: true,
     }, {
         // Step 6
         title: "Collect may-set of next reached read states per subtree",
@@ -112,7 +112,7 @@ const steps: StepDescription[] = [
         canMoveNodes: false,
         canEditNodes: false,
         canConnectNodes: false,
-        canSourceConnectToSource: false,
+        canSourceConnectToSource: true,
     }, {
         // Step 7
         title: "Collect may-set of last reached read states per subtree",
@@ -120,14 +120,14 @@ const steps: StepDescription[] = [
         canMoveNodes: false,
         canEditNodes: false,
         canConnectNodes: false,
-        canSourceConnectToSource: false,
+        canSourceConnectToSource: true,
     }, {
         // Step 8
         title: "Create automaton",
         canMoveNodes: false,
         canEditNodes: false,
         canConnectNodes: false,
-        canSourceConnectToSource: false,
+        canSourceConnectToSource: true,
     }
 ]
 
