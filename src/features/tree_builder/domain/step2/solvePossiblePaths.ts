@@ -52,7 +52,7 @@ export default function solvePossiblePaths(nodes: Node[], edges: Edge[]): Solver
             case "|":
                 addEdge(edges, node.id, "step2l", children[0].id, "step2l");
                 addEdge(edges, children[0].id, "step2r", node.id, "step2r");
-                addEdge(edges, node.id, "step2l", children[0].id, "step2l");
+                addEdge(edges, node.id, "step2l", children[1].id, "step2l");
                 addEdge(edges, children[1].id, "step2r", node.id, "step2r");
                 break;
             default:
