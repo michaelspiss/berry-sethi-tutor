@@ -11,7 +11,7 @@ export default function VerificationErrors() {
 
     return <ScrollArea maw={"25vw"} mah={"100%"} mr={"md"}>
         {errors.map((error) => {
-            return <DefaultError title={error.title} message={error.message} causes={error.causes}/>
+            return <DefaultError key={error.title} title={error.title} message={error.message} causes={error.causes}/>
         })}
     </ScrollArea>
 
