@@ -45,7 +45,8 @@ export default function TreeElementsPanel() {
         </Stack>
         <Stack spacing={0}>
             <Center>
-                <div className={"terminalNode " + cx(classes.node, nodeClasses.node, nodeClasses.terminalNode)}
+                <div className={"terminalNode " + cx(classes.node, nodeClasses.node)}
+                     style={{overflow: "hidden"}}
                      onDragStart={(event) => onDragStart(event, 'terminal')}
                      draggable>
                     <div className={nodeClasses.nodeContent}>
