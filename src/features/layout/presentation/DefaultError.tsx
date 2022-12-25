@@ -1,10 +1,11 @@
 import React from "react";
 import {IconAlertCircle} from "@tabler/icons";
-import {Alert} from "@mantine/core";
+import {Alert, useMantineTheme} from "@mantine/core";
 import {useReactFlow} from "reactflow";
 
 export default function DefaultError(props: { title: string, message: React.ReactElement, causes?: string[] }) {
     const reactFlow = useReactFlow();
+    const theme = useMantineTheme();
 
     const showCauses = () => {
         reactFlow.setNodes(nodes => nodes.map(node => {
@@ -14,7 +15,7 @@ export default function DefaultError(props: { title: string, message: React.Reac
             return {
                 ...node,
                 style: {
-                    background: "#f00"
+                    background: theme.colors.red[6],
                 }
             }
         }));
@@ -25,7 +26,7 @@ export default function DefaultError(props: { title: string, message: React.Reac
             return {
                 ...edge,
                 style: {
-                    stroke: "#f00"
+                    stroke: theme.colors.red[6],
                 }
             }
         }))
