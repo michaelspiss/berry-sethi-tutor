@@ -25,6 +25,7 @@ const useNodeStyles = createStyles((theme) => ({
         textAlign: "center",
         flexWrap: "wrap",
         lineHeight: 40,
+        pointerEvents: "none",
     },
     operatorNode: {
         borderRadius: "50%"
