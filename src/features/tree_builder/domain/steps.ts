@@ -2,7 +2,7 @@ import verifySyntaxTree from "@/tree_builder/domain/step1/verifySyntaxTree";
 import {Edge, Node} from "reactflow";
 import solveSyntaxTree from "@/tree_builder/domain/step1/solveSyntaxTree";
 import layOutSyntaxTree from "@/tree_builder/domain/layOutSyntaxTree";
-import React from "react";
+import React, {ReactNode} from "react";
 import {NonEmptyArray} from "../../../configuration/helperTypes";
 import solvePossiblePaths from "@/tree_builder/domain/step2/solvePossiblePaths";
 import verifyPossiblePaths from "@/tree_builder/domain/step2/verifyPossiblePaths";
@@ -11,11 +11,23 @@ import solveCanBeEmpty from "@/tree_builder/domain/step4/solveCanBeEmpty";
 import solveFirstReachedStates from "@/tree_builder/domain/step5/solveFirstReachedStates";
 import solveNextReachedStates from "@/tree_builder/domain/step6/solveNextReachedStates";
 import solveLastReached from "@/tree_builder/domain/step7/solveLastReached";
+import SyntaxTreeHelper from "@/tree_builder/domain/step1/SyntaxTreeHelper";
+import PossiblePathsHelper from "@/tree_builder/domain/step2/PossiblePathsHelper";
+import EnumerateLeavesHelper from "@/tree_builder/domain/step3/EnumerateLeavesHelper";
+import CanBeEmptyHelper from "@/tree_builder/domain/step4/CanBeEmptyHelper";
+import FirstReachedStatesHelper from "@/tree_builder/domain/step5/FirstReachedStatesHelper";
+import NextReachedStatesHelper from "@/tree_builder/domain/step6/NextReachedStatesHelper";
+import LastReachedStatesHelper from "@/tree_builder/domain/step7/LastReachedStatesHelper";
+import CreateAutomatonHelper from "@/tree_builder/domain/step8/CreateAutomatonHelper";
 
 interface StepDescription {
     title: string,
     verifier: (nodes: Node[], edges: Edge[]) => VerificationResult,
     solver: (nodes: Node[], edges: Edge[]) => SolverResult,
+    /**
+     * Content returned in the helper bar
+     */
+    helper: () => ReactNode,
     /**
      * Called if either validator returns true or solver is run
      * @param nodes
@@ -63,6 +75,7 @@ const steps: StepDescription[] = [
         title: "Create syntax tree",
         verifier: verifySyntaxTree,
         solver: solveSyntaxTree,
+        helper: SyntaxTreeHelper,
         cleanup: (nodes, edges) => {
             layOutSyntaxTree(nodes, edges);
             makeEdgesStaticCleanUp(edges);
@@ -76,6 +89,7 @@ const steps: StepDescription[] = [
         title: "Draw possible paths",
         cleanup: (_, edges) => makeEdgesStaticCleanUp(edges),
         solver: solvePossiblePaths,
+        helper: PossiblePathsHelper,
         verifier: verifyPossiblePaths,
         canMoveNodes: false,
         canEditNodes: false,
@@ -85,6 +99,7 @@ const steps: StepDescription[] = [
         // Step 3
         title: "Enumerate leaves",
         solver: solveEnumerateLeaves,
+        helper: EnumerateLeavesHelper,
         canMoveNodes: false,
         canEditNodes: false,
         canConnectNodes: false,
@@ -93,6 +108,7 @@ const steps: StepDescription[] = [
         // Step 4
         title: "Set empty attributes",
         solver: solveCanBeEmpty,
+        helper: CanBeEmptyHelper,
         canMoveNodes: false,
         canEditNodes: false,
         canConnectNodes: false,
@@ -101,6 +117,7 @@ const steps: StepDescription[] = [
         // Step 5
         title: "Collect may-set of first reached states",
         solver: solveFirstReachedStates,
+        helper: FirstReachedStatesHelper,
         canMoveNodes: false,
         canEditNodes: false,
         canConnectNodes: false,
@@ -109,6 +126,7 @@ const steps: StepDescription[] = [
         // Step 6
         title: "Collect may-set of next reached read states per subtree",
         solver: solveNextReachedStates,
+        helper: NextReachedStatesHelper,
         canMoveNodes: false,
         canEditNodes: false,
         canConnectNodes: false,
@@ -117,6 +135,7 @@ const steps: StepDescription[] = [
         // Step 7
         title: "Collect may-set of last reached read states per subtree",
         solver: solveLastReached,
+        helper: LastReachedStatesHelper,
         canMoveNodes: false,
         canEditNodes: false,
         canConnectNodes: false,
@@ -124,6 +143,7 @@ const steps: StepDescription[] = [
     }, {
         // Step 8
         title: "Create automaton",
+        helper: CreateAutomatonHelper,
         canMoveNodes: false,
         canEditNodes: false,
         canConnectNodes: false,

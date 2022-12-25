@@ -14,7 +14,7 @@ import {
     ReactFlowInstance,
     useNodesState
 } from "reactflow";
-import React, {DragEventHandler, useCallback, useRef, useState} from "react";
+import React, {DragEventHandler, FunctionComponent, useCallback, useRef, useState} from "react";
 import TreeElementsPanel from "@/tree_builder/presentation/TreeElementsPanel";
 import OperatorNode from "@/tree_builder/presentation/OperatorNode";
 import TerminalNode from "@/tree_builder/presentation/TerminalNode";
@@ -22,6 +22,7 @@ import useNodeStyles from "@/tree_builder/presentation/useNodeStyles";
 import steps from "@/tree_builder/domain/steps";
 import useAppStateStore from "@/layout/stores/appStateStore";
 import VerificationErrors from "@/tree_builder/presentation/VerificationErrors";
+import {Alert, Group, useMantineTheme} from "@mantine/core";
 
 function getId() {
     return `node_${+new Date()}`
@@ -39,6 +40,7 @@ const nodeTypes = {
 export default function InteractiveTreeBuilder(): React.ReactElement {
     const [nodes, setNodes, onNodesChange] = useNodesState([]);
     const [edges, setEdges] = useState<Edge[]>([]);
+    const theme = useMantineTheme();
     const reactFlowWrapper = useRef<HTMLDivElement>(null);
     const [reactFlowInstance, setReactFlowInstance] = useState<ReactFlowInstance | null>(null);
     const {classes, cx} = useNodeStyles();
@@ -79,8 +81,8 @@ export default function InteractiveTreeBuilder(): React.ReactElement {
         }
 
         const position = reactFlowInstance.project({
-            x: event.clientX - reactFlowBounds.left - 40,
-            y: event.clientY - reactFlowBounds.top - 40,
+            x: event.clientX - reactFlowBounds.left - 20,
+            y: event.clientY - reactFlowBounds.top - 20,
         });
 
         const id = getId();
@@ -119,31 +121,40 @@ export default function InteractiveTreeBuilder(): React.ReactElement {
         setNodes((nodes) => nodes.concat(newNode));
     }, [reactFlowInstance])
 
-    return <div style={{height: "100%", width: "100%"}} ref={reactFlowWrapper}><ReactFlow
-        nodes={nodes}
-        edges={edges}
-        onNodesChange={onNodesChange}
-        onEdgesChange={onEdgesChange}
-        onConnect={onConnect}
-        onInit={setReactFlowInstance}
-        onDragOver={onDragOver}
-        onDrop={onDrop}
-        nodeTypes={nodeTypes}
-        selectNodesOnDrag={false}
-        nodesDraggable={steps[solveStep].canMoveNodes}
-        nodesConnectable={steps[solveStep].canConnectNodes}
-        nodesFocusable={steps[solveStep].canEditNodes}
-        connectionMode={steps[solveStep].canSourceConnectToSource ? ConnectionMode.Loose : ConnectionMode.Strict}
-        deleteKeyCode={['Backspace', 'Delete']}
-        selectionKeyCode={null}
-        multiSelectionKeyCode={null}>
-        <Background/>
-        <Controls showInteractive={false} />
-        <Panel position={"top-right"} style={{height: "100%", paddingBottom: 0}}>
-            <VerificationErrors/>
-        </Panel>
-        <Panel position={"bottom-center"}>
-            {steps[solveStep].canEditNodes ? <TreeElementsPanel/> : null}
-        </Panel>
-    </ReactFlow></div>
+    return <div style={{height: "100%", width: "100%", display: "flex", flexDirection: "column"}}>
+        <Alert color={"blue"} radius={0} py={6} styles={{message: {overflow: "visible"}}}>
+            <Group position={"apart"}>
+                {React.createElement(steps[solveStep].helper as unknown as FunctionComponent)}
+            </Group>
+        </Alert>
+        <div style={{flexGrow: 1}} ref={reactFlowWrapper}>
+            <ReactFlow
+                nodes={nodes}
+                edges={edges}
+                onNodesChange={onNodesChange}
+                onEdgesChange={onEdgesChange}
+                onConnect={onConnect}
+                onInit={setReactFlowInstance}
+                onDragOver={onDragOver}
+                onDrop={onDrop}
+                nodeTypes={nodeTypes}
+                selectNodesOnDrag={false}
+                nodesDraggable={steps[solveStep].canMoveNodes}
+                nodesConnectable={steps[solveStep].canConnectNodes}
+                nodesFocusable={steps[solveStep].canEditNodes}
+                connectionMode={steps[solveStep].canSourceConnectToSource ? ConnectionMode.Loose : ConnectionMode.Strict}
+                deleteKeyCode={['Backspace', 'Delete']}
+                selectionKeyCode={null}
+                multiSelectionKeyCode={null}>
+                <Background/>
+                <Controls showInteractive={false}/>
+                <Panel position={"top-right"} style={{height: "100%", paddingBottom: 0}}>
+                    <VerificationErrors/>
+                </Panel>
+                <Panel position={"bottom-center"}>
+                    {steps[solveStep].canEditNodes ? <TreeElementsPanel/> : null}
+                </Panel>
+            </ReactFlow>
+        </div>
+    </div>
 }
