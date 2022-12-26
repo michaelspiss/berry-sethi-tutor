@@ -45,12 +45,12 @@ export default function TerminalNode(props: NodeProps) {
             />
             <Handle type={"source"}
                     position={Position.Left}
-                    style={solveStep !== 0 ? undefined : {pointerEvents: "none", visibility: "hidden"}}
+                    style={solveStep === 1 ? undefined : solveStep === 0 ? {pointerEvents: "none", visibility: "hidden"} : {pointerEvents: "none"}}
                     id={"step2l"}
             />
             <Handle type={"source"}
                     position={Position.Right}
-                    style={solveStep !== 0 ? undefined : {pointerEvents: "none", visibility: "hidden"}}
+                    style={solveStep === 1 ? undefined : solveStep === 0 ? {pointerEvents: "none", visibility: "hidden"} : {pointerEvents: "none"}}
                     id={"step2r"}
             />
             <NodeAttributes data={props.data} />
