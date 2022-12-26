@@ -4,6 +4,7 @@ import {
     applyEdgeChanges,
     Background,
     Connection,
+    ConnectionLineType,
     ConnectionMode,
     Controls,
     Edge,
@@ -22,7 +23,7 @@ import useNodeStyles from "@/tree_builder/presentation/useNodeStyles";
 import steps from "@/tree_builder/domain/steps";
 import useAppStateStore from "@/layout/stores/appStateStore";
 import VerificationErrors from "@/tree_builder/presentation/VerificationErrors";
-import {Alert, Group, useMantineTheme} from "@mantine/core";
+import {Alert, Group} from "@mantine/core";
 
 function getId() {
     return `node_${+new Date()}`
@@ -40,7 +41,6 @@ const nodeTypes = {
 export default function InteractiveTreeBuilder(): React.ReactElement {
     const [nodes, setNodes, onNodesChange] = useNodesState([]);
     const [edges, setEdges] = useState<Edge[]>([]);
-    const theme = useMantineTheme();
     const reactFlowWrapper = useRef<HTMLDivElement>(null);
     const [reactFlowInstance, setReactFlowInstance] = useState<ReactFlowInstance | null>(null);
     const {classes, cx} = useNodeStyles();
@@ -145,6 +145,7 @@ export default function InteractiveTreeBuilder(): React.ReactElement {
                 connectionMode={steps[solveStep].canSourceConnectToSource ? ConnectionMode.Loose : ConnectionMode.Strict}
                 deleteKeyCode={['Backspace', 'Delete']}
                 selectionKeyCode={null}
+                connectionLineType={solveStep === 0 ? ConnectionLineType.Bezier : ConnectionLineType.Straight}
                 multiSelectionKeyCode={null}>
                 <Background/>
                 <Controls showInteractive={false}/>
