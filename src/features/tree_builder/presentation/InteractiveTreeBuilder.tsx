@@ -144,6 +144,7 @@ export default function InteractiveTreeBuilder(): React.ReactElement {
                 onDrop={onDrop}
                 nodeTypes={nodeTypes}
                 edgeTypes={edgeTypes}
+                onNodeClick={(_, node) => steps[solveStep].onNodeClick?.call(null, node, reactFlowInstance!)}
                 selectNodesOnDrag={false}
                 nodesDraggable={steps[solveStep].canMoveNodes}
                 nodesConnectable={steps[solveStep].canConnectNodes}
@@ -155,7 +156,7 @@ export default function InteractiveTreeBuilder(): React.ReactElement {
                 multiSelectionKeyCode={null}>
                 <Background/>
                 <Controls showInteractive={false}/>
-                <Panel position={"top-right"} style={{height: "100%", paddingBottom: 0}}>
+                <Panel position={"top-right"} style={{maxHeight: "100%", paddingBottom: 0}}>
                     <VerificationErrors/>
                 </Panel>
                 <Panel position={"bottom-center"}>
