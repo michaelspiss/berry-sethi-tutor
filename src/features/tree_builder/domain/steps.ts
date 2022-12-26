@@ -1,5 +1,5 @@
 import verifySyntaxTree from "@/tree_builder/domain/step1/verifySyntaxTree";
-import {Edge, Node} from "reactflow";
+import {Edge, Node, ReactFlowInstance} from "reactflow";
 import solveSyntaxTree from "@/tree_builder/domain/step1/solveSyntaxTree";
 import layOutSyntaxTree from "@/tree_builder/domain/layOutSyntaxTree";
 import React, {ReactNode} from "react";
@@ -19,6 +19,9 @@ import FirstReachedStatesHelper from "@/tree_builder/domain/step5/FirstReachedSt
 import NextReachedStatesHelper from "@/tree_builder/domain/step6/NextReachedStatesHelper";
 import LastReachedStatesHelper from "@/tree_builder/domain/step7/LastReachedStatesHelper";
 import CreateAutomatonHelper from "@/tree_builder/domain/step8/CreateAutomatonHelper";
+import enumerateLeavesOnClickHandler from "@/tree_builder/domain/step3/enumerateLeavesOnClickHandler";
+import verifyEnumerateLeaves from "@/tree_builder/domain/step3/verifyEnumerateLeaves";
+import useEnumerateLeaves from "@/tree_builder/domain/step3/useEnumerateLeaves";
 
 interface StepDescription {
     title: string,
@@ -28,6 +31,8 @@ interface StepDescription {
      * Content returned in the helper bar
      */
     helper: () => ReactNode,
+    onNodeClick?: (node: Node, reactFlow: ReactFlowInstance) => void,
+    prepare?: (reactFlow: ReactFlowInstance) => void,
     /**
      * Called if either validator returns true or solver is run
      * @param nodes
@@ -64,6 +69,7 @@ function makeEdgesStaticCleanUp(edges: Edge[]) {
     edges.map((edge) => {
         edge.focusable = false;
         edge.interactionWidth = 0;
+        edge.selected = false;
         edge.style = {pointerEvents: "none"};
         return edge
     });
@@ -100,6 +106,10 @@ const steps: StepDescription[] = [
         title: "Enumerate leaves",
         solver: solveEnumerateLeaves,
         helper: EnumerateLeavesHelper,
+        onNodeClick: enumerateLeavesOnClickHandler,
+        verifier: verifyEnumerateLeaves,
+        prepare: () => useEnumerateLeaves.setState({nextIndex: 0}),
+        cleanup: () => useEnumerateLeaves.destroy(),
         canMoveNodes: false,
         canEditNodes: false,
         canConnectNodes: false,

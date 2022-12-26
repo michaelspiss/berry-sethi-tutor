@@ -22,6 +22,7 @@ export default function SolveButton() {
         steps[solveStep].cleanup?.apply(null, [styledNodes, result.edges]);
         reactFlow.setNodes(styledNodes);
         reactFlow.setEdges(result.edges);
+        steps[solveStep + 1]?.prepare?.call(null, reactFlow);
         useAppStateStore.setState({solveStep: solveStep + 1, verificationErrors: undefined});
         const to = setTimeout(() => reactFlow.fitView(), 100);
         return () => clearTimeout(to);
