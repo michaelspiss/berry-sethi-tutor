@@ -126,7 +126,7 @@ export default function verifyPossiblePaths(nodes: Node[], edges: Edge[]): Verif
     if (nodesWithoutMinimumEdges.length !== 0) {
         errors.push({
             title: "Node is missing edges",
-            message: <>Each node must have at least one incoming and one outgoing edge. Try adding the missing ones.</>,
+            message: <>Each node except for the root must have at least one incoming and one outgoing edge. Try adding the missing ones.</>,
             causes: nodesWithoutMinimumEdges,
         })
     }
