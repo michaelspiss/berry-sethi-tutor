@@ -1,10 +1,10 @@
-import {ActionIcon, AppShell, Center, Group, Header, MantineProvider, Navbar, ScrollArea} from '@mantine/core';
+import {ActionIcon, AppShell, Center, Group, Header, MantineProvider, Navbar, ScrollArea, Tooltip} from '@mantine/core';
 import mantineThemeOther from "./configuration/mantineThemeOther";
 import useAppStateStore from "@/layout/stores/appStateStore";
 import StepsProgress from "@/layout/presentation/StepsProgress";
 import RegexInputScreen from "@/analyze_regex/presentation/screens/RegexInputScreen";
 import InteractiveTreeBuilder from "@/tree_builder/presentation/InteractiveTreeBuilder";
-import {IconArrowBack} from "@tabler/icons";
+import {IconAlertTriangle, IconArrowBack} from "@tabler/icons";
 import RegexHighlighter from "@/analyze_regex/presentation/RegexHighlighter";
 import {ReactFlowProvider} from "reactflow";
 import SolveButton from "@/tree_builder/presentation/SolveButton";
@@ -13,6 +13,7 @@ import VerifyTreeButton from "@/tree_builder/presentation/VerifyTreeButton";
 export default function App() {
     const solveStep = useAppStateStore((state) => state.solveStep);
     const regexValue = useAppStateStore((state) => state.regex);
+    const isSimplified = useAppStateStore(state => state.isSimplified);
 
     return (
         <MantineProvider withGlobalStyles withNormalizeCSS theme={{
@@ -27,6 +28,7 @@ export default function App() {
                                           {solveStep === -1 ? null :
                                               <ActionIcon onClick={() => useAppStateStore.setState({
                                                   solveStep: -1,
+                                                  isSimplified: false,
                                                   verificationErrors: undefined
                                               })}>
                                                   <IconArrowBack size={16}/>
@@ -36,7 +38,18 @@ export default function App() {
                                       </Center>
                                       {solveStep === -1 ? null : <>
                                           <Center style={{height: mantineThemeOther.headerHeight}}>{
-                                              <RegexHighlighter regex={regexValue}/> // TODO: display "simplify" button/link, if model.getRegex() !== regex and in step 1 (for when the user accidentally groups too much)
+                                              <Group>
+                                                  <RegexHighlighter regex={regexValue}/>
+                                                  {
+                                                      isSimplified ? <Tooltip
+                                                          withArrow
+                                                          label={"Redundant groups have been removed"}>
+                                                          <Center pt={2}>
+                                                              <IconAlertTriangle size={16} color={"orange"} />
+                                                          </Center>
+                                                      </Tooltip> : null
+                                                  }
+                                              </Group>
                                           }</Center>
                                           <Center style={{height: mantineThemeOther.headerHeight}}>
                                               <Group>

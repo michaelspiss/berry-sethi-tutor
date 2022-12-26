@@ -20,7 +20,7 @@ export default function RegexInputScreen() {
 
     const formRef = useEventListener('submit', (event) => {
         event.preventDefault();
-        const regex = useAppStateStore.getState().regex;
+        let regex = useAppStateStore.getState().regex;
 
         if (regex.trim() === "") {
             return
@@ -30,6 +30,10 @@ export default function RegexInputScreen() {
         try {
             const regexModel = parseRegex(regex);
             setError(null);
+            const simplifiedRegex = regexModel.getRegex();
+            if(simplifiedRegex !== regex) {
+                useAppStateStore.setState({regex: simplifiedRegex, isSimplified: true})
+            }
             useAppStateStore.setState({regexModel, solveStep: 0});
         } catch (e) {
             if (e instanceof RegexError) {
