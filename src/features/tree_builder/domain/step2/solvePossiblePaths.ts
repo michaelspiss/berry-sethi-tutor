@@ -26,7 +26,7 @@ export default function solvePossiblePaths(nodes: Node[], edges: Edge[]): Solver
     // reset user input
     edges = edges.filter(edge => edge.data.step !== 1);
     nodes.forEach(node => {
-        const children = getOutgoers(node, nodes, edges);
+        const children = getOutgoers(node, nodes, edges).sort((nodeA, nodeB) => nodeA.position.x - nodeB.position.x);
         switch(node.data.label) {
             case "*":
                 addEdge(edges, node.id, "step2l", node.id, "step2r");
