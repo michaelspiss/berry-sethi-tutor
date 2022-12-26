@@ -1,5 +1,5 @@
 import React from 'react';
-import {EdgeProps} from 'reactflow';
+import {EdgeProps, Position} from 'reactflow';
 import {useMantineTheme} from "@mantine/core";
 import * as path from "path";
 
@@ -14,62 +14,47 @@ export default function PathEdge({
                                      selected,
                                      sourcePosition,
                                      targetPosition,
-                                     sourceHandleId,
-                                     targetHandleId,
                                      style = {},
                                      markerEnd,
                                  }: EdgeProps) {
 
     const theme = useMantineTheme();
 
-    if (sourceY === targetY) {
-        if (sourceX < targetX && source === target) {
-            sourceX += 5;
-            targetX -= 5;
-            sourceY += 5;
-            targetY += 5;
-        } else {
-            sourceX -= 5;
-            targetX += 5;
-            sourceY -= 5;
-            targetY -= 5;
-        }
-        const curveDistance = sourceX < targetX && source === target ? 38 : -38;
-
-        return <>
-            <path id={id}
-                  style={{stroke: selected ? theme.colors.gray[9] : theme.colors.orange[5], ...style}}
-                  className="react-flow__edge-path"
-                  markerEnd={markerEnd}
-                  d={`M ${sourceX} ${sourceY} C ${sourceX} ${sourceY + curveDistance}, ${targetX} ${targetY + curveDistance}, ${targetX} ${targetY}`}
-            />
-        </>
-    }
-
-    if (sourceHandleId === "step2l" && targetHandleId === "step2l" && sourceX === targetX) {
+    if (sourcePosition === Position.Left) {
         sourceX += 5;
-        targetX += 5;
-        sourceY -= 5;
-        targetY -= 5;
-    }
-    if (sourceHandleId === "step2r" && targetHandleId === "step2r" && sourceX === targetX) {
+    } else if (sourcePosition === Position.Right) {
         sourceX -= 5;
-        targetX -= 5;
-        sourceY -= 5;
-        targetY += 5;
     }
 
-    const path = sourceX === targetX
-        ? `M ${sourceX} ${sourceY} L ${targetX} ${targetY}`
-        : sourceY < targetY
-            ? `M ${sourceX} ${sourceY + 2} C ${sourceX - 20} ${sourceY + 20}, ${targetX - 20} ${targetY - 20}, ${targetX} ${targetY - 2}`
-            : `M ${sourceX} ${sourceY - 2} C ${sourceX + 20} ${sourceY - 20}, ${targetX + 20} ${targetY + 20}, ${targetX} ${targetY + 2}`
+    if (targetPosition === Position.Left) {
+        targetX += 5;
+    } else if (targetPosition === Position.Right) {
+        targetX -= 5;
+    }
+
+    let path;
+    if (sourceY === targetY) {
+        const sign = sourceX < targetX && source === target ? 1 : -1;
+        const curveDistance = sign * 40;
+        path = `M ${sourceX} ${sourceY + sign * 2} C ${sourceX} ${sourceY + curveDistance}, ${targetX} ${targetY + curveDistance}, ${targetX} ${targetY + sign * 2}`
+    } else if (sourceX === targetX) {
+        const adjustment = sourceY > targetY ? 2 : -2;
+        path = `M ${sourceX} ${sourceY} L ${targetX} ${targetY + adjustment}`
+    } else {
+        const isRightToLeft = sourceX > targetX;
+        const isTopToBottom = sourceY < targetY;
+        const sign = isTopToBottom ? -1 : 1;
+        const reach = isRightToLeft ? 40 : 20;
+
+        path = `M ${sourceX} ${sourceY} C ${targetX + sign* reach} ${targetY}, ${targetX + sign * 20} ${targetY + sign * 5}, ${targetX + sign * 2} ${targetY}`
+
+    }
 
     return (
         <>
             <path
                 id={id}
-                style={{stroke: selected  ? theme.colors.gray[9] : theme.colors.orange[5], ...style}}
+                style={{stroke: selected ? theme.colors.gray[9] : theme.colors.orange[5], ...style}}
                 className="react-flow__edge-path"
                 d={path}
                 markerEnd={markerEnd}

@@ -8,7 +8,7 @@ export default function ArrowMarker() {
                 markerWidth="8"
                 markerHeight="6"
                 orient="auto"
-                refX={10}
+                refX={15}
                 refY={5}
             >
                 <path d="M 0 0 L 10 5 L 0 10 z" fill="context-stroke" stroke="context-stroke" />
