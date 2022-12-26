@@ -1,5 +1,5 @@
 import {Box, createStyles, Textarea} from "@mantine/core";
-import {getHotkeyHandler, useEventListener} from "@mantine/hooks";
+import {getHotkeyHandler, useEventListener, useFocusTrap} from "@mantine/hooks";
 import useAppStateStore from "@/layout/stores/appStateStore";
 import RegexHighlighter from "@/analyze_regex/presentation/RegexHighlighter";
 
@@ -62,7 +62,9 @@ export default function RegexInput(props: RegexInputProps) {
         }
     })
 
-    return <Box className={classes.wrapper}>
+    const focusTrap = useFocusTrap();
+
+    return <Box className={classes.wrapper} ref={focusTrap}>
         <Textarea placeholder={"Regex"}
                   autosize
                   classNames={{root: classes.inputRoot, input: classes.input}}
