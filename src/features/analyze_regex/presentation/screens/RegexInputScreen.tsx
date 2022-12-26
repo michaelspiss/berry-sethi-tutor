@@ -64,6 +64,16 @@ export default function RegexInputScreen() {
                                 onEnter={() => {
                                     formRef.current.dispatchEvent(new Event("submit", {cancelable: true}));
                                 }} />
+                    <Button style={{flexGrow: 0}} variant={"outline"} onClick={() => {
+                        const textarea = document.getElementsByTagName("textarea")[0];
+                        const pos = textarea.selectionStart;
+                        const value = textarea.value;
+                        useAppStateStore.setState({regex: value.substring(0, pos) + "ε" + value.substring(pos)});
+                        setTimeout(() => {
+                            textarea.focus();
+                            textarea.setSelectionRange(pos + 1, pos + 1);
+                        }, 50)
+                    }}>ε</Button>
                     <Button style={{flexGrow: 0}} type={"submit"} loading={isLoading}>Start</Button>
                 </Group>
             </form>

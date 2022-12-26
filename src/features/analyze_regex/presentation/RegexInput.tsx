@@ -7,7 +7,7 @@ import RegexHighlighter from "@/analyze_regex/presentation/RegexHighlighter";
 const useStyles = createStyles(() => ({
     wrapper: {
         position: "relative",
-        maxWidth: "100%",
+        maxWidth: "100% !important",
         flexGrow: 1,
     },
     inputRoot: {
