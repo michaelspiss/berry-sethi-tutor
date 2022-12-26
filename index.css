@@ -20,11 +20,11 @@ body, #root {
 }
 
 .react-flow .react-flow__handle-left {
-    left: -8px;
+    left: -14px;
 }
 
 .react-flow .react-flow__handle-right {
-    right: -8px;
+    right: -14px;
 }
 
 .react-flow .react-flow__panel {

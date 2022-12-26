@@ -1,4 +1,4 @@
-import {Edge, getOutgoers, MarkerType, Node} from "reactflow";
+import {Edge, getOutgoers, Node} from "reactflow";
 import {SolverResult} from "@/tree_builder/domain/steps";
 
 function addEdge(edges: Edge[], sourceId: string, sourceHandle: string, targetId: string, targetHandle: string) {
@@ -13,12 +13,11 @@ function addEdge(edges: Edge[], sourceId: string, sourceHandle: string, targetId
         sourceHandle: sourceHandle,
         target: targetId,
         targetHandle: targetHandle,
-        markerEnd: {
-            type: MarkerType.ArrowClosed,
-        },
+        markerEnd: "arrowMarker",
         data: {
             step: 1,
-        }
+        },
+        type: "pathEdge",
     })
 }
 

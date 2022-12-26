@@ -9,7 +9,6 @@ import {
     Controls,
     Edge,
     EdgeChange,
-    MarkerType,
     Panel,
     ReactFlow,
     ReactFlowInstance,
@@ -24,6 +23,8 @@ import steps from "@/tree_builder/domain/steps";
 import useAppStateStore from "@/layout/stores/appStateStore";
 import VerificationErrors from "@/tree_builder/presentation/VerificationErrors";
 import {Alert, Group} from "@mantine/core";
+import PathEdge from "@/tree_builder/presentation/PathEdge";
+import ArrowMarker from "@/tree_builder/presentation/ArrowMarker";
 
 function getId() {
     return `node_${+new Date()}`
@@ -32,6 +33,10 @@ function getId() {
 const nodeTypes = {
     operator: OperatorNode,
     terminal: TerminalNode
+}
+
+const edgeTypes = {
+    pathEdge: PathEdge,
 }
 
 /**
@@ -53,9 +58,8 @@ export default function InteractiveTreeBuilder(): React.ReactElement {
                 data: {
                     step: solveStep,
                 },
-                markerEnd: solveStep !== 1 ? undefined : {
-                    type: MarkerType.ArrowClosed,
-                },
+                markerEnd: solveStep !== 1 ? undefined : "arrowMarker",
+                type: solveStep !== 1 ? undefined : "pathEdge",
             }, edges))
         }, [edges, solveStep, setEdges],
     );
@@ -128,6 +132,7 @@ export default function InteractiveTreeBuilder(): React.ReactElement {
             </Group>
         </Alert>
         <div style={{flexGrow: 1}} ref={reactFlowWrapper}>
+            <ArrowMarker />
             <ReactFlow
                 nodes={nodes}
                 edges={edges}
@@ -138,6 +143,7 @@ export default function InteractiveTreeBuilder(): React.ReactElement {
                 onDragOver={onDragOver}
                 onDrop={onDrop}
                 nodeTypes={nodeTypes}
+                edgeTypes={edgeTypes}
                 selectNodesOnDrag={false}
                 nodesDraggable={steps[solveStep].canMoveNodes}
                 nodesConnectable={steps[solveStep].canConnectNodes}
