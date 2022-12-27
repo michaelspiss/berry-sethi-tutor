@@ -29,7 +29,8 @@ export default function App() {
                                               <ActionIcon onClick={() => useAppStateStore.setState({
                                                   solveStep: -1,
                                                   isSimplified: false,
-                                                  verificationErrors: undefined
+                                                  verificationErrors: undefined,
+                                                  disableSelect: false,
                                               })}>
                                                   <IconArrowBack size={16}/>
                                               </ActionIcon>

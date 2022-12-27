@@ -24,6 +24,7 @@ import verifyEnumerateLeaves from "@/tree_builder/domain/step3/verifyEnumerateLe
 import useEnumerateLeaves from "@/tree_builder/domain/step3/useEnumerateLeaves";
 import canBeEmptyOnClickHandler from "@/tree_builder/domain/step4/canBeEmptyOnClickHandler";
 import verifyCanBeEmpty from "@/tree_builder/domain/step4/verifyCanBeEmpty";
+import useAppStateStore from "@/layout/stores/appStateStore";
 
 interface StepDescription {
     title: string,
@@ -83,6 +84,7 @@ function defaultNodeCleanUp(nodes: Node[]) {
         node.selected = false;
         node.style = undefined;
     })
+    useAppStateStore.setState({disableSelect: false});
 }
 
 const steps: StepDescription[] = [
@@ -185,6 +187,7 @@ const steps: StepDescription[] = [
         // Step 8
         title: "Create automaton",
         helper: CreateAutomatonHelper,
+        cleanup: () => {},
         canMoveNodes: false,
         canEditNodes: false,
         canConnectNodes: false,

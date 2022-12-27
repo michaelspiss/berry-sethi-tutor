@@ -50,6 +50,7 @@ export default function InteractiveTreeBuilder(): React.ReactElement {
     const [reactFlowInstance, setReactFlowInstance] = useState<ReactFlowInstance | null>(null);
     const {classes, cx} = useNodeStyles();
     const solveStep = useAppStateStore((state) => state.solveStep);
+    const disableSelect = useAppStateStore(state => state.disableSelect);
 
     const onConnect = useCallback((params: Edge | Connection) => {
             setEdges((edges) => addEdge({
@@ -146,7 +147,7 @@ export default function InteractiveTreeBuilder(): React.ReactElement {
                 edgeTypes={edgeTypes}
                 onNodeClick={(_, node) => steps[solveStep].onNodeClick?.call(null, node, reactFlowInstance!)}
                 selectNodesOnDrag={false}
-                elementsSelectable={steps[solveStep].canSelectElements}
+                elementsSelectable={steps[solveStep].canSelectElements && !disableSelect}
                 nodesDraggable={steps[solveStep].canMoveNodes}
                 nodesConnectable={steps[solveStep].canConnectNodes}
                 nodesFocusable={steps[solveStep].canEditNodes}

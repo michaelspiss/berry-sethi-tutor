@@ -24,6 +24,10 @@ interface AppState {
      * edge/node ids which caused the error.
      */
     verificationErrors?: {title: string, message: React.ReactElement, causes?: string[]}[],
+    /**
+     * Overrides the step's "canSelectElements" attribute temporarily
+     */
+    disableSelect: boolean
 }
 
 const useAppStateStore = create<AppState>(() => ({
@@ -31,6 +35,7 @@ const useAppStateStore = create<AppState>(() => ({
     isSimplified: false,
     regexModel: null,
     solveStep: -1,
+    disableSelect: false,
 }))
 
 export default useAppStateStore
