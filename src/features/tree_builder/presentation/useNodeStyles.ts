@@ -12,6 +12,9 @@ const useNodeStyles = createStyles((theme) => ({
         width: 40,
         fontSize: 20,
         position: "relative",
+        "&.selected": {
+            outline: `2px solid ${theme.colors.blue[5]}`
+        }
     },
     nodeContent: {
         position: "absolute",

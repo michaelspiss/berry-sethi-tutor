@@ -146,6 +146,7 @@ export default function InteractiveTreeBuilder(): React.ReactElement {
                 edgeTypes={edgeTypes}
                 onNodeClick={(_, node) => steps[solveStep].onNodeClick?.call(null, node, reactFlowInstance!)}
                 selectNodesOnDrag={false}
+                elementsSelectable={steps[solveStep].canSelectElements}
                 nodesDraggable={steps[solveStep].canMoveNodes}
                 nodesConnectable={steps[solveStep].canConnectNodes}
                 nodesFocusable={steps[solveStep].canEditNodes}

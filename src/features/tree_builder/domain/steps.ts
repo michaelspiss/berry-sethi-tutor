@@ -45,6 +45,7 @@ interface StepDescription {
     canEditNodes: boolean,
     canConnectNodes: boolean,
     canSourceConnectToSource: boolean,
+    canSelectElements: boolean,
 }
 
 export interface VerificationError {
@@ -100,6 +101,7 @@ const steps: StepDescription[] = [
         canEditNodes: true,
         canConnectNodes: true,
         canSourceConnectToSource: false,
+        canSelectElements: true,
     }, {
         // Step 2
         title: "Draw possible paths",
@@ -114,6 +116,7 @@ const steps: StepDescription[] = [
         canEditNodes: false,
         canConnectNodes: true,
         canSourceConnectToSource: true,
+        canSelectElements: true,
     }, {
         // Step 3
         title: "Enumerate leaves",
@@ -130,6 +133,7 @@ const steps: StepDescription[] = [
         canEditNodes: false,
         canConnectNodes: false,
         canSourceConnectToSource: true,
+        canSelectElements: false,
     }, {
         // Step 4
         title: "Set empty attributes",
@@ -143,6 +147,7 @@ const steps: StepDescription[] = [
         canEditNodes: false,
         canConnectNodes: false,
         canSourceConnectToSource: true,
+        canSelectElements: false,
     }, {
         // Step 5
         title: "Collect may-set of first reached states",
@@ -153,6 +158,7 @@ const steps: StepDescription[] = [
         canEditNodes: false,
         canConnectNodes: false,
         canSourceConnectToSource: true,
+        canSelectElements: true,
     }, {
         // Step 6
         title: "Collect may-set of next reached read states per subtree",
@@ -163,6 +169,7 @@ const steps: StepDescription[] = [
         canEditNodes: false,
         canConnectNodes: false,
         canSourceConnectToSource: true,
+        canSelectElements: true,
     }, {
         // Step 7
         title: "Collect may-set of last reached read states per subtree",
@@ -173,6 +180,7 @@ const steps: StepDescription[] = [
         canEditNodes: false,
         canConnectNodes: false,
         canSourceConnectToSource: true,
+        canSelectElements: true,
     }, {
         // Step 8
         title: "Create automaton",
@@ -181,6 +189,7 @@ const steps: StepDescription[] = [
         canEditNodes: false,
         canConnectNodes: false,
         canSourceConnectToSource: true,
+        canSelectElements: false,
     }
 ]
 
