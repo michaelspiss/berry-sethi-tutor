@@ -152,7 +152,7 @@ export default function InteractiveTreeBuilder(): React.ReactElement {
                 nodesConnectable={steps[solveStep].canConnectNodes}
                 nodesFocusable={steps[solveStep].canEditNodes}
                 connectionMode={steps[solveStep].canSourceConnectToSource ? ConnectionMode.Loose : ConnectionMode.Strict}
-                deleteKeyCode={['Backspace', 'Delete']}
+                deleteKeyCode={steps[solveStep].canEditNodes ? ['Backspace', 'Delete'] : null}
                 selectionKeyCode={null}
                 connectionLineType={solveStep === 0 ? ConnectionLineType.Bezier : ConnectionLineType.Straight}
                 multiSelectionKeyCode={null}>
