@@ -22,6 +22,8 @@ import CreateAutomatonHelper from "@/tree_builder/domain/step8/CreateAutomatonHe
 import enumerateLeavesOnClickHandler from "@/tree_builder/domain/step3/enumerateLeavesOnClickHandler";
 import verifyEnumerateLeaves from "@/tree_builder/domain/step3/verifyEnumerateLeaves";
 import useEnumerateLeaves from "@/tree_builder/domain/step3/useEnumerateLeaves";
+import canBeEmptyOnClickHandler from "@/tree_builder/domain/step4/canBeEmptyOnClickHandler";
+import verifyCanBeEmpty from "@/tree_builder/domain/step4/verifyCanBeEmpty";
 
 interface StepDescription {
     title: string,
@@ -32,7 +34,7 @@ interface StepDescription {
      */
     helper: () => ReactNode,
     onNodeClick?: (node: Node, reactFlow: ReactFlowInstance) => void,
-    prepare?: (reactFlow: ReactFlowInstance) => void,
+    prepare?: (nodes: Node[], edges: Edge[]) => void,
     /**
      * Called if either validator returns true or solver is run
      * @param nodes
@@ -75,6 +77,13 @@ function makeEdgesStaticCleanUp(edges: Edge[]) {
     });
 }
 
+function defaultNodeCleanUp(nodes: Node[]) {
+    nodes.forEach(node => {
+        node.selected = false;
+        node.style = undefined;
+    })
+}
+
 const steps: StepDescription[] = [
     {
         // Step 1
@@ -85,6 +94,7 @@ const steps: StepDescription[] = [
         cleanup: (nodes, edges) => {
             layOutSyntaxTree(nodes, edges);
             makeEdgesStaticCleanUp(edges);
+            defaultNodeCleanUp(nodes);
         },
         canMoveNodes: true,
         canEditNodes: true,
@@ -93,7 +103,10 @@ const steps: StepDescription[] = [
     }, {
         // Step 2
         title: "Draw possible paths",
-        cleanup: (_, edges) => makeEdgesStaticCleanUp(edges),
+        cleanup: (nodes, edges) => {
+            makeEdgesStaticCleanUp(edges);
+            defaultNodeCleanUp(nodes);
+        },
         solver: solvePossiblePaths,
         helper: PossiblePathsHelper,
         verifier: verifyPossiblePaths,
@@ -109,7 +122,10 @@ const steps: StepDescription[] = [
         onNodeClick: enumerateLeavesOnClickHandler,
         verifier: verifyEnumerateLeaves,
         prepare: () => useEnumerateLeaves.setState({nextIndex: 0}),
-        cleanup: () => useEnumerateLeaves.destroy(),
+        cleanup: (nodes) => {
+            useEnumerateLeaves.destroy();
+            defaultNodeCleanUp(nodes);
+        },
         canMoveNodes: false,
         canEditNodes: false,
         canConnectNodes: false,
@@ -118,7 +134,11 @@ const steps: StepDescription[] = [
         // Step 4
         title: "Set empty attributes",
         solver: solveCanBeEmpty,
+        verifier: verifyCanBeEmpty,
         helper: CanBeEmptyHelper,
+        prepare: (nodes) => nodes.forEach(node => node.data.canBeEmpty = true),
+        onNodeClick: canBeEmptyOnClickHandler,
+        cleanup: (nodes) => defaultNodeCleanUp(nodes),
         canMoveNodes: false,
         canEditNodes: false,
         canConnectNodes: false,
@@ -128,6 +148,7 @@ const steps: StepDescription[] = [
         title: "Collect may-set of first reached states",
         solver: solveFirstReachedStates,
         helper: FirstReachedStatesHelper,
+        cleanup: (nodes) => defaultNodeCleanUp(nodes),
         canMoveNodes: false,
         canEditNodes: false,
         canConnectNodes: false,
@@ -137,6 +158,7 @@ const steps: StepDescription[] = [
         title: "Collect may-set of next reached read states per subtree",
         solver: solveNextReachedStates,
         helper: NextReachedStatesHelper,
+        cleanup: (nodes) => defaultNodeCleanUp(nodes),
         canMoveNodes: false,
         canEditNodes: false,
         canConnectNodes: false,
@@ -146,6 +168,7 @@ const steps: StepDescription[] = [
         title: "Collect may-set of last reached read states per subtree",
         solver: solveLastReached,
         helper: LastReachedStatesHelper,
+        cleanup: (nodes) => defaultNodeCleanUp(nodes),
         canMoveNodes: false,
         canEditNodes: false,
         canConnectNodes: false,
