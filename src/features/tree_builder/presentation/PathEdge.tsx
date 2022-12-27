@@ -50,6 +50,8 @@ export default function PathEdge({
 
     }
 
+    // FIXME: also return wider, transparent edge for easier click handling
+
     return (
         <>
             <path

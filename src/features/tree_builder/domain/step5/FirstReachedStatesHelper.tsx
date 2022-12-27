@@ -3,6 +3,7 @@ import StepHelp from "@/tree_builder/presentation/StepHelp";
 import {Button, Group, Kbd} from "@mantine/core";
 import {useHotkeys} from "@mantine/hooks";
 import finishNode from "@/tree_builder/domain/step5/finishNode";
+import clearNode from "@/tree_builder/domain/step5/clearNode";
 
 export default function FirstReachedStatesHelper() {
     const selected_nodes = useNodes().filter(node => node.selected);
@@ -11,7 +12,10 @@ export default function FirstReachedStatesHelper() {
         TODO: step help
     </StepHelp>
 
-    useHotkeys([["Enter", () => finishNode(selected_nodes, reactFlow)]])
+    useHotkeys([
+        ["Enter", () => finishNode(selected_nodes, reactFlow)],
+        ["Escape", () => clearNode(selected_nodes, reactFlow, "firstReached")],
+    ])
 
     if (selected_nodes.length === 0) {
         return <>
@@ -21,8 +25,8 @@ export default function FirstReachedStatesHelper() {
     } else {
         return <>
             <Group>
-                Click all terminals which can be reached first from the selected node.
-                To finish node press <Kbd py={2}>Enter</Kbd> or
+                Click all terminals which can be reached first from the selected node. To clear node, press <Kbd py={2}>Esc</Kbd>,
+                to finish node press <Kbd py={2}>Enter</Kbd> or
                 <Button size={"xs"} h={28} onClick={() => finishNode(selected_nodes, reactFlow)}>Finish</Button>
             </Group>
             {help}
