@@ -1,14 +1,19 @@
-import {useNodes} from "reactflow";
+import {useNodes, useReactFlow} from "reactflow";
 import StepHelp from "@/tree_builder/presentation/StepHelp";
 import {Button, Group, Kbd} from "@mantine/core";
+import {useHotkeys} from "@mantine/hooks";
+import finishNode from "@/tree_builder/domain/step5/finishNode";
 
 export default function FirstReachedStatesHelper() {
     const selected_nodes = useNodes().filter(node => node.selected);
+    const reactFlow = useReactFlow();
     const help = <StepHelp>
         TODO: step help
     </StepHelp>
 
-    if(selected_nodes.length === 0) {
+    useHotkeys([["Enter", () => finishNode(selected_nodes, reactFlow)]])
+
+    if (selected_nodes.length === 0) {
         return <>
             Click node to select its first reached states
             {help}
@@ -17,8 +22,8 @@ export default function FirstReachedStatesHelper() {
         return <>
             <Group>
                 Click all terminals which can be reached first from the selected node.
-                {/* TODO: make buttons work */ }
-                To finish press <Kbd py={2}>Enter</Kbd> or <Button size={"xs"} h={28}>Finish</Button>
+                To finish node press <Kbd py={2}>Enter</Kbd> or
+                <Button size={"xs"} h={28} onClick={() => finishNode(selected_nodes, reactFlow)}>Finish</Button>
             </Group>
             {help}
         </>
