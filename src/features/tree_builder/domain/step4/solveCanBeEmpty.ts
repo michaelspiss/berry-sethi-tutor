@@ -10,10 +10,11 @@ export default function solveCanBeEmpty(nodes: Node[], edges: Edge[]) : SolverRe
             case "*":
                 return {canBeEmpty: true};
             case "+":
-            case "·":
                 return {canBeEmpty: children[0].data.canBeEmpty}
+            case "·":
+                return {canBeEmpty: children.map(child => child.data.canBeEmpty).reduce((a,c) => a && c, true)}
             case "|":
-                return {canBeEmpty: children.map(child => child.data.canBeEmpty).reduce((a,c) => !a && !c, false)}
+                return {canBeEmpty: children.map(child => child.data.canBeEmpty).reduce((a,c) => a || c, false)}
             default:
                 return {canBeEmpty: false};
         }
@@ -21,5 +22,3 @@ export default function solveCanBeEmpty(nodes: Node[], edges: Edge[]) : SolverRe
 
     return {nodes, edges};
 }
-
-// TODO: add ε as button to regex input
