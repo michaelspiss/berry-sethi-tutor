@@ -159,8 +159,7 @@ export default function verifyPossiblePaths(nodes: Node[], edges: Edge[]): Verif
 
     if (edgesNotToChildrenOrParentOrSibling.length !== 0) {
         errors.push({
-            // TODO: add or itself (node)
-            title: "Edges must only go to children, the parent, or the following sibling",
+            title: "Edges must only go to children, the parent, the following sibling, or the node itself",
             message: <>You have edges which violate this requirement. Try removing edges which skip nodes.</>,
             causes: edgesNotToChildrenOrParentOrSibling,
         });
