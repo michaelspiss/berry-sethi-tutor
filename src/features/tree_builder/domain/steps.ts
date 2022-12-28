@@ -25,6 +25,7 @@ import useEnumerateLeaves from "@/tree_builder/domain/step3/useEnumerateLeaves";
 import canBeEmptyOnClickHandler from "@/tree_builder/domain/step4/canBeEmptyOnClickHandler";
 import verifyCanBeEmpty from "@/tree_builder/domain/step4/verifyCanBeEmpty";
 import useAppStateStore from "@/layout/stores/appStateStore";
+import clickNode from "@/tree_builder/domain/step5/clickNode";
 
 interface StepDescription {
     title: string,
@@ -155,6 +156,8 @@ const steps: StepDescription[] = [
         title: "Collect may-set of first reached states",
         solver: solveFirstReachedStates,
         helper: FirstReachedStatesHelper,
+        onNodeClick: (node, reactFlow) => clickNode(node, reactFlow, "firstReached"),
+        prepare: (nodes) => nodes.forEach(node => node.data.firstReached = []),
         cleanup: (nodes) => defaultNodeCleanUp(nodes),
         canMoveNodes: false,
         canEditNodes: false,
@@ -166,6 +169,8 @@ const steps: StepDescription[] = [
         title: "Collect may-set of next reached read states per subtree",
         solver: solveNextReachedStates,
         helper: NextReachedStatesHelper,
+        onNodeClick: (node, reactFlow) => clickNode(node, reactFlow, "nextReached"),
+        prepare: (nodes) => nodes.forEach(node => node.data.nextReached = []),
         cleanup: (nodes) => defaultNodeCleanUp(nodes),
         canMoveNodes: false,
         canEditNodes: false,
@@ -177,6 +182,8 @@ const steps: StepDescription[] = [
         title: "Collect may-set of last reached read states per subtree",
         solver: solveLastReached,
         helper: LastReachedStatesHelper,
+        onNodeClick: (node, reactFlow) => clickNode(node, reactFlow, "lastReached"),
+        prepare: (nodes) => nodes.forEach(node => node.data.lastReached = []),
         cleanup: (nodes) => defaultNodeCleanUp(nodes),
         canMoveNodes: false,
         canEditNodes: false,
