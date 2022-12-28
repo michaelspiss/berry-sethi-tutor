@@ -7,6 +7,7 @@ const useStyles = createStyles((theme) => ({
         width: theme.spacing.xl * 2,
         lineHeight: theme.spacing.md + "px",
         zIndex: 10,
+        textShadow: "1px 0 #fff, -1px 0 #fff, 0 1px #fff, 0 -1px #fff, 0px 0px #fff, -0px -0px #fff, 0px -0px #fff, -0px 0px #fff;"
     },
     topLeft: {
         top: -10,
