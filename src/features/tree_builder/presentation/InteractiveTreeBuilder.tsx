@@ -148,6 +148,7 @@ export default function InteractiveTreeBuilder(): React.ReactElement {
                 onNodeClick={(_, node) => steps[solveStep].onNodeClick?.call(null, node, reactFlowInstance!)}
                 selectNodesOnDrag={false}
                 elementsSelectable={steps[solveStep].canSelectElements && !disableSelect}
+                onPaneClick={() => disableSelect && useAppStateStore.setState({disableSelect: false})}
                 nodesDraggable={steps[solveStep].canMoveNodes}
                 nodesConnectable={steps[solveStep].canConnectNodes}
                 nodesFocusable={steps[solveStep].canEditNodes}
