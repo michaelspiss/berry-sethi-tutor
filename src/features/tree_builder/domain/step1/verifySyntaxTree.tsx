@@ -87,6 +87,19 @@ function allNodesHaveValidLabels(nodes: Node[], errors: VerificationError[]) {
                 try escaping it (e.g. \+ instead of +). Reserved characters are: {operatorSymbols.join(', ')}</>
         })
     }
+
+    if(terminalWithTooManyCharacters.length === 0 && terminalsWithOperatorLabel.length === 0 && emptyNodes.length === 0) {
+        const regexTerminals = useAppStateStore.getState().regexModel!.getTerminals();
+        const terminalsNotInRegex = nodes.filter(node => node.type === "terminal" && !regexTerminals.includes(node.data.label));
+
+        if(terminalsNotInRegex.length !== 0) {
+            errors.push({
+                title: "Terminal does not exist in regex",
+                message: <>At least one terminal does not exist in the regular expression. Reading a value which is not defined in the regular expression always leads to a faulty state. Try removing it.</>,
+                causes: terminalsNotInRegex.map(node => node.id),
+            })
+        }
+    }
 }
 
 function getCorrectChildCountForOperator(operator: string) {
