@@ -26,6 +26,7 @@ import canBeEmptyOnClickHandler from "@/tree_builder/domain/step4/canBeEmptyOnCl
 import verifyCanBeEmpty from "@/tree_builder/domain/step4/verifyCanBeEmpty";
 import useAppStateStore from "@/layout/stores/appStateStore";
 import clickNode from "@/tree_builder/domain/step5/clickNode";
+import verifyFirstReached from "@/tree_builder/domain/step5/verifyFirstReached";
 
 interface StepDescription {
     title: string,
@@ -153,9 +154,10 @@ const steps: StepDescription[] = [
         canSelectElements: false,
     }, {
         // Step 5
-        title: "Collect may-set of first reached states",
+        title: "Collect may-set of first reached read states",
         solver: solveFirstReachedStates,
         helper: FirstReachedStatesHelper,
+        verifier: verifyFirstReached,
         onNodeClick: (node, reactFlow) => clickNode(node, reactFlow, "firstReached"),
         prepare: (nodes) => nodes.forEach(node => node.data.firstReached = []),
         cleanup: (nodes) => defaultNodeCleanUp(nodes),

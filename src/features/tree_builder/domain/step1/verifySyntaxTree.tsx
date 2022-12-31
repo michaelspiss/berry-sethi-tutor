@@ -58,6 +58,7 @@ function allNodesHaveExactlyOneParent(nodes: Node[], edges: Edge[], errors: Veri
 }
 
 function allNodesHaveValidLabels(nodes: Node[], errors: VerificationError[]) {
+    // TODO: check if terminal characters even exist
     const emptyNodes = nodes.filter((node) => !node.data.label || node.data.label === "");
     if (emptyNodes.length !== 0) {
         errors.push({
@@ -67,14 +68,6 @@ function allNodesHaveValidLabels(nodes: Node[], errors: VerificationError[]) {
         });
     }
 
-    const operatorsWithWrongType = nodes.filter((node) => node.type === "operator" && !operatorSymbols.includes(node.data.label));
-    if (operatorsWithWrongType.length !== 0) {
-        errors.push({
-            title: 'Graph contains unknown operators',
-            causes: operatorsWithWrongType.map(node => node.id),
-            message: <>Please only use the buttons to choose a type.</>
-        });
-    }
     const terminalWithTooManyCharacters = nodes.filter(node => node.type === "terminal" && !terminalLengthIsValid(node.data.label));
     if (terminalWithTooManyCharacters.length !== 0) {
         errors.push({
