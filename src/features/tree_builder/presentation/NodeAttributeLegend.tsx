@@ -12,6 +12,9 @@ const useStyles = createStyles(() => ({
         marginLeft: "auto",
         marginRight: "auto",
         marginBottom: 10,
+    },
+    nodeContent: {
+        userSelect: "none",
     }
 }))
 
@@ -21,7 +24,7 @@ export default function NodeAttributeLegend() {
     const {classes: attributeClasses} = useAttributeStyles();
 
     return <div className={cx(classes.node, nodeClasses.node)}>
-        <div className={nodeClasses.nodeContent}>c</div>
+        <div className={cx(nodeClasses.nodeContent, classes.nodeContent)}>a</div>
         <div className={cx(attributeClasses.attribute, attributeClasses.topLeft, classes.attribute)}>can read empty</div>
         <div className={cx(attributeClasses.attribute, attributeClasses.bottomLeft, classes.attribute)}>first reached</div>
         <div className={cx(attributeClasses.attribute, attributeClasses.topRight, classes.attribute)}>next reached</div>
