@@ -39,8 +39,8 @@ export default function NodeAttributes(props: {data: {[key: string]: any}}) {
         {props.data.canBeEmpty === undefined ? null
             : <div className={cx(classes.attribute, classes.topLeft)}>
             {props.data.canBeEmpty
-                ? <span style={{color: theme.colors.green[7]}}>t&nbsp;</span>
-                : <span style={{color: theme.colors.red[7]}}>f&nbsp;</span>}
+                ? <span style={{color: theme.colors.green[8]}}>t&nbsp;</span>
+                : <span style={{color: theme.colors.red[8]}}>f&nbsp;</span>}
             </div>}
         {props.data.firstReached === undefined ? null
             : <div className={cx(classes.attribute, classes.bottomLeft)}>
