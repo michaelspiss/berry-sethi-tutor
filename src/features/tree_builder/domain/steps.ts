@@ -166,7 +166,7 @@ const steps: StepDescription[] = [
         canSelectElements: true,
     }, {
         // Step 6
-        title: "Collect may-set of next reached read states per subtree",
+        title: "Collect may-set of next reached read states",
         solver: solveNextReachedStates,
         helper: NextReachedStatesHelper,
         onNodeClick: (node, reactFlow) => clickNode(node, reactFlow, "nextReached"),
@@ -179,7 +179,7 @@ const steps: StepDescription[] = [
         canSelectElements: true,
     }, {
         // Step 7
-        title: "Collect may-set of last reached read states per subtree",
+        title: "Collect may-set of last reached read states",
         solver: solveLastReached,
         helper: LastReachedStatesHelper,
         onNodeClick: (node, reactFlow) => clickNode(node, reactFlow, "lastReached"),
