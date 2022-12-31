@@ -1,4 +1,15 @@
-import {ActionIcon, AppShell, Center, Group, Header, MantineProvider, Navbar, ScrollArea, Tooltip} from '@mantine/core';
+import {
+    ActionIcon,
+    AppShell,
+    Center,
+    Group,
+    Header,
+    MantineProvider,
+    Navbar,
+    ScrollArea,
+    Text,
+    Tooltip
+} from '@mantine/core';
 import mantineThemeOther from "./configuration/mantineThemeOther";
 import useAppStateStore from "@/layout/stores/appStateStore";
 import StepsProgress from "@/layout/presentation/StepsProgress";
@@ -9,6 +20,7 @@ import RegexHighlighter from "@/analyze_regex/presentation/RegexHighlighter";
 import {ReactFlowProvider} from "reactflow";
 import SolveButton from "@/tree_builder/presentation/SolveButton";
 import VerifyTreeButton from "@/tree_builder/presentation/VerifyTreeButton";
+import NodeAttributeLegend from "@/tree_builder/presentation/NodeAttributeLegend";
 
 export default function App() {
     const solveStep = useAppStateStore((state) => state.solveStep);
@@ -66,9 +78,15 @@ export default function App() {
                           }
                           navbar={
                               solveStep === -1 ? undefined : <Navbar width={{base: 240}} p={"xs"}>
-                                  <ScrollArea>
+                                  <Navbar.Section component={ScrollArea} grow>
                                       <StepsProgress activeStep={solveStep}/>
-                                  </ScrollArea>
+                                  </Navbar.Section>
+                                  <Navbar.Section>
+                                      <Text size="xs" weight={500} color="dimmed" pb={10}>
+                                          Reference
+                                      </Text>
+                                      <NodeAttributeLegend />
+                                  </Navbar.Section>
                               </Navbar>
                           }>
                     {solveStep === -1 ? <RegexInputScreen/> : <InteractiveTreeBuilder/>}

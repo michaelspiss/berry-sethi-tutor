@@ -64,6 +64,8 @@ export default function RegexInput(props: RegexInputProps) {
 
     const focusTrap = useFocusTrap();
 
+
+    // TODO: add lecture examples in dropdown
     return <Box className={classes.wrapper} ref={focusTrap}>
         <Textarea placeholder={"Regex"}
                   autosize

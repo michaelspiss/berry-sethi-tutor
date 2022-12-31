@@ -1,6 +1,6 @@
 import {createStyles} from "@mantine/core";
 
-const useStyles = createStyles((theme) => ({
+export const useAttributeStyles = createStyles((theme) => ({
     attribute: {
         position: "absolute",
         fontSize: theme.spacing.sm,
@@ -11,26 +11,29 @@ const useStyles = createStyles((theme) => ({
     },
     topLeft: {
         top: -10,
-        right: 40,
+        right: 38,
         textAlign: "right",
     },
     bottomLeft: {
         right: 38,
         bottom: -10,
         textAlign: "right",
+        color: theme.colors.blue[7],
     },
     topRight: {
         left: 38,
         top: -10,
+        color: theme.colors.teal[9],
     },
     bottomRight: {
         left: 38,
         bottom: -10,
+        color: theme.colors.yellow[9],
     }
 }));
 
 export default function NodeAttributes(props: {data: {[key: string]: any}}) {
-    const {classes, cx, theme} = useStyles();
+    const {classes, cx, theme} = useAttributeStyles();
 
     return <>
         {props.data.canBeEmpty === undefined ? null
@@ -40,15 +43,15 @@ export default function NodeAttributes(props: {data: {[key: string]: any}}) {
                 : <span style={{color: theme.colors.red[7]}}>f&nbsp;</span>}
             </div>}
         {props.data.firstReached === undefined ? null
-            : <div className={cx(classes.attribute, classes.bottomLeft)} style={{color: theme.colors.blue[7]}}>
+            : <div className={cx(classes.attribute, classes.bottomLeft)}>
                 {"{" + props.data.firstReached.join(",") + "}"}
             </div> }
         {props.data.nextReached === undefined ? null
-            : <div className={cx(classes.attribute, classes.topRight)} style={{color: theme.colors.teal[9]}}>
+            : <div className={cx(classes.attribute, classes.topRight)}>
                 {"{" + props.data.nextReached.join(",") + "}"}
             </div> }
         {props.data.lastReached === undefined ? null
-            : <div className={cx(classes.attribute, classes.bottomRight)} style={{color: theme.colors.yellow[9]}}>
+            : <div className={cx(classes.attribute, classes.bottomRight)}>
                 {"{" + props.data.lastReached.join(",") + "}"}
             </div> }
     </>
