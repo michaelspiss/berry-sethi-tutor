@@ -3,6 +3,7 @@ import {Kbd} from "@mantine/core";
 import {Edge, getOutgoers, Node} from "reactflow";
 import arraysAreEqual from "@/tree_builder/domain/arraysAreEqual";
 
+// TODO: replace "read" with "reached" everywhere?
 export default function verifyFirstReached(nodes: Node[], edges: Edge[]): VerificationResult {
     const errors: VerificationError[] = [];
     const step1edges = edges.filter(edge => edge.data.step === 0);
@@ -28,8 +29,8 @@ export default function verifyFirstReached(nodes: Node[], edges: Edge[]): Verifi
 
     if (terminalsMustReadThemselves.length !== 0) {
         errors.push({
-            title: "Terminals must reach themselves first",
-            message: <>Terminals always read only themselves first, except for epsilon transitions, where the first read
+            title: "Terminals must only reach themselves first",
+            message: <>Terminals always only reach themselves first, except for epsilon transitions, where the first reached
                 is always empty. Try clearing all terminal first read lists and adding only themselves.</>,
             causes: terminalsMustReadThemselves,
         });
@@ -85,7 +86,7 @@ export default function verifyFirstReached(nodes: Node[], edges: Edge[]): Verifi
 
     if (concatenationsSecondIfFirstAlwaysEmpty.length !== 0) {
         errors.push({
-            title: "Concatenation first reached must equal second child if first is empty",
+            title: "Concatenation's first reached must equal second child if first is empty",
             message: <>If the first child cannot reach any read states, the first reached read states of the second
                 child become the first reachable for the concatenation node.</>,
             causes: concatenationsSecondIfFirstAlwaysEmpty,
@@ -94,19 +95,19 @@ export default function verifyFirstReached(nodes: Node[], edges: Edge[]): Verifi
 
     if (concatenationsConcatIfFirstCanBeEmpty.length !== 0) {
         errors.push({
-            title: "Concatenation first reached must include items from both children if first can be empty",
+            title: "Concatenation's first reached must include items from both children if first can be empty",
             message: <>If the first child has the can be empty attribute set to true, the second child's first reached
                 terminals may also be the concatenation's first reached. Thus, the concatenation's first reached read
-                states must include all items of both children's first reached attribute.</>,
+                states must include all items of both children's first reached attributes.</>,
             causes: concatenationsConcatIfFirstCanBeEmpty,
         })
     }
 
     if (concatenationsFirstChildOnly.length !== 0) {
         errors.push({
-            title: "Concatenations first reached read states must equal that of the first child",
+            title: "Concatenation's first reached read states must equal that of the first child",
             message: <>As long as the first child's can be empty attribute is not set to true and the first child's
-                first reached read states is not empty, a concatenation's first reached equal that of its first
+                first reached read states are not empty, a concatenation's first reached list equals that of its first
                 child.</>,
             causes: concatenationsFirstChildOnly,
         })
@@ -124,7 +125,7 @@ export default function verifyFirstReached(nodes: Node[], edges: Edge[]): Verifi
 
     if (alterationsAlwaysBoth.length !== 0) {
         errors.push({
-            title: "Alteration must always include all items from both children",
+            title: "Alterations must always include all items from both children",
             message: <>As either child of an alteration may be the first one, all first reached states of the children
                 need to be added to the alteration's.</>,
             causes: alterationsAlwaysBoth,

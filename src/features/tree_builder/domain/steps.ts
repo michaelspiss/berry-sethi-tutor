@@ -28,6 +28,7 @@ import useAppStateStore from "@/layout/stores/appStateStore";
 import clickNode from "@/tree_builder/domain/step5/clickNode";
 import verifyFirstReached from "@/tree_builder/domain/step5/verifyFirstReached";
 import verifyNextReached from "@/tree_builder/domain/step6/verifyNextReached";
+import verifyLastReached from "@/tree_builder/domain/step7/verifyLastReached";
 
 interface StepDescription {
     title: string,
@@ -186,6 +187,7 @@ const steps: StepDescription[] = [
         title: "Collect may-set of last reached read states",
         solver: solveLastReached,
         helper: LastReachedStatesHelper,
+        verifier: verifyLastReached,
         onNodeClick: (node, reactFlow) => clickNode(node, reactFlow, "lastReached"),
         prepare: (nodes) => nodes.forEach(node => node.data.lastReached = []),
         cleanup: (nodes) => defaultNodeCleanUp(nodes),
