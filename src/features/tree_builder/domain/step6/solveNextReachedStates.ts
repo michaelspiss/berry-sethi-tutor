@@ -22,7 +22,7 @@ export default function solveNextReachedStates(nodes: Node[], edges: Edge[]): So
  * @param nodes
  * @param pathEdges
  */
-function getNextReached(node: Node, nodes: Node[], pathEdges: Edge[]): string[] {
+export function getNextReached(node: Node, nodes: Node[], pathEdges: Edge[]): string[] {
     return pathEdges
         .filter(edge => edge.source === node.id && edge.sourceHandle === "step2r")
         .map(edge => traverseAndReturnNextReachedTerminals(edge, nodes, pathEdges))

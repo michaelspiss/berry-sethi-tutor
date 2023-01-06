@@ -27,6 +27,7 @@ import verifyCanBeEmpty from "@/tree_builder/domain/step4/verifyCanBeEmpty";
 import useAppStateStore from "@/layout/stores/appStateStore";
 import clickNode from "@/tree_builder/domain/step5/clickNode";
 import verifyFirstReached from "@/tree_builder/domain/step5/verifyFirstReached";
+import verifyNextReached from "@/tree_builder/domain/step6/verifyNextReached";
 
 interface StepDescription {
     title: string,
@@ -171,6 +172,7 @@ const steps: StepDescription[] = [
         title: "Collect may-set of next reached read states",
         solver: solveNextReachedStates,
         helper: NextReachedStatesHelper,
+        verifier: verifyNextReached,
         onNodeClick: (node, reactFlow) => clickNode(node, reactFlow, "nextReached"),
         prepare: (nodes) => nodes.forEach(node => node.data.nextReached = []),
         cleanup: (nodes) => defaultNodeCleanUp(nodes),
