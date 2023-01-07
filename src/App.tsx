@@ -14,13 +14,14 @@ import mantineThemeOther from "./configuration/mantineThemeOther";
 import useAppStateStore from "@/layout/stores/appStateStore";
 import StepsProgress from "@/layout/presentation/StepsProgress";
 import RegexInputScreen from "@/analyze_regex/presentation/screens/RegexInputScreen";
-import InteractiveTreeBuilder from "@/tree_builder/presentation/InteractiveTreeBuilder";
 import {IconAlertTriangle, IconArrowBack} from "@tabler/icons";
 import RegexHighlighter from "@/analyze_regex/presentation/RegexHighlighter";
 import {ReactFlowProvider} from "reactflow";
 import SolveButton from "@/tree_builder/presentation/SolveButton";
 import VerifyTreeButton from "@/tree_builder/presentation/VerifyTreeButton";
 import NodeAttributeLegend from "@/tree_builder/presentation/NodeAttributeLegend";
+import AutomatonBuilderScreen from "@/automaton_builder/presentation/AutomatonBuilderScreen";
+import TreeBuilderScreen from "@/tree_builder/presentation/screens/TreeBuilderScreen";
 
 export default function App() {
     const solveStep = useAppStateStore((state) => state.solveStep);
@@ -89,7 +90,11 @@ export default function App() {
                                   </Navbar.Section>
                               </Navbar>
                           }>
-                    {solveStep === -1 ? <RegexInputScreen/> : <InteractiveTreeBuilder/>}
+                    {solveStep === -1
+                        ? <RegexInputScreen/>
+                        : solveStep === 7
+                            ? <AutomatonBuilderScreen/>
+                            : <TreeBuilderScreen/>}
                 </AppShell>
             </ReactFlowProvider>
         </MantineProvider>

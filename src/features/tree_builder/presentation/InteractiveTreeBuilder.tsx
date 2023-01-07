@@ -14,7 +14,7 @@ import {
     ReactFlowInstance,
     useNodesState
 } from "reactflow";
-import React, {DragEventHandler, FunctionComponent, useCallback, useRef, useState} from "react";
+import React, {DragEventHandler, useCallback, useRef, useState} from "react";
 import TreeElementsPanel from "@/tree_builder/presentation/TreeElementsPanel";
 import OperatorNode from "@/tree_builder/presentation/OperatorNode";
 import TerminalNode from "@/tree_builder/presentation/TerminalNode";
@@ -22,7 +22,6 @@ import useNodeStyles from "@/tree_builder/presentation/useNodeStyles";
 import steps from "@/tree_builder/domain/steps";
 import useAppStateStore from "@/layout/stores/appStateStore";
 import VerificationErrors from "@/tree_builder/presentation/VerificationErrors";
-import {Alert, Group} from "@mantine/core";
 import PathEdge from "@/tree_builder/presentation/PathEdge";
 import ArrowMarker from "@/tree_builder/presentation/ArrowMarker";
 
@@ -126,46 +125,39 @@ export default function InteractiveTreeBuilder(): React.ReactElement {
         setNodes((nodes) => nodes.concat(newNode));
     }, [reactFlowInstance])
 
-    return <div style={{height: "100%", width: "100%", display: "flex", flexDirection: "column"}}>
-        <Alert color={"blue"} radius={0} py={6} styles={{message: {overflow: "visible"}}}>
-            <Group position={"apart"}>
-                {React.createElement(steps[solveStep].helper as unknown as FunctionComponent)}
-            </Group>
-        </Alert>
-        <div style={{flexGrow: 1}} ref={reactFlowWrapper}>
-            <ArrowMarker />
-            <ReactFlow
-                nodes={nodes}
-                edges={edges}
-                onNodesChange={onNodesChange}
-                onEdgesChange={onEdgesChange}
-                onConnect={onConnect}
-                onInit={setReactFlowInstance}
-                onDragOver={onDragOver}
-                onDrop={onDrop}
-                nodeTypes={nodeTypes}
-                edgeTypes={edgeTypes}
-                onNodeClick={(_, node) => steps[solveStep].onNodeClick?.call(null, node, reactFlowInstance!)}
-                selectNodesOnDrag={false}
-                elementsSelectable={steps[solveStep].canSelectElements && !disableSelect}
-                onPaneClick={() => disableSelect && useAppStateStore.setState({disableSelect: false})}
-                nodesDraggable={steps[solveStep].canMoveNodes}
-                nodesConnectable={steps[solveStep].canConnectNodes}
-                nodesFocusable={steps[solveStep].canEditNodes}
-                connectionMode={steps[solveStep].canSourceConnectToSource ? ConnectionMode.Loose : ConnectionMode.Strict}
-                deleteKeyCode={steps[solveStep].canEditNodes ? ['Backspace', 'Delete'] : null}
-                selectionKeyCode={null}
-                connectionLineType={solveStep === 0 ? ConnectionLineType.Bezier : ConnectionLineType.Straight}
-                multiSelectionKeyCode={null}>
-                <Background/>
-                <Controls showInteractive={false}/>
-                <Panel position={"top-right"} style={{maxHeight: "100%", paddingBottom: 0}}>
-                    <VerificationErrors/>
-                </Panel>
-                <Panel position={"bottom-center"}>
-                    {steps[solveStep].canEditNodes ? <TreeElementsPanel/> : null}
-                </Panel>
-            </ReactFlow>
-        </div>
+    return <div style={{flexGrow: 1}} ref={reactFlowWrapper}>
+        <ArrowMarker/>
+        <ReactFlow
+            nodes={nodes}
+            edges={edges}
+            onNodesChange={onNodesChange}
+            onEdgesChange={onEdgesChange}
+            onConnect={onConnect}
+            onInit={setReactFlowInstance}
+            onDragOver={onDragOver}
+            onDrop={onDrop}
+            nodeTypes={nodeTypes}
+            edgeTypes={edgeTypes}
+            onNodeClick={(_, node) => steps[solveStep].onNodeClick?.call(null, node, reactFlowInstance!)}
+            selectNodesOnDrag={false}
+            elementsSelectable={steps[solveStep].canSelectElements && !disableSelect}
+            onPaneClick={() => disableSelect && useAppStateStore.setState({disableSelect: false})}
+            nodesDraggable={steps[solveStep].canMoveNodes}
+            nodesConnectable={steps[solveStep].canConnectNodes}
+            nodesFocusable={steps[solveStep].canEditNodes}
+            connectionMode={steps[solveStep].canSourceConnectToSource ? ConnectionMode.Loose : ConnectionMode.Strict}
+            deleteKeyCode={steps[solveStep].canEditNodes ? ['Backspace', 'Delete'] : null}
+            selectionKeyCode={null}
+            connectionLineType={solveStep === 0 ? ConnectionLineType.Bezier : ConnectionLineType.Straight}
+            multiSelectionKeyCode={null}>
+            <Background/>
+            <Controls showInteractive={false}/>
+            <Panel position={"top-right"} style={{maxHeight: "100%", paddingBottom: 0}}>
+                <VerificationErrors/>
+            </Panel>
+            <Panel position={"bottom-center"}>
+                {steps[solveStep].canEditNodes ? <TreeElementsPanel/> : null}
+            </Panel>
+        </ReactFlow>
     </div>
 }
