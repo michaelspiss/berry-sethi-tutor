@@ -4,7 +4,6 @@ import InteractiveTreeBuilder from "@/tree_builder/presentation/InteractiveTreeB
 import HintBar from "@/layout/presentation/HintBar";
 import AutomatonPreview from "@/automaton_builder/presentation/AutomatonPreview";
 import {useState} from "react";
-import {ReactFlowProvider} from "reactflow";
 
 const useStyles = createStyles(() => ({
     wrapper: {
@@ -27,7 +26,6 @@ const useStyles = createStyles(() => ({
             flexDirection: "column",
         }
     },
-
 }))
 
 export default function AutomatonBuilderScreen() {
@@ -38,12 +36,10 @@ export default function AutomatonBuilderScreen() {
         <HintBar/>
         <div className={classes.horizontalWrapper}>
             <div className={cx(classes.graphWrapper, {["stacked"]: displayGraphsStacked})}>
-                <InteractiveTreeBuilder />
-                <ReactFlowProvider>
-                    <AutomatonPreview />
-                </ReactFlowProvider>
+                <InteractiveTreeBuilder/>
+                <AutomatonPreview/>
             </div>
-            <AutomatonEditor />
+            <AutomatonEditor/>
         </div>
     </div>
 }

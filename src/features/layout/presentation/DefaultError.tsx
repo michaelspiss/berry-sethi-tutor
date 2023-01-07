@@ -1,14 +1,13 @@
 import React from "react";
 import {IconAlertCircle} from "@tabler/icons";
 import {Alert, useMantineTheme} from "@mantine/core";
-import {useReactFlow} from "reactflow";
+import useTree from "@/tree_builder/domain/useTree";
 
 export default function DefaultError(props: { title: string, message: React.ReactElement, causes?: string[] }) {
-    const reactFlow = useReactFlow();
     const theme = useMantineTheme();
 
     const showCauses = () => {
-        reactFlow.setNodes(nodes => nodes.map(node => {
+        useTree.getState().setNodes(nodes => nodes.map(node => {
             if (!props.causes?.includes(node.id)) {
                 return node;
             }
@@ -19,7 +18,7 @@ export default function DefaultError(props: { title: string, message: React.Reac
                 }
             }
         }));
-        reactFlow.setEdges(edges => edges.map(edge => {
+        useTree.getState().setEdges(edges => edges.map(edge => {
             if (!props.causes?.includes(edge.id)) {
                 return edge;
             }
@@ -32,7 +31,7 @@ export default function DefaultError(props: { title: string, message: React.Reac
         }))
     }
     const hideCauses = () => {
-        reactFlow.setNodes(nodes => nodes.map(node => {
+        useTree.getState().setNodes(nodes => nodes.map(node => {
             if (!props.causes?.includes(node.id)) {
                 return node;
             }
@@ -41,7 +40,7 @@ export default function DefaultError(props: { title: string, message: React.Reac
                 style: undefined,
             }
         }));
-        reactFlow.setEdges(edges => edges.map(edge => {
+        useTree.getState().setEdges(edges => edges.map(edge => {
             if (!props.causes?.includes(edge.id)) {
                 return edge;
             }

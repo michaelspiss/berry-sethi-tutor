@@ -2,13 +2,11 @@ import StepHelp from "@/tree_builder/presentation/StepHelp";
 import {Group, Kbd} from "@mantine/core";
 import {useHotkeys} from "@mantine/hooks";
 import useEnumerateLeaves from "@/tree_builder/domain/step3/useEnumerateLeaves";
-import {useReactFlow} from "reactflow";
+import useTree from "@/tree_builder/domain/useTree";
 
 export default function EnumerateLeavesHelper() {
-    const reactFlow = useReactFlow();
-
     useHotkeys([["Escape", () => {
-        reactFlow.setNodes(nodes => nodes.map(node => {
+        useTree.getState().setNodes(nodes => nodes.map(node => {
             return node.type === "terminal" ? {
                 ...node,
                 data: {

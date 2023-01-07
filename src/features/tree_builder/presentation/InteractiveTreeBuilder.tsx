@@ -2,6 +2,7 @@ import 'reactflow/dist/style.css';
 import {
     addEdge,
     applyEdgeChanges,
+    applyNodeChanges,
     Background,
     Connection,
     ConnectionLineType,
@@ -9,10 +10,11 @@ import {
     Controls,
     Edge,
     EdgeChange,
+    NodeChange,
     Panel,
     ReactFlow,
     ReactFlowInstance,
-    useNodesState
+    ReactFlowProvider
 } from "reactflow";
 import React, {DragEventHandler, useCallback, useRef, useState} from "react";
 import TreeElementsPanel from "@/tree_builder/presentation/TreeElementsPanel";
@@ -24,6 +26,7 @@ import useAppStateStore from "@/layout/stores/appStateStore";
 import VerificationErrors from "@/tree_builder/presentation/VerificationErrors";
 import PathEdge from "@/tree_builder/presentation/PathEdge";
 import ArrowMarker from "@/tree_builder/presentation/ArrowMarker";
+import useTree from "@/tree_builder/domain/useTree";
 
 function getId() {
     return `node_${+new Date()}`
@@ -38,14 +41,8 @@ const edgeTypes = {
     pathEdge: PathEdge,
 }
 
-/**
- * Displays a canvas which displays the tree and with which the user is able to alter interactively via drag and drop
- * @constructor
- */
-export default function InteractiveTreeBuilder(): React.ReactElement {
-    const [nodes, setNodes, onNodesChange] = useNodesState([]);
-    const [edges, setEdges] = useState<Edge[]>([]);
-    const reactFlowWrapper = useRef<HTMLDivElement>(null);
+const Flow = (props: {reactFlowWrapper: React.RefObject<HTMLDivElement>}) => {
+    const {nodes, edges, setNodes, setEdges} = useTree();
     const [reactFlowInstance, setReactFlowInstance] = useState<ReactFlowInstance | null>(null);
     const {classes, cx} = useNodeStyles();
     const solveStep = useAppStateStore((state) => state.solveStep);
@@ -64,6 +61,10 @@ export default function InteractiveTreeBuilder(): React.ReactElement {
         }, [edges, solveStep, setEdges],
     );
 
+    const onNodesChange = useCallback((changes: NodeChange[]) =>
+        setNodes(nodes => applyNodeChanges(changes, nodes)),
+        [setNodes])
+
     const onEdgesChange = useCallback((changes: EdgeChange[]) =>
             // TODO: prevent changes to edges from a previous step
             setEdges((edges) => applyEdgeChanges(changes, edges)),
@@ -77,7 +78,7 @@ export default function InteractiveTreeBuilder(): React.ReactElement {
 
     const onDrop: DragEventHandler = useCallback((event) => {
         event.preventDefault();
-        const reactFlowBounds = reactFlowWrapper.current?.getBoundingClientRect();
+        const reactFlowBounds = props.reactFlowWrapper.current?.getBoundingClientRect();
         const type = event.dataTransfer.getData('application/berrysethitutor');
 
         if (!type || !reactFlowBounds || !reactFlowInstance) {
@@ -125,39 +126,54 @@ export default function InteractiveTreeBuilder(): React.ReactElement {
         setNodes((nodes) => nodes.concat(newNode));
     }, [reactFlowInstance])
 
+    return <ReactFlow
+        nodes={nodes}
+        edges={edges}
+        onNodesChange={onNodesChange}
+        onEdgesChange={onEdgesChange}
+        onConnect={onConnect}
+        onInit={(instance) => {
+            setReactFlowInstance(instance);
+            useTree.setState({reactFlow: instance});
+        }}
+        onDragOver={onDragOver}
+        onDrop={onDrop}
+        nodeTypes={nodeTypes}
+        edgeTypes={edgeTypes}
+        onNodeClick={(_, node) => steps[solveStep].onNodeClick?.call(null, node, reactFlowInstance!)}
+        selectNodesOnDrag={false}
+        elementsSelectable={steps[solveStep].canSelectElements && !disableSelect}
+        onPaneClick={() => disableSelect && useAppStateStore.setState({disableSelect: false})}
+        nodesDraggable={steps[solveStep].canMoveNodes}
+        nodesConnectable={steps[solveStep].canConnectNodes}
+        nodesFocusable={steps[solveStep].canEditNodes}
+        connectionMode={steps[solveStep].canSourceConnectToSource ? ConnectionMode.Loose : ConnectionMode.Strict}
+        deleteKeyCode={steps[solveStep].canEditNodes ? ['Backspace', 'Delete'] : null}
+        selectionKeyCode={null}
+        connectionLineType={solveStep === 0 ? ConnectionLineType.Bezier : ConnectionLineType.Straight}
+        multiSelectionKeyCode={null}>
+        <Background/>
+        <Controls showInteractive={false}/>
+        <Panel position={"top-right"} style={{maxHeight: "100%", paddingBottom: 0}}>
+            <VerificationErrors/>
+        </Panel>
+        <Panel position={"bottom-center"}>
+            {steps[solveStep].canEditNodes ? <TreeElementsPanel/> : null}
+        </Panel>
+    </ReactFlow>
+}
+
+/**
+ * Displays a canvas which displays the tree and with which the user is able to alter interactively via drag and drop
+ * @constructor
+ */
+export default function InteractiveTreeBuilder(): React.ReactElement {
+    const reactFlowWrapper = useRef<HTMLDivElement>(null);
+
     return <div style={{flexGrow: 1}} ref={reactFlowWrapper}>
         <ArrowMarker/>
-        <ReactFlow
-            nodes={nodes}
-            edges={edges}
-            onNodesChange={onNodesChange}
-            onEdgesChange={onEdgesChange}
-            onConnect={onConnect}
-            onInit={setReactFlowInstance}
-            onDragOver={onDragOver}
-            onDrop={onDrop}
-            nodeTypes={nodeTypes}
-            edgeTypes={edgeTypes}
-            onNodeClick={(_, node) => steps[solveStep].onNodeClick?.call(null, node, reactFlowInstance!)}
-            selectNodesOnDrag={false}
-            elementsSelectable={steps[solveStep].canSelectElements && !disableSelect}
-            onPaneClick={() => disableSelect && useAppStateStore.setState({disableSelect: false})}
-            nodesDraggable={steps[solveStep].canMoveNodes}
-            nodesConnectable={steps[solveStep].canConnectNodes}
-            nodesFocusable={steps[solveStep].canEditNodes}
-            connectionMode={steps[solveStep].canSourceConnectToSource ? ConnectionMode.Loose : ConnectionMode.Strict}
-            deleteKeyCode={steps[solveStep].canEditNodes ? ['Backspace', 'Delete'] : null}
-            selectionKeyCode={null}
-            connectionLineType={solveStep === 0 ? ConnectionLineType.Bezier : ConnectionLineType.Straight}
-            multiSelectionKeyCode={null}>
-            <Background/>
-            <Controls showInteractive={false}/>
-            <Panel position={"top-right"} style={{maxHeight: "100%", paddingBottom: 0}}>
-                <VerificationErrors/>
-            </Panel>
-            <Panel position={"bottom-center"}>
-                {steps[solveStep].canEditNodes ? <TreeElementsPanel/> : null}
-            </Panel>
-        </ReactFlow>
+        <ReactFlowProvider>
+            <Flow reactFlowWrapper={reactFlowWrapper} />
+        </ReactFlowProvider>
     </div>
 }
