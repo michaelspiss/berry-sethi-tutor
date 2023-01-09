@@ -46,7 +46,7 @@ export default function PathEdge({
         const sign = isTopToBottom ? -1 : 1;
         const reach = isRightToLeft ? 40 : 20;
 
-        path = `M ${sourceX} ${sourceY} C ${targetX + sign* reach} ${targetY}, ${targetX + sign * 20} ${targetY + sign * 5}, ${targetX + sign * 2} ${targetY}`
+        path = `M ${sourceX} ${sourceY} C ${targetX + sign * reach} ${targetY}, ${targetX + sign * 20} ${targetY + sign * 5}, ${targetX + sign * 2} ${targetY}`
 
     }
 
@@ -61,6 +61,7 @@ export default function PathEdge({
                 d={path}
                 markerEnd={markerEnd}
             />
+            <path d={path} strokeWidth={10} stroke={"transparent"} fill={"none"} />
         </>
     );
 }
