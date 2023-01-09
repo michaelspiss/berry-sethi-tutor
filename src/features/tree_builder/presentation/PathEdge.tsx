@@ -12,6 +12,7 @@ export default function PathEdge({
                                      source,
                                      target,
                                      selected,
+                                     interactionWidth,
                                      sourcePosition,
                                      targetPosition,
                                      style = {},
@@ -69,7 +70,7 @@ export default function PathEdge({
                 d={path}
                 markerEnd={markerEnd}
             />
-            <path d={path} strokeWidth={10} stroke={"transparent"} fill={"none"}/>
+            <path d={path} strokeWidth={interactionWidth ?? 10} stroke={"transparent"} fill={"none"}/>
         </>
     );
 }
