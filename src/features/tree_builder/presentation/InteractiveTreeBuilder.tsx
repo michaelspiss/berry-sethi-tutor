@@ -41,7 +41,7 @@ const edgeTypes = {
     pathEdge: PathEdge,
 }
 
-const Flow = (props: {reactFlowWrapper: React.RefObject<HTMLDivElement>}) => {
+const Flow = (props: { reactFlowWrapper: React.RefObject<HTMLDivElement> }) => {
     const {nodes, edges, setNodes, setEdges} = useTree();
     const [reactFlowInstance, setReactFlowInstance] = useState<ReactFlowInstance | null>(null);
     const {classes, cx} = useNodeStyles();
@@ -148,7 +148,7 @@ const Flow = (props: {reactFlowWrapper: React.RefObject<HTMLDivElement>}) => {
         nodesConnectable={steps[solveStep].canConnectNodes}
         nodesFocusable={steps[solveStep].canEditNodes}
         connectionMode={steps[solveStep].canSourceConnectToSource ? ConnectionMode.Loose : ConnectionMode.Strict}
-        deleteKeyCode={steps[solveStep].canEditNodes ? ['Backspace', 'Delete'] : null}
+        deleteKeyCode={steps[solveStep].canEditNodes || steps[solveStep].canConnectNodes ? ['Backspace', 'Delete'] : null}
         selectionKeyCode={null}
         connectionLineType={solveStep === 0 ? ConnectionLineType.Bezier : ConnectionLineType.Straight}
         multiSelectionKeyCode={null}>
@@ -173,7 +173,7 @@ export default function InteractiveTreeBuilder(): React.ReactElement {
     return <div style={{flexGrow: 1}} ref={reactFlowWrapper}>
         <ArrowMarker/>
         <ReactFlowProvider>
-            <Flow reactFlowWrapper={reactFlowWrapper} />
+            <Flow reactFlowWrapper={reactFlowWrapper}/>
         </ReactFlowProvider>
     </div>
 }

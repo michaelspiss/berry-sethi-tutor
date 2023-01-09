@@ -118,6 +118,7 @@ const steps: StepDescription[] = [
         solver: solvePossiblePaths,
         helper: PossiblePathsHelper,
         verifier: verifyPossiblePaths,
+        onNodeClick: (node, rf) => rf.setNodes(nodes => nodes.map(n => n.id !== node.id ? n : {...n, selected: false})),
         canMoveNodes: false,
         canEditNodes: false,
         canConnectNodes: true,
