@@ -29,6 +29,7 @@ import clickNode from "@/tree_builder/domain/step5/clickNode";
 import verifyFirstReached from "@/tree_builder/domain/step5/verifyFirstReached";
 import verifyNextReached from "@/tree_builder/domain/step6/verifyNextReached";
 import verifyLastReached from "@/tree_builder/domain/step7/verifyLastReached";
+import useTree from "@/tree_builder/domain/useTree";
 
 interface StepDescription {
     title: string,
@@ -201,6 +202,14 @@ const steps: StepDescription[] = [
         // Step 8
         title: "Create automaton",
         helper: CreateAutomatonHelper,
+        prepare: () => {
+            const center = setTimeout(() => {
+                const treeReactFlow = useTree.getState().reactFlow;
+                treeReactFlow.fitView();
+                treeReactFlow.zoomOut();
+            }, 100);
+            return () => clearTimeout(center);
+        },
         cleanup: () => {},
         canMoveNodes: false,
         canEditNodes: false,
