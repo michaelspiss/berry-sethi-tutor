@@ -44,21 +44,11 @@ export default function PathEdge({
     } else {
         const isRightToLeft = sourceX > targetX;
         const isTopToBottom = sourceY < targetY;
+        const sign = isTopToBottom ? -1 : 1;
+        const reach = isRightToLeft ? 40 : 20;
 
-        if (targetPosition === "right") {
-            targetX += 2;
-        }
-        if (targetPosition === "left") {
-            targetX -= 2;
-        }
+        path = `M ${sourceX} ${sourceY} C ${targetX + sign * reach} ${targetY}, ${targetX + sign * 20} ${targetY + sign * 5}, ${targetX + sign * 2} ${targetY}`
 
-        if (isTopToBottom) {
-            const reach = isRightToLeft ? 40 : 20;
-            path = `M ${sourceX} ${sourceY} C ${targetX - reach} ${targetY}, ${targetX - 20} ${targetY - 5}, ${targetX} ${targetY}`
-        } else {
-            const reach = isRightToLeft ? 20 : 40;
-            path = `M ${sourceX} ${sourceY} C ${targetX + reach} ${targetY}, ${targetX + 20} ${targetY + 5}, ${targetX} ${targetY}`
-        }
     }
 
     return (
