@@ -207,7 +207,7 @@ const steps: StepDescription[] = [
                 const treeReactFlow = useTree.getState().reactFlow;
                 treeReactFlow.fitView();
                 treeReactFlow.zoomOut();
-            }, 100);
+            }, 200);
             return () => clearTimeout(center);
         },
         cleanup: () => {},
