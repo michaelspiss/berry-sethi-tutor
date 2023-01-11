@@ -150,6 +150,7 @@ const Flow = (props: { reactFlowWrapper: React.RefObject<HTMLDivElement> }) => {
         connectionMode={steps[solveStep].canSourceConnectToSource ? ConnectionMode.Loose : ConnectionMode.Strict}
         deleteKeyCode={steps[solveStep].canEditNodes || steps[solveStep].canConnectNodes ? ['Backspace', 'Delete'] : null}
         selectionKeyCode={null}
+        zoomOnDoubleClick={false}
         connectionLineType={solveStep === 0 ? ConnectionLineType.Bezier : ConnectionLineType.Straight}
         multiSelectionKeyCode={null}>
         <Background/>
