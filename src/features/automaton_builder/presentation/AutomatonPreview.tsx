@@ -1,7 +1,7 @@
 import ReactFlow, {Background, Controls, ReactFlowProvider} from "reactflow";
 
 const Flow = () => {
-    return <ReactFlow zoomOnDoubleClick={false}>
+    return <ReactFlow zoomOnDoubleClick={false} id={"automaton"}>
         <Background/>
         <Controls showInteractive={false}/>
     </ReactFlow>
