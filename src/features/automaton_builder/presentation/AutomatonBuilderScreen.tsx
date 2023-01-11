@@ -35,11 +35,11 @@ export default function AutomatonBuilderScreen() {
     return <div className={classes.wrapper}>
         <HintBar/>
         <div className={classes.horizontalWrapper}>
+            <AutomatonEditor/>
             <div className={cx(classes.graphWrapper, {["stacked"]: displayGraphsStacked})}>
                 <InteractiveTreeBuilder/>
                 <AutomatonPreview/>
             </div>
-            <AutomatonEditor/>
         </div>
     </div>
 }
