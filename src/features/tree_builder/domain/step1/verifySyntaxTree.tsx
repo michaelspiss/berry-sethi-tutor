@@ -171,6 +171,7 @@ function orderNodesByHorizontalPositionRec(rootNode: Node, nodes: Node[], edges:
 
 function allTerminalsExistAndAreInCorrectOrder(rootNode: Node, nodes: Node[], edges: Edge[], errors: VerificationError[]) {
     const model = useAppStateStore.getState().regexModel;
+    // FIXME: terminals are sorted by creation date, rather than appearance
     const graphTerminals = nodes.filter((node) => getOutgoers(node, nodes, edges).length === 0).map(node => node.data.label);
     const modelTerminals = model!.getTerminals();
 

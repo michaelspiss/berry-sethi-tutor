@@ -23,9 +23,10 @@ function addEdge(edges: Edge[], sourceId: string, sourceHandle: string, targetId
 
 export default function solvePossiblePaths(nodes: Node[], edges: Edge[]): SolverResult {
     // reset user input
-    edges = edges.filter(edge => edge.data.step !== 1);
+    edges = edges.filter(edge => edge.data.step === 0);
+    const step1edges = [...edges];
     nodes.forEach(node => {
-        const children = getOutgoers(node, nodes, edges).sort((nodeA, nodeB) => nodeA.position.x - nodeB.position.x);
+        const children = getOutgoers(node, nodes, step1edges).sort((nodeA, nodeB) => nodeA.position.x - nodeB.position.x);
         switch(node.data.label) {
             case "*":
                 addEdge(edges, node.id, "step2l", node.id, "step2r");
