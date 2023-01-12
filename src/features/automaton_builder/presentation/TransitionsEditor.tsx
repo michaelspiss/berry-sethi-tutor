@@ -1,7 +1,7 @@
 import {createStyles, Textarea} from "@mantine/core";
 import {useElementSize} from "@mantine/hooks";
 import useAutomaton from "@/automaton_builder/domain/useAutomaton";
-import {useRef} from "react";
+import {ChangeEventHandler, useRef} from "react";
 
 const useStyles = createStyles(theme => ({
     wrapper : {
@@ -41,6 +41,14 @@ const useStyles = createStyles(theme => ({
     }
 }))
 
+const onTransitionsChange : ChangeEventHandler<HTMLTextAreaElement> = (event) => {
+    const value = event.currentTarget.value
+        .replaceAll(".", "·")
+        .replaceAll(/\) *, *\n? *\(/g, "),\n(");
+
+    useAutomaton.setState({transitions: value})
+}
+
 export default function TransitionsEditor() {
     const {classes} = useStyles();
     const value = useAutomaton(state => state.transitions);
@@ -52,9 +60,9 @@ export default function TransitionsEditor() {
         {/* TODO: Add header: "Enter a normal dot for entry/exit handle position"? Add toggle layout button here? */}
         <Textarea
             classNames={{root: classes.inputRoot, input: classes.input, wrapper: classes.inputWrapper}}
-            defaultValue={value}
+            value={value}
             placeholder={"(·r,a,...),"}
-            onChange={(event) => useAutomaton.setState({transitions: event.currentTarget.value})}
+            onChange={onTransitionsChange}
             autosize
             ref={sizeRef}
             onScroll={event => {
