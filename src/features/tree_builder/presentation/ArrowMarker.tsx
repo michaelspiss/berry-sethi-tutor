@@ -1,7 +1,7 @@
 export default function ArrowMarker() {
 
 
-    return <svg style={{ position: 'absolute', top: 0, left: 0 }}>
+    return <svg style={{ position: 'absolute', top: 0, left: 0, width: 0, height: 0, overflow: "hidden", }}>
             <marker
                 id="arrowMarker"
                 viewBox="0 0 10 10"
