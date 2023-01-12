@@ -1,21 +1,22 @@
 import {createStyles, Textarea} from "@mantine/core";
-import {useFocusTrap} from "@mantine/hooks";
-import useAutomaton from "@/automaton_builder/presentation/useAutomaton";
+import {useElementSize} from "@mantine/hooks";
+import useAutomaton from "@/automaton_builder/domain/useAutomaton";
+import {useRef} from "react";
 
 const useStyles = createStyles(theme => ({
     wrapper : {
-        flexGrow: 1,
         position: "relative",
-        maxWidth: 300,
     },
     styled: {
         position: "absolute",
+        overflowWrap: "break-word",
+        overflow: "hidden",
+        whiteSpace: "pre-wrap",
+        boxSizing: "content-box",
         top: 0,
-        right: 0,
-        bottom: 0,
         left: 0,
         zIndex: 1,
-        padding: theme.spacing.md,
+        padding: theme.spacing.xs,
         fontFamily: "Consolas,Monaco,Lucida Console,Liberation Mono,DejaVu Sans Mono,Bitstream Vera Sans Mono,Courier New",
         fontSize: 14,
         border: `1px solid transparent`,
@@ -31,29 +32,36 @@ const useStyles = createStyles(theme => ({
     },
     input: {
         height: "100%",
-        borderRadius: 0,
         color: "transparent",
         background: "transparent",
-        padding: theme.spacing.md,
+        padding: theme.spacing.xs,
         fontFamily: "Consolas,Monaco,Lucida Console,Liberation Mono,DejaVu Sans Mono,Bitstream Vera Sans Mono,Courier New",
         fontSize: 14,
         caretColor: "black",
     }
 }))
 
-export default function AutomatonEditor() {
+export default function TransitionsEditor() {
     const {classes} = useStyles();
-    const value = useAutomaton(state => state.definition);
-    const focusTrap = useFocusTrap();
+    const value = useAutomaton(state => state.transitions);
+    const {ref: sizeRef, width, height} = useElementSize();
+    const styledContentRef = useRef<HTMLDivElement>(null);
 
-    return <div className={classes.wrapper} ref={focusTrap}>
+    return <div className={classes.wrapper}>
         {/* TODO: split lines, parse lines, build automaton */}
+        {/* TODO: Add header: "Enter a normal dot for entry/exit handle position"? Add toggle layout button here? */}
         <Textarea
             classNames={{root: classes.inputRoot, input: classes.input, wrapper: classes.inputWrapper}}
             defaultValue={value}
-            onChange={(event) => useAutomaton.setState({definition: event.currentTarget.value})}
+            placeholder={"(·r,a,...),"}
+            onChange={(event) => useAutomaton.setState({transitions: event.currentTarget.value})}
+            autosize
+            ref={sizeRef}
+            onScroll={event => {
+                styledContentRef.current!.scrollTop = event.currentTarget.scrollTop
+            }}
         />
-        <div className={classes.styled}>
+        <div className={classes.styled} style={{width, height}} ref={styledContentRef}>
             {value /* TODO: format */}
         </div>
     </div>
