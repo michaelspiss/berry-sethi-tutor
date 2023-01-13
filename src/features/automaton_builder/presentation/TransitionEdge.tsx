@@ -1,5 +1,5 @@
 import {useCallback} from "react";
-import {BaseEdge, EdgeProps, Position, useStore} from "reactflow";
+import {BaseEdge, EdgeLabelRenderer, EdgeProps, Position, useStore} from "reactflow";
 
 // this helper function returns the intersection point
 // of the line between the center of the intersectionNode and the target node
@@ -74,14 +74,16 @@ export function getEdgeParams(source, target) {
 }
 
 export default function TransitionEdge(props: EdgeProps) {
-    const {sourceX: sx, sourceY: sy} = props;
     const sourceNode = useStore(useCallback((store) => store.nodeInternals.get(props.source), [props.source]));
     const targetNode = useStore(useCallback((store) => store.nodeInternals.get(props.target), [props.target]));
 
-    const {tx, ty} = getEdgeParams(sourceNode, targetNode);
+    const {sx, sy, tx, ty} = getEdgeParams(sourceNode, targetNode);
 
     const xDelta = Math.max(sx,tx) - Math.min(sx,tx);
     const yDelta = Math.max(sy,ty) - Math.min(sy,ty);
+
+
+    const sign = sx > tx ? -1 : 1;
 
     if(props.source === props.target) {
         return <>
@@ -89,7 +91,30 @@ export default function TransitionEdge(props: EdgeProps) {
         </>
     }
 
+    const perpendicularX = yDelta;
+    const perpendicularY = -xDelta;
+
+    const middleX = sx + sign * (xDelta/2 + perpendicularX/2);
+    const labelX = sx + sign * (xDelta/2 + perpendicularX/4);
+    const middleY = sy + sign * (yDelta/2 + perpendicularY/2);
+    const labelY = sy + sign * (yDelta/2 + perpendicularY/4);
+
     return <>
-        <BaseEdge path={`M ${sx} ${sy} Q ${sx + xDelta/2} ${sy+yDelta/2 - xDelta*0.3}, ${tx} ${ty}`} {...props} />
+        <BaseEdge path={`M ${sx} ${sy} Q ${middleX} ${middleY}, ${tx} ${ty}`} {...props} />
+        <EdgeLabelRenderer>
+            <div style={{
+                position: 'absolute',
+                transform: `translate(-50%, -50%) translate(${labelX}px,${labelY}px)`,
+                background: 'rgba(255,255,255,1)',
+                color: "#000",
+                border: "1px solid #aaa",
+                padding: 5,
+                borderRadius: 5,
+                fontSize: 10,
+                lineHeight: .8,
+            }}>
+                {props.label}
+            </div>
+        </EdgeLabelRenderer>
     </>
 }
