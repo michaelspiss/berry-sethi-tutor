@@ -10,7 +10,7 @@
     "preview": "vite preview"
   },
   "dependencies": {
-    "@crinkles/digl": "^2.0.2",
+    "@crinkles/digl": "^2.0.3",
     "@emotion/react": "^11.10.5",
     "@mantine/core": "^5.10.0",
     "@mantine/hooks": "^5.10.0",

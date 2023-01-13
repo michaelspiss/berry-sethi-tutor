@@ -108,7 +108,9 @@ const Flow = () => {
         const phantom = sources.map(s => ({source: "", target: s.id}));
         let diglEdges = edges.concat(phantom);
 
-        const graphs = digl(diglEdges);
+        let graphs = digl(diglEdges);
+        graphs.forEach(rank => diglEdges.push({source: "", target: (rank[0] ?? [])[0] ?? ""}))
+        graphs = digl(diglEdges);
 
         const laidOutNodes : Node[] = [];
         graphs.forEach(ranks => laidOutNodes.push(...positionNodes(states, ranks)));
