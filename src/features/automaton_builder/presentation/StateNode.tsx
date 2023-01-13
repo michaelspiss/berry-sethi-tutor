@@ -14,7 +14,7 @@ const useStyles = createStyles(() => ({
         position: "relative",
     },
     handle: {
-        bottom: "15px !important",
+        bottom: "20px !important",
         visibility: "hidden",
     },
     finalRing: {
