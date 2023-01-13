@@ -13,6 +13,7 @@ import TransitionEdge from "@/automaton_builder/presentation/TransitionEdge";
 import {useEffect, useMemo, useState} from "react";
 import {digl} from "@crinkles/digl";
 import {Rank} from "@crinkles/digl/dist/types";
+import {useElementSize} from "@mantine/hooks";
 
 const nodeTypes = {
     state: StateNode,
@@ -51,7 +52,7 @@ function positionNodes(
     return _nodes;
 }
 
-const Flow = () => {
+const Flow = (props: {height: number, width: number}) => {
     const [nodes, setNodes] = useState<Node[]>([]);
     const [reactFlow, setReactFlow] = useState<ReactFlowInstance|null>(null);
     const transitionRegex = new RegExp(/^\( *([^, ]+) *, *([^, ]+) *, *([^,) ]+) *\) *,? *$/);
@@ -120,7 +121,14 @@ const Flow = () => {
         }, 250);
         return () => clearTimeout(fV);
 
-    }, [states, transitions])
+    }, [states, transitions]);
+
+    useEffect(() => {
+        const fV = setTimeout(() => {
+            reactFlow?.fitView({duration: 200});
+        }, 250);
+        return () => clearTimeout(fV);
+    }, [props.width, props.height]);
 
     return <ReactFlow zoomOnDoubleClick={false}
                       id={"automaton"}
@@ -145,9 +153,11 @@ const Flow = () => {
 }
 
 export default function AutomatonPreview() {
-    return <div style={{flexGrow: 1}}>
+    const {ref, width, height} = useElementSize();
+
+    return <div style={{flexGrow: 1}} ref={ref}>
         <ReactFlowProvider>
-            <Flow/>
+            <Flow height={height} width={width} />
         </ReactFlowProvider>
     </div>
 }
