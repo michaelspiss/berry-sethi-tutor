@@ -1,9 +1,18 @@
-import ReactFlow, {Background, ConnectionMode, Controls, Edge, MarkerType, Node, ReactFlowProvider} from "reactflow";
+import ReactFlow, {
+    Background,
+    ConnectionMode,
+    Edge,
+    MarkerType,
+    Node,
+    ReactFlowInstance,
+    ReactFlowProvider
+} from "reactflow";
 import useAutomaton from "@/automaton_builder/domain/useAutomaton";
 import StateNode from "@/automaton_builder/presentation/StateNode";
 import TransitionEdge from "@/automaton_builder/presentation/TransitionEdge";
 import {useEffect, useMemo, useState} from "react";
-import {graphlib, layout} from "dagre";
+import {digl} from "@crinkles/digl";
+import {Rank} from "@crinkles/digl/dist/types";
 
 const nodeTypes = {
     state: StateNode,
@@ -13,9 +22,39 @@ const edgeTypes = {
     transition: TransitionEdge,
 }
 
+// slight adaptation from documentation: https://github.com/kevtiq/digl
+function positionNodes(
+    nodes: Node[],
+    ranks: Rank[],
+    config: { orientation: "horizontal"|"vertical", width: number, height: number } = {orientation: 'horizontal', height: 46, width: 46},
+) {
+    const _nodes: Node[] = [];
+    const _h = config.orientation === 'horizontal';
+
+    ranks.forEach((r, i) => {
+        const xStart = _h
+            ? 2 * config.width * i
+            : -0.5 * (r.length - 1) * 2 * config.width;
+        const yStart = _h
+            ? -0.5 * (r.length - 1) * 2 * config.height
+            : 2 * config.height * i;
+
+        r.forEach((nodeId, nIndex) => {
+            const _node = nodes.find((n) => n.id == nodeId);
+            if (!_node) return;
+            const x = _h ? xStart : xStart + 2 * config.width * nIndex;
+            const y = _h ? yStart + 2 * config.height * nIndex : yStart;
+            _nodes.push({ ..._node, position: {x , y} });
+        });
+    });
+
+    return _nodes;
+}
+
 const Flow = () => {
     const [nodes, setNodes] = useState<Node[]>([]);
-    const transitionRegex = new RegExp(/^\(([^,]*),([^,]*),([^)]*)\),?$/);
+    const [reactFlow, setReactFlow] = useState<ReactFlowInstance|null>(null);
+    const transitionRegex = new RegExp(/^\( *([^, ]+) *, *([^, ]+) *, *([^,) ]+) *\) *,? *$/);
     const automaton = useAutomaton();
 
     const finalStates = useMemo(() => automaton.finalStates
@@ -60,36 +99,46 @@ const Flow = () => {
     }), [automaton.transitions])
 
     useEffect(() => {
-        const children = states.map(state => ({id: state.id, height: state.height ?? 50, width: state.width ?? 50}));
-        const g = new graphlib.Graph();
-        g.setGraph({rankdir: 'LR', nodesep: 70, ranksep: 70, align: 'UL'});
-        g.setDefaultEdgeLabel(() => ({}));
-        children.forEach(c => g.setNode(c.id, {width: c.width, height: c.height}))
-        transitions
-            .filter(t => children.some(c => c.id === t.source) && children.some(c => c.id === t.target))
-            .forEach(t => g.setEdge(t.source, t.target));
+        const edges = transitions
+            .filter(t => states.some(c => c.id === t.source) && states.some(c => c.id === t.target))
+            .map(e => ({source: e.source, target: e.target}))
 
-        layout(g);
-        const laidOutNodes: Node[] = [];
-        states.forEach(node => {
-            const laidOut = g.node(node.id);
-            laidOutNodes.push({...node, position: {x: laidOut?.x ?? 0, y: laidOut?.y ?? 0}});
-        });
+
+        const sources = states.filter(s => edges.every(e => e.target !== s.id));
+        const phantom = sources.map(s => ({source: "", target: s.id}));
+        let diglEdges = edges.concat(phantom);
+
+        const graphs = digl(diglEdges);
+
+        const laidOutNodes : Node[] = [];
+        graphs.forEach(ranks => laidOutNodes.push(...positionNodes(states, ranks)));
         setNodes(laidOutNodes);
+        const fV = setTimeout(() => {
+            reactFlow?.fitView({duration: 200});
+        }, 250);
+        return () => clearTimeout(fV);
+
     }, [states, transitions])
 
     return <ReactFlow zoomOnDoubleClick={false}
                       id={"automaton"}
+                      onInit={(rf) => {
+                          setReactFlow(rf);
+                          rf.fitView()
+                      }}
                       elementsSelectable={false}
                       nodesConnectable={false}
                       nodesDraggable={false}
                       nodeTypes={nodeTypes}
                       edgeTypes={edgeTypes}
                       nodes={nodes}
+                      panOnDrag={false}
+                      zoomOnScroll={false}
+                      zoomActivationKeyCode={null}
+                      zoomOnPinch={false}
                       connectionMode={ConnectionMode.Loose}
                       edges={transitions}>
         <Background/>
-        <Controls showInteractive={false}/>
     </ReactFlow>
 }
 
