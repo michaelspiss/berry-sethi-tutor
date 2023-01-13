@@ -15,10 +15,14 @@ export default function VerifyTreeButton() {
         const result = steps[solveStep].verifier(useTree.getState().nodes, useTree.getState().edges);
         if(!result.errors) {
             steps[solveStep].cleanup(result.nodes, result.edges);
-            steps[solveStep + 1]?.prepare?.call(null, result.nodes, result.edges);
+            let nextSolveStep = solveStep;
+            if(steps[solveStep + 1] !== undefined) {
+                nextSolveStep++;
+                steps[solveStep + 1]?.prepare?.call(null, result.nodes, result.edges);
+            }
             setNodes(result.nodes);
             setEdges(result.edges);
-            useAppStateStore.setState({solveStep: solveStep + 1, verificationErrors: undefined});
+            useAppStateStore.setState({solveStep: nextSolveStep, verificationErrors: undefined});
             const fitView = setTimeout(() => useTree.getState().reactFlow?.fitView({padding: 0.2}), 300);
             setState("success");
             const feedback = setTimeout(() => setState("idle"), 2500);

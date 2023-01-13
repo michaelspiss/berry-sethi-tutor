@@ -17,10 +17,15 @@ export default function SolveButton() {
             return node;
         });
         steps[solveStep].cleanup?.apply(null, [styledNodes, result.edges]);
-        steps[solveStep + 1]?.prepare?.call(null, styledNodes, result.edges);
+        let nextSolveStep = solveStep;
+        if(steps[solveStep + 1] !== undefined) {
+            nextSolveStep++;
+            steps[solveStep + 1]?.prepare?.call(null, styledNodes, result.edges);
+        }
         setNodes(styledNodes);
         setEdges(result.edges);
-        useAppStateStore.setState({solveStep: solveStep + 1, verificationErrors: undefined});
+
+        useAppStateStore.setState({solveStep: nextSolveStep, verificationErrors: undefined});
         const to = setTimeout(() => useTree.getState().reactFlow?.fitView({padding: 0.2}), 300);
         return () => clearTimeout(to);
     }}>Solve</Button>
