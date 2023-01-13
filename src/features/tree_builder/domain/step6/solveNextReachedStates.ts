@@ -25,18 +25,22 @@ export default function solveNextReachedStates(nodes: Node[], edges: Edge[]): So
 export function getNextReached(node: Node, nodes: Node[], pathEdges: Edge[]): string[] {
     return pathEdges
         .filter(edge => edge.source === node.id && edge.sourceHandle === "step2r")
-        .map(edge => traverseAndReturnNextReachedTerminals(edge, nodes, pathEdges))
+        .map(edge => traverseAndReturnNextReachedTerminals(node, edge, nodes, pathEdges))
         .reduce((a, c) => a.concat(c), []);
 }
 
-function traverseAndReturnNextReachedTerminals(edge: Edge, nodes: Node[], pathEdges: Edge[]): string[] {
+function traverseAndReturnNextReachedTerminals(startingNode: Node, edge: Edge, nodes: Node[], pathEdges: Edge[]): string[] {
     const node = nodes.find(node => node.id === edge.target)!;
     if (node.type === "terminal") {
         return [node.data.terminalIndex]
     }
 
+    if(node.id === startingNode.id) {
+        return [];
+    }
+
     return pathEdges
         .filter(pathEdge => pathEdge.source === edge.target && pathEdge.sourceHandle === edge.targetHandle)
-        .map(followingEdge => traverseAndReturnNextReachedTerminals(followingEdge, nodes, pathEdges))
+        .map(followingEdge => traverseAndReturnNextReachedTerminals(startingNode, followingEdge, nodes, pathEdges))
         .reduce((a, c) => [...a, ...c], [])
 }
