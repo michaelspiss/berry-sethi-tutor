@@ -127,6 +127,7 @@ const Flow = (props: { reactFlowWrapper: React.RefObject<HTMLDivElement> }) => {
     }, [reactFlowInstance])
 
     return <ReactFlow
+        id={"syntax-tree"}
         nodes={nodes}
         edges={edges}
         onNodesChange={onNodesChange}

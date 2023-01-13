@@ -43,7 +43,7 @@ const useStyles = createStyles(theme => ({
 
 const onTransitionsChange : ChangeEventHandler<HTMLTextAreaElement> = (event) => {
     const value = event.currentTarget.value
-        .replaceAll(".", "·")
+        .replaceAll(".", "•")
         .replaceAll(/\) *, *\n? *\(/g, "),\n(");
 
     useAutomaton.setState({transitions: value})
@@ -61,7 +61,7 @@ export default function TransitionsEditor() {
         <Textarea
             classNames={{root: classes.inputRoot, input: classes.input, wrapper: classes.inputWrapper}}
             value={value}
-            placeholder={"(·r,a,...),"}
+            placeholder={"(•r,a,...),"}
             onChange={onTransitionsChange}
             autosize
             ref={sizeRef}

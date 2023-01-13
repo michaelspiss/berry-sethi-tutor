@@ -1,24 +1,49 @@
-import ReactFlow, {Background, Controls, Edge, Node, ReactFlowProvider} from "reactflow";
+import ReactFlow, {Background, ConnectionMode, Controls, Edge, MarkerType, Node, ReactFlowProvider} from "reactflow";
 import useAutomaton from "@/automaton_builder/domain/useAutomaton";
+import StateNode from "@/automaton_builder/presentation/StateNode";
+import TransitionEdge from "@/automaton_builder/presentation/TransitionEdge";
+import {useMemo, useState} from "react";
+import ElkConstructor from "elkjs";
+
+const nodeTypes = {
+    state: StateNode,
+}
+
+const edgeTypes = {
+    transition: TransitionEdge,
+}
+
+const elk = new ElkConstructor();
 
 const Flow = () => {
-    const states: Node[] = [...new Set(
-        ["·r"].concat(
-            useAutomaton(state => state.states)
+    const [nodes, setNodes] = useState<Node[]>([]);
+    const transitionRegex = new RegExp(/^\(([^,]*),([^,]*),([^)]*)\),?$/);
+    const automaton = useAutomaton();
+
+    const finalStates = useMemo(() => automaton.finalStates
+        .split(",")
+        .map(state => state.trim())
+        .filter(state => state !== ""), [automaton.finalStates]);
+
+    const states: Node[] = useMemo(() => [...new Set(
+        ["•r"].concat(
+            automaton.states
                 .split(",")
                 .map(state => state.trim())
                 .filter(state => state !== "")
         )
-    )].map((stateName, i) => ({
+    )].map((stateName) => ({
         id: stateName,
-        position: {x: 0, y: i * 70},
+        position: {x: 0, y: 0},
         data: {
             label: stateName,
+            isFinal: finalStates.includes(stateName),
         },
-    }));
-    const transitionRegex = new RegExp(/^\(([^,]*),([^,]*),([^)]*)\),?$/);
-    const transitions: Edge[] = [...new Set(
-        useAutomaton(state => state.transitions)
+        type: "state",
+    })), [automaton.states]);
+
+    const transitions: Edge[] = useMemo(() => [...new Set(
+        automaton.transitions
             .split(",\n")
             .map(transition => transition.trim())
             .filter(transition => transitionRegex.test(transition))
@@ -29,21 +54,22 @@ const Flow = () => {
             source: result[1],
             target: result[3],
             label: result[2],
+            markerEnd: {
+                type: MarkerType.ArrowClosed
+            },
+            type: "transition",
         }
-    })
-
-    console.log([...new Set(
-        useAutomaton(state => state.transitions)
-            .split(",")
-            .map(transition => transition.trim())
-    )])
+    }), [automaton.transitions])
 
     return <ReactFlow zoomOnDoubleClick={false}
                       id={"automaton"}
                       elementsSelectable={false}
                       nodesConnectable={false}
                       nodesDraggable={false}
+                      nodeTypes={nodeTypes}
+                      edgeTypes={edgeTypes}
                       nodes={states}
+                      connectionMode={ConnectionMode.Loose}
                       edges={transitions}>
         <Background/>
         <Controls showInteractive={false}/>

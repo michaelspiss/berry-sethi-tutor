@@ -38,10 +38,10 @@ const useStyles = createStyles(() => ({
 }))
 
 const onFinalStatesChange : ChangeEventHandler<HTMLInputElement> = (event) => {
-    useAutomaton.setState({finalStates: event.currentTarget.value.replaceAll(".", "·")});
+    useAutomaton.setState({finalStates: event.currentTarget.value.replaceAll(".", "•")});
 }
 const onStatesChange : ChangeEventHandler<HTMLInputElement> = (event) => {
-    useAutomaton.setState({states: event.currentTarget.value.replaceAll(".", "·")});
+    useAutomaton.setState({states: event.currentTarget.value.replaceAll(".", "•")});
 }
 
 export default function AutomatonBuilderScreen() {
@@ -58,10 +58,10 @@ export default function AutomatonBuilderScreen() {
                 <pre style={{padding: theme.spacing.xs}}>
                     r=<RegexHighlighter regex={useAppStateStore.getState().regex} inline/><br/>
                     A<sub>r</sub>=(Q,Σ,δ,I,F)<br/>
-                    Q={"{"}<TextInput data-autofocus value={states} onChange={onStatesChange} styles={{withIcon: {paddingLeft: 26}}} icon={<span style={{color: "black", fontSize: 14, }}>·r,</span>}/>{"}"}<br/>
+                    Q={"{"}<TextInput data-autofocus value={states} onChange={onStatesChange} styles={{withIcon: {paddingLeft: 26}}} icon={<span style={{color: "black", fontSize: 14, }}>•r,</span>}/>{"}"}<br/>
                     Σ={"{" + [...new Set(useAppStateStore.getState().regexModel?.getTerminals())].filter(t => t !== "ε").sort().join(",")  + "}"}<br/>
                     δ={"{"}<TransitionsEditor/>{"}"}<br/>
-                    I={"{·r}"}<br/>
+                    I={"{•r}"}<br/>
                     F={"{"}<TextInput value={finalStates} onChange={onFinalStatesChange}/>{"}"}
                 </pre>
             </ScrollArea>
