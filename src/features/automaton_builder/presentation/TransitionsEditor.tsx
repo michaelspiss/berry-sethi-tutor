@@ -42,11 +42,19 @@ const useStyles = createStyles(theme => ({
 }))
 
 const onTransitionsChange : ChangeEventHandler<HTMLTextAreaElement> = (event) => {
-    const value = event.currentTarget.value
-        .replaceAll(".", "•")
-        .replaceAll(/\) *, *\n? *\(/g, "),\n(");
+    let selection = event.currentTarget.selectionStart;
 
-    useAutomaton.setState({transitions: value})
+    const value = event.currentTarget.value.replaceAll(".", "•");
+
+    const newValue = value.replaceAll(/\) *, *\n? *\(/g, "),\n(");
+    if(value !== newValue) {
+        selection++;
+    }
+
+    event.currentTarget.value = newValue;
+
+    useAutomaton.setState({transitions: newValue});
+    event.currentTarget.setSelectionRange(selection, selection);
 }
 
 export default function TransitionsEditor() {
@@ -60,7 +68,7 @@ export default function TransitionsEditor() {
         {/* TODO: Add header: "Enter a normal dot for entry/exit handle position"? Add toggle layout button here? */}
         <Textarea
             classNames={{root: classes.inputRoot, input: classes.input, wrapper: classes.inputWrapper}}
-            value={value}
+            defaultValue={value}
             placeholder={"(•r,a,...),"}
             onChange={onTransitionsChange}
             autosize

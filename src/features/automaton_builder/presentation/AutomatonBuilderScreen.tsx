@@ -38,10 +38,18 @@ const useStyles = createStyles(() => ({
 }))
 
 const onFinalStatesChange : ChangeEventHandler<HTMLInputElement> = (event) => {
-    useAutomaton.setState({finalStates: event.currentTarget.value.replaceAll(".", "•")});
+    const selection = event.currentTarget.selectionStart;
+    const value = event.currentTarget.value.replaceAll(".", "•");
+    useAutomaton.setState({finalStates: value});
+    event.currentTarget.value = value;
+    event.currentTarget.setSelectionRange(selection, selection);
 }
 const onStatesChange : ChangeEventHandler<HTMLInputElement> = (event) => {
-    useAutomaton.setState({states: event.currentTarget.value.replaceAll(".", "•")});
+    const selection = event.currentTarget.selectionStart;
+    const value = event.currentTarget.value.replaceAll(".", "•");
+    useAutomaton.setState({states: value});
+    event.currentTarget.value = value;
+    event.currentTarget.setSelectionRange(selection, selection);
 }
 
 export default function AutomatonBuilderScreen() {
@@ -58,11 +66,11 @@ export default function AutomatonBuilderScreen() {
                 <pre style={{padding: theme.spacing.xs}}>
                     r=<RegexHighlighter regex={useAppStateStore.getState().regex} inline/><br/>
                     A<sub>r</sub>=(Q,Σ,δ,I,F)<br/>
-                    Q={"{"}<TextInput data-autofocus value={states} onChange={onStatesChange} styles={{withIcon: {paddingLeft: 26}}} icon={<span style={{color: "black", fontSize: 14, }}>•r,</span>}/>{"}"}<br/>
+                    Q={"{"}<TextInput data-autofocus defaultValue={states} onChange={onStatesChange} styles={{withIcon: {paddingLeft: 26}}} icon={<span style={{color: "black", fontSize: 14, }}>•r,</span>}/>{"}"}<br/>
                     Σ={"{" + [...new Set(useAppStateStore.getState().regexModel?.getTerminals())].filter(t => t !== "ε").sort().join(",")  + "}"}<br/>
                     δ={"{"}<TransitionsEditor/>{"}"}<br/>
                     I={"{•r}"}<br/>
-                    F={"{"}<TextInput value={finalStates} onChange={onFinalStatesChange}/>{"}"}
+                    F={"{"}<TextInput defaultValue={finalStates} onChange={onFinalStatesChange}/>{"}"}
                 </pre>
             </ScrollArea>
             <div className={cx(classes.graphWrapper, {["stacked"]: displayGraphsStacked})}>
