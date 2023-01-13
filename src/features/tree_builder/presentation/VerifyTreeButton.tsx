@@ -9,7 +9,6 @@ export default function VerifyTreeButton() {
     const solveStep = useAppStateStore((state) => state.solveStep);
     const setNodes = useTree(state => state.setNodes);
     const setEdges = useTree(state => state.setEdges);
-    const reactFlow = useTree(state => state.reactFlow);
     const [state, setState] = useState<"idle"|"error"|"success">("idle");
 
     return <Button w={75} color={state==="success" ? "green" : state === "error" ? "red" : "blue"} onClick={() => {
@@ -20,7 +19,7 @@ export default function VerifyTreeButton() {
             setNodes(result.nodes);
             setEdges(result.edges);
             useAppStateStore.setState({solveStep: solveStep + 1, verificationErrors: undefined});
-            const fitView = setTimeout(() => reactFlow?.fitView(), 100);
+            const fitView = setTimeout(() => useTree.getState().reactFlow?.fitView(), 100);
             setState("success");
             const feedback = setTimeout(() => setState("idle"), 2500);
             return () => {clearTimeout(fitView); clearTimeout(feedback);}
