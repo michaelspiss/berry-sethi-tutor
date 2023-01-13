@@ -19,7 +19,7 @@ export default function VerifyTreeButton() {
             setNodes(result.nodes);
             setEdges(result.edges);
             useAppStateStore.setState({solveStep: solveStep + 1, verificationErrors: undefined});
-            const fitView = setTimeout(() => useTree.getState().reactFlow?.fitView(), 100);
+            const fitView = setTimeout(() => useTree.getState().reactFlow?.fitView({padding: 0.2}), 300);
             setState("success");
             const feedback = setTimeout(() => setState("idle"), 2500);
             return () => {clearTimeout(fitView); clearTimeout(feedback);}

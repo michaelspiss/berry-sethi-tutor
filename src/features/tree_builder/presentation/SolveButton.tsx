@@ -21,7 +21,7 @@ export default function SolveButton() {
         setNodes(styledNodes);
         setEdges(result.edges);
         useAppStateStore.setState({solveStep: solveStep + 1, verificationErrors: undefined});
-        const to = setTimeout(() => useTree.getState().reactFlow?.fitView(), 300);
+        const to = setTimeout(() => useTree.getState().reactFlow?.fitView({padding: 0.2}), 300);
         return () => clearTimeout(to);
     }}>Solve</Button>
 }
