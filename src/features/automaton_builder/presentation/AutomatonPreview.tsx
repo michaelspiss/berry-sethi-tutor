@@ -2,7 +2,7 @@ import ReactFlow, {Background, ConnectionMode, Controls, Edge, MarkerType, Node,
 import useAutomaton from "@/automaton_builder/domain/useAutomaton";
 import StateNode from "@/automaton_builder/presentation/StateNode";
 import TransitionEdge from "@/automaton_builder/presentation/TransitionEdge";
-import {useMemo, useState} from "react";
+import {useEffect, useMemo, useState} from "react";
 import ElkConstructor from "elkjs";
 
 const nodeTypes = {
@@ -40,7 +40,7 @@ const Flow = () => {
             isFinal: finalStates.includes(stateName),
         },
         type: "state",
-    })), [automaton.states]);
+    })), [automaton.states, finalStates]);
 
     const transitions: Edge[] = useMemo(() => [...new Set(
         automaton.transitions
@@ -61,6 +61,23 @@ const Flow = () => {
         }
     }), [automaton.transitions])
 
+    useEffect(() => {
+        const graph = {
+            id: "root",
+            layoutOptions: {'elk.algorithm': 'layered'},
+            children: states.map(state => ({id: state.id, height: state.height ?? 50, width: state.width ?? 50})),
+            edges: transitions.map(t => ({id: t.id, sources: [t.source], targets: [t.target]}))
+        }
+        elk.layout(graph).then(graph => {
+            const laidOutNodes: Node[] = [];
+            states.forEach(node => {
+                const laidOut = graph.children?.find(child => child.id === node.id);
+                laidOutNodes.push({...node, position: {x: laidOut?.x ?? 0, y: laidOut?.y ?? 0}});
+            });
+            setNodes(laidOutNodes);
+        });
+    }, [states, transitions])
+
     return <ReactFlow zoomOnDoubleClick={false}
                       id={"automaton"}
                       elementsSelectable={false}
@@ -68,7 +85,7 @@ const Flow = () => {
                       nodesDraggable={false}
                       nodeTypes={nodeTypes}
                       edgeTypes={edgeTypes}
-                      nodes={states}
+                      nodes={nodes}
                       connectionMode={ConnectionMode.Loose}
                       edges={transitions}>
         <Background/>

@@ -30,3 +30,7 @@ body, #root {
 .react-flow .react-flow__panel {
     margin: 0;
 }
+
+.react-flow__node-state {
+    transition: transform 200ms ease-in-out;
+}

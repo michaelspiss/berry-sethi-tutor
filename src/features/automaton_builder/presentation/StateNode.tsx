@@ -15,6 +15,7 @@ const useStyles = createStyles(() => ({
     },
     handle: {
         bottom: "15px !important",
+        visibility: "hidden",
     },
     finalRing: {
         position: "absolute",
