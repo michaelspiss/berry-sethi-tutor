@@ -3,7 +3,7 @@ import useAutomaton from "@/automaton_builder/domain/useAutomaton";
 import StateNode from "@/automaton_builder/presentation/StateNode";
 import TransitionEdge from "@/automaton_builder/presentation/TransitionEdge";
 import {useEffect, useMemo, useState} from "react";
-import ElkConstructor from "elkjs";
+import {graphlib, layout} from "dagre";
 
 const nodeTypes = {
     state: StateNode,
@@ -12,8 +12,6 @@ const nodeTypes = {
 const edgeTypes = {
     transition: TransitionEdge,
 }
-
-const elk = new ElkConstructor();
 
 const Flow = () => {
     const [nodes, setNodes] = useState<Node[]>([]);
@@ -63,22 +61,21 @@ const Flow = () => {
 
     useEffect(() => {
         const children = states.map(state => ({id: state.id, height: state.height ?? 50, width: state.width ?? 50}));
-        const graph = {
-            id: "root",
-            layoutOptions: {'elk.algorithm': 'layered'},
-            children: children,
-            edges: transitions
-                .filter(t => children.some(c => c.id === t.source) && children.some(c => c.id === t.target))
-                .map(t => ({id: t.id, sources: [t.source], targets: [t.target]}))
-        }
-        elk.layout(graph).then(graph => {
-            const laidOutNodes: Node[] = [];
-            states.forEach(node => {
-                const laidOut = graph.children?.find(child => child.id === node.id);
-                laidOutNodes.push({...node, position: {x: laidOut?.x ?? 0, y: laidOut?.y ?? 0}});
-            });
-            setNodes(laidOutNodes);
+        const g = new graphlib.Graph();
+        g.setGraph({rankdir: 'LR', nodesep: 70, ranksep: 70, align: 'UL'});
+        g.setDefaultEdgeLabel(() => ({}));
+        children.forEach(c => g.setNode(c.id, {width: c.width, height: c.height}))
+        transitions
+            .filter(t => children.some(c => c.id === t.source) && children.some(c => c.id === t.target))
+            .forEach(t => g.setEdge(t.source, t.target));
+
+        layout(g);
+        const laidOutNodes: Node[] = [];
+        states.forEach(node => {
+            const laidOut = g.node(node.id);
+            laidOutNodes.push({...node, position: {x: laidOut?.x ?? 0, y: laidOut?.y ?? 0}});
         });
+        setNodes(laidOutNodes);
     }, [states, transitions])
 
     return <ReactFlow zoomOnDoubleClick={false}
