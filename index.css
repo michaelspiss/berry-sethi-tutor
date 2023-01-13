@@ -34,3 +34,8 @@ body, #root {
 .react-flow__node-state {
     transition: transform 200ms ease-in-out;
 }
+
+#automaton .react-flow__pane {
+    cursor: default;
+    user-select: none;
+}
