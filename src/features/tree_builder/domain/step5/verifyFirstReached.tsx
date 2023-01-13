@@ -70,17 +70,21 @@ export default function verifyFirstReached(nodes: Node[], edges: Edge[]): Verifi
     concatenations.forEach(concatenation => {
         const children = getOutgoers(concatenation, nodes, step1edges)
             .sort((nodeA, nodeB) => nodeA.position.x - nodeB.position.x);
-        if (children[0].data.firstReached.length === 0
-            && !arraysAreEqual(concatenation.data.firstReached, children[1].data.firstReached)) {
-            concatenationsSecondIfFirstAlwaysEmpty.push(concatenation.id);
-        } else if (children[0].data.canBeEmpty
-            && !arraysAreEqual(
+        if(children[0].data.firstReached.length === 0) {
+            if(!arraysAreEqual(concatenation.data.firstReached, children[1].data.firstReached)) {
+                concatenationsSecondIfFirstAlwaysEmpty.push(concatenation.id);
+            }
+        } else if(children[0].data.canBeEmpty) {
+            if(!arraysAreEqual(
                 concatenation.data.firstReached,
                 [...new Set(children[0].data.firstReached.concat(children[1].data.firstReached))],
             )) {
-            concatenationsConcatIfFirstCanBeEmpty.push(concatenation.id);
-        } else if (!arraysAreEqual(concatenation.data.firstReached, children[0].data.firstReached)) {
-            concatenationsFirstChildOnly.push(concatenation.id);
+                concatenationsConcatIfFirstCanBeEmpty.push(concatenation.id);
+            }
+        } else {
+            if(!arraysAreEqual(concatenation.data.firstReached, children[0].data.firstReached)) {
+                concatenationsFirstChildOnly.push(concatenation.id);
+            }
         }
     })
 

@@ -4,7 +4,7 @@ import {getOutgoers} from "../../../../../../react-flow/packages/reactflow";
 import arraysAreEqual from "@/tree_builder/domain/arraysAreEqual";
 import {Kbd} from "@mantine/core";
 
-export default function verifyLastReached(nodes: Node[], edges: Edge[]) : VerificationResult {
+export default function verifyLastReached(nodes: Node[], edges: Edge[]): VerificationResult {
     const errors: VerificationError[] = [];
     const step1edges = edges.filter(edge => edge.data.step === 0);
     const terminals = nodes.filter(node => step1edges.filter(edge => edge.source === node.id).length === 0)
@@ -20,8 +20,10 @@ export default function verifyLastReached(nodes: Node[], edges: Edge[]) : Verifi
     if (terminalsMustReadThemselves.length !== 0) {
         errors.push({
             title: "Terminals must only reach themselves last",
-            message: <>Terminals always only reach themselves last, except for epsilon transitions, where the last reached
-                list is always empty. Try clearing the last reached lists of all terminals and adding only themselves.</>,
+            message: <>Terminals always only reach themselves last, except for epsilon transitions, where the last
+                reached
+                list is always empty. Try clearing the last reached lists of all terminals and adding only
+                themselves.</>,
             causes: terminalsMustReadThemselves,
         });
     }
@@ -56,7 +58,8 @@ export default function verifyLastReached(nodes: Node[], edges: Edge[]) : Verifi
     if (quantifiersHaveSameAttributeAsChild.length !== 0) {
         errors.push({
             title: "Quantifiers must have same the same last reached as their child",
-            message: <>As quantifiers can only read their subtree, the last reached attribute for them must always be the
+            message: <>As quantifiers can only read their subtree, the last reached attribute for them must always be
+                the
                 same as that of their direct child.</>,
             causes: quantifiersHaveSameAttributeAsChild,
         })
@@ -70,17 +73,21 @@ export default function verifyLastReached(nodes: Node[], edges: Edge[]) : Verifi
     concatenations.forEach(concatenation => {
         const children = getOutgoers(concatenation, nodes, step1edges)
             .sort((nodeA, nodeB) => nodeA.position.x - nodeB.position.x);
-        if (children[1].data.lastReached.length === 0
-            && !arraysAreEqual(concatenation.data.lastReached, children[0].data.lastReached)) {
-            concatenationsFirstIfSecondAlwaysEmpty.push(concatenation.id);
-        } else if (children[1].data.canBeEmpty
-            && !arraysAreEqual(
+        if(children[1].data.lastReached.length === 0) {
+            if(!arraysAreEqual(concatenation.data.lastReached, children[0].data.lastReached)) {
+                concatenationsFirstIfSecondAlwaysEmpty.push(concatenation.id);
+            }
+        } else if(children[1].data.canBeEmpty) {
+            if(!arraysAreEqual(
                 concatenation.data.lastReached,
                 [...new Set(children[0].data.lastReached.concat(children[1].data.lastReached))],
             )) {
-            concatenationsConcatIfSecondCanBeEmpty.push(concatenation.id);
-        } else if (!arraysAreEqual(concatenation.data.lastReached, children[1].data.lastReached)) {
-            concatenationsSecondChildOnly.push(concatenation.id);
+                concatenationsConcatIfSecondCanBeEmpty.push(concatenation.id);
+            }
+        } else {
+            if(!arraysAreEqual(concatenation.data.lastReached, children[1].data.lastReached)) {
+                concatenationsSecondChildOnly.push(concatenation.id);
+            }
         }
     })
 
