@@ -30,6 +30,7 @@ import verifyFirstReached from "@/tree_builder/domain/step5/verifyFirstReached";
 import verifyNextReached from "@/tree_builder/domain/step6/verifyNextReached";
 import verifyLastReached from "@/tree_builder/domain/step7/verifyLastReached";
 import useTree from "@/tree_builder/domain/useTree";
+import solveBuildAutomaton from "@/tree_builder/domain/step8/solveBuildAutomaton";
 
 interface StepDescription {
     title: string,
@@ -210,6 +211,7 @@ const steps: StepDescription[] = [
             }, 200);
             return () => clearTimeout(center);
         },
+        solver: solveBuildAutomaton,
         cleanup: () => {},
         canMoveNodes: false,
         canEditNodes: false,

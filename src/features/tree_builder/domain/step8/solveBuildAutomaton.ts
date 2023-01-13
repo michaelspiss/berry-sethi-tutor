@@ -1,0 +1,35 @@
+import {SolverResult} from "@/tree_builder/domain/steps";
+import {Edge, Node} from "reactflow";
+import useAutomaton from "@/automaton_builder/domain/useAutomaton";
+
+export default function solveBuildAutomaton(nodes: Node[], edges: Edge[]) : SolverResult {
+    const terminals = nodes.filter(node => node.type === "terminal");
+    const syntaxTreeEdges = edges.filter(edge => edge.data.step === 0);
+    const root = nodes.find(node => !syntaxTreeEdges.some(edge => edge.target === node.id))!;
+
+    // •r is added by default
+    const states = terminals.filter(t => t.data.label !== "ε").map(t => t.data.terminalIndex + "•");
+
+    const rootLastReached = (root.data.lastReached as string[]).map(t => t + "•");
+    const finalStates = root.data.canBeEmpty ? ["•r"].concat(rootLastReached) : rootLastReached;
+
+    const rootTransitions = (root.data.firstReached as string[]).map(t => {
+        const terminal = terminals.find(terminal => terminal.data.terminalIndex === t)?.data.label ?? "";
+        return `(•r, ${terminal}, ${t}•)`
+    })
+
+    const terminalTransitions = terminals.flatMap(terminal => (terminal.data.nextReached as string[]).map(next => {
+        const nextTerminal = terminals.find(n => n.data.terminalIndex === next)?.data.label ?? "";
+        return `(${terminal.data.terminalIndex}•, ${nextTerminal}, ${next}•)`
+    }))
+
+    const transitions = [...new Set([...rootTransitions, ...terminalTransitions])];
+
+    useAutomaton.setState({
+        states: states.join(", "),
+        finalStates: finalStates.join(", "),
+        transitions: transitions.join(",\n"),
+    })
+
+    return {nodes, edges};
+}
