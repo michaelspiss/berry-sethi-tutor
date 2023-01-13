@@ -62,11 +62,14 @@ const Flow = () => {
     }), [automaton.transitions])
 
     useEffect(() => {
+        const children = states.map(state => ({id: state.id, height: state.height ?? 50, width: state.width ?? 50}));
         const graph = {
             id: "root",
             layoutOptions: {'elk.algorithm': 'layered'},
-            children: states.map(state => ({id: state.id, height: state.height ?? 50, width: state.width ?? 50})),
-            edges: transitions.map(t => ({id: t.id, sources: [t.source], targets: [t.target]}))
+            children: children,
+            edges: transitions
+                .filter(t => children.some(c => c.id === t.source) && children.some(c => c.id === t.target))
+                .map(t => ({id: t.id, sources: [t.source], targets: [t.target]}))
         }
         elk.layout(graph).then(graph => {
             const laidOutNodes: Node[] = [];
