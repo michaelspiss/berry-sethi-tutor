@@ -3,9 +3,8 @@ import useAutomaton from "@/automaton_builder/domain/useAutomaton";
 import StateNode from "@/automaton_builder/presentation/StateNode";
 import TransitionEdge from "@/automaton_builder/presentation/TransitionEdge";
 import {useEffect, useMemo, useState} from "react";
-import {digl} from "@crinkles/digl";
-import {Rank} from "@crinkles/digl/dist/types";
 import {useElementSize} from "@mantine/hooks";
+import ElkConstructor from "elkjs";
 
 const nodeTypes = {
     state: StateNode,
@@ -15,37 +14,9 @@ const edgeTypes = {
     transition: TransitionEdge,
 }
 
-// slight adaptation from documentation: https://github.com/kevtiq/digl
-function positionNodes(
-    nodes: Node[],
-    ranks: Rank[],
-    config: { orientation: "horizontal"|"vertical", width: number, height: number } = {orientation: 'horizontal', height: 46, width: 46},
-) {
-    const _nodes: Node[] = [];
-    const _h = config.orientation === 'horizontal';
-
-    ranks.forEach((r, i) => {
-        const xStart = _h
-            ? 2 * config.width * i
-            : -0.5 * (r.length - 1) * 2 * config.width;
-        const yStart = _h
-            ? -0.5 * (r.length - 1) * 2 * config.height
-            : 2 * config.height * i;
-
-        r.forEach((nodeId, nIndex) => {
-            const _node = nodes.find((n) => n.id == nodeId);
-            if (!_node) return;
-            const x = _h ? xStart : xStart + 2 * config.width * nIndex;
-            const y = _h ? yStart + 2 * config.height * nIndex : yStart;
-            _nodes.push({ ..._node, position: {x , y} });
-        });
-    });
-
-    return _nodes;
-}
-
 const Flow = (props: {height: number, width: number}) => {
     const [nodes, setNodes] = useState<Node[]>([]);
+    const [edges, setEdges] = useState<Edge[]>([]);
     const [reactFlow, setReactFlow] = useState<ReactFlowInstance|null>(null);
     const transitionRegex = new RegExp(/^\( *([^, ]+) *, *([^, ]+) *, *([^,) ]+) *\) *,? *$/);
     const automaton = useAutomaton();
@@ -92,27 +63,66 @@ const Flow = (props: {height: number, width: number}) => {
     }), [automaton.transitions])
 
     useEffect(() => {
-        const edges = transitions
-            .filter(t => states.some(c => c.id === t.source) && states.some(c => c.id === t.target))
-            .map(e => ({source: e.source, target: e.target}))
+        const effect = async () => {
+            const elk = new ElkConstructor();
+            const nodes = states.map(s => ({id: s.id, width: s.width ?? 46, height: s.height ?? 46}));
+            const edges = transitions
+                .filter(t => states.some(c => c.id === t.source) && states.some(c => c.id === t.target))
+                .map(e => ({id: e.id, sources: [e.source], targets: [e.target], labels: [{text: e.label as string|undefined}]}))
 
+            const graph = {
+                id: "root",
+                layoutOptions: {'elk.algorithm': 'layered'},
+                children: nodes,
+                edges: edges,
+            }
 
-        const sources = states.filter(s => edges.every(e => e.target !== s.id));
-        const phantom = sources.map(s => ({source: "", target: s.id}));
-        let diglEdges = edges.concat(phantom);
+            const laidOutNodes : Node[] = [];
+            const laidOutEdges : Edge[] = [];
 
-        let graphs = digl(diglEdges);
-        graphs.forEach(rank => diglEdges.push({source: "", target: (rank[0] ?? [])[0] ?? ""}))
-        graphs = digl(diglEdges);
+            const laidOut = await elk.layout(graph)
+            console.log(laidOut)
+            states.forEach(node => {
+                const laidOutNode = laidOut.children?.find(c => c.id === node.id);
+                laidOutNodes.push({
+                    ...node,
+                    position: {x: laidOutNode?.x ?? 0, y: laidOutNode?.y ?? 0},
+                })
+            });
+            edges.forEach(edge => {
+                const laidOutEdge = laidOut.edges?.find(e => e.id === edge.id);
+                const points = laidOutEdge ? {
+                    points: [
+                        laidOutEdge?.sections?.[0]?.startPoint,
+                        ...(laidOutEdge?.sections?.[0]?.bendPoints ?? []),
+                        laidOutEdge?.sections?.[0]?.endPoint,
+                    ]
+                } : {};
+                laidOutEdges.push({
+                    id: edge.id,
+                    source: edge.sources[0]!,
+                    target: edge.targets[0]!,
+                    label: edge.labels[0]?.text,
+                    data: {
+                        ...points,
+                        labelPosition: {x: laidOutEdge?.labels?.[0]?.x ?? 0, y: laidOutEdge?.labels?.[0]?.y},
+                    },
+                    type: "transition",
+                    markerEnd: {
+                        type: MarkerType.ArrowClosed,
+                    }
+                })
+            })
 
-        const laidOutNodes : Node[] = [];
-        graphs.forEach(ranks => laidOutNodes.push(...positionNodes(states, ranks)));
-        setNodes(laidOutNodes);
+            setNodes(laidOutNodes);
+            setEdges(laidOutEdges);
+        }
+
+        effect().then(_ => {});
         const fV = setTimeout(() => {
             reactFlow?.fitView({duration: 200});
-        }, 250);
+        }, 300);
         return () => clearTimeout(fV);
-
     }, [states, transitions]);
 
     useEffect(() => {
@@ -133,7 +143,7 @@ const Flow = (props: {height: number, width: number}) => {
                       nodeTypes={nodeTypes}
                       edgeTypes={edgeTypes}
                       nodes={nodes}
-                      edges={transitions}>
+                      edges={edges}>
         <Background/>
     </ReactFlow>
 }
