@@ -135,7 +135,6 @@ const steps: StepDescription[] = [
         verifier: verifyEnumerateLeaves,
         prepare: () => useEnumerateLeaves.setState({nextIndex: 0}),
         cleanup: (nodes) => {
-            useEnumerateLeaves.destroy();
             defaultNodeCleanUp(nodes);
         },
         canMoveNodes: false,
