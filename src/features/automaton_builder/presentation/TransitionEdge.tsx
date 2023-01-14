@@ -85,12 +85,6 @@ export default function TransitionEdge(props: EdgeProps) {
 
     const sign = sx > tx ? -1 : 1;
 
-    if(props.source === props.target) {
-        return <>
-            <BaseEdge path={`M ${sx} ${sy} C ${sx - 60} ${sy + 60}, ${sx - 60} ${sy - 60}, ${sx - 17} ${sy - 17}`} {...props} />
-        </>
-    }
-
     const perpendicularX = yDelta;
     const perpendicularY = -xDelta;
 
@@ -99,8 +93,13 @@ export default function TransitionEdge(props: EdgeProps) {
     const middleY = sy + sign * (yDelta/2 + perpendicularY/2);
     const labelY = sy + sign * (yDelta/2 + perpendicularY/4);
 
+    // TODO: make self-references visible, move labels more towards edge
     return <>
-        <BaseEdge path={`M ${sx} ${sy} Q ${middleX} ${middleY}, ${tx} ${ty}`} {...props} />
+        {
+            props.source === props.target
+                ? <BaseEdge path={`M ${sx} ${sy} C ${sx - 60} ${sy + 60}, ${sx - 60} ${sy - 60}, ${sx - 17} ${sy - 17}`} {...props} />
+                : <BaseEdge path={`M ${sx} ${sy} Q ${middleX} ${middleY}, ${tx} ${ty}`} {...props} />
+        }
         <EdgeLabelRenderer>
             <div style={{
                 position: 'absolute',
