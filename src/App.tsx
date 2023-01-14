@@ -22,6 +22,7 @@ import NodeAttributeLegend from "@/tree_builder/presentation/NodeAttributeLegend
 import AutomatonBuilderScreen from "@/automaton_builder/presentation/AutomatonBuilderScreen";
 import TreeBuilderScreen from "@/tree_builder/presentation/screens/TreeBuilderScreen";
 import useTree from "@/tree_builder/domain/useTree";
+import useAutomaton from "@/automaton_builder/domain/useAutomaton";
 
 export default function App() {
     const solveStep = useAppStateStore((state) => state.solveStep);
@@ -48,6 +49,11 @@ export default function App() {
                                               useTree.setState({
                                                   nodes: [],
                                                   edges: [],
+                                              })
+                                              useAutomaton.setState({
+                                                  states: "",
+                                                  finalStates: "",
+                                                  transitions: "",
                                               })
                                           }}>
                                               <IconArrowBack size={16}/>
