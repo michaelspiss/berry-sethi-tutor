@@ -81,7 +81,6 @@ const Flow = (props: {height: number, width: number}) => {
             const laidOutEdges : Edge[] = [];
 
             const laidOut = await elk.layout(graph)
-            console.log(laidOut)
             states.forEach(node => {
                 const laidOutNode = laidOut.children?.find(c => c.id === node.id);
                 laidOutNodes.push({
