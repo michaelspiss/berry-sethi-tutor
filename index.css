@@ -36,7 +36,6 @@ body, #root {
 }
 
 #automaton .react-flow__pane {
-    cursor: default;
     user-select: none;
 }
 

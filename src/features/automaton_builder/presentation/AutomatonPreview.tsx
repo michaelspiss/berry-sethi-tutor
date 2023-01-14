@@ -1,12 +1,4 @@
-import ReactFlow, {
-    Background,
-    ConnectionMode,
-    Edge,
-    MarkerType,
-    Node,
-    ReactFlowInstance,
-    ReactFlowProvider
-} from "reactflow";
+import ReactFlow, {Background, Edge, MarkerType, Node, ReactFlowInstance, ReactFlowProvider} from "reactflow";
 import useAutomaton from "@/automaton_builder/domain/useAutomaton";
 import StateNode from "@/automaton_builder/presentation/StateNode";
 import TransitionEdge from "@/automaton_builder/presentation/TransitionEdge";
@@ -136,17 +128,11 @@ const Flow = (props: {height: number, width: number}) => {
                           setReactFlow(rf);
                           rf.fitView()
                       }}
-                      elementsSelectable={false}
                       nodesConnectable={false}
                       nodesDraggable={false}
                       nodeTypes={nodeTypes}
                       edgeTypes={edgeTypes}
                       nodes={nodes}
-                      panOnDrag={false}
-                      zoomOnScroll={false}
-                      zoomActivationKeyCode={null}
-                      zoomOnPinch={false}
-                      connectionMode={ConnectionMode.Loose}
                       edges={transitions}>
         <Background/>
     </ReactFlow>
