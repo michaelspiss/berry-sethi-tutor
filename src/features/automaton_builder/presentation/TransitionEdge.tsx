@@ -74,32 +74,43 @@ export function getEdgeParams(source, target) {
 }
 
 export default function TransitionEdge(props: EdgeProps) {
-    const sourceNode = useStore(useCallback((store) => store.nodeInternals.get(props.source), [props.source]));
-    const targetNode = useStore(useCallback((store) => store.nodeInternals.get(props.target), [props.target]));
+    const {sourceX, sourceY} = props;
 
-    const {sx, sy, tx, ty} = getEdgeParams(sourceNode, targetNode);
+    let path : string;
+    let labelX: number;
+    let labelY: number;
 
-    const xDelta = Math.max(sx,tx) - Math.min(sx,tx);
-    const yDelta = Math.max(sy,ty) - Math.min(sy,ty);
+    if(props.source === props.target) {
+        path = `M ${sourceX-5} ${sourceY+21} C ${sourceX-10} ${sourceY + 60}, ${sourceX - 40} ${sourceY + 50}, ${sourceX - 16} ${sourceY+16}`;
+        labelX = sourceX - 25;
+        labelY = sourceY + 45;
+    } else {
+        const sourceNode = useStore(useCallback((store) => store.nodeInternals.get(props.source), [props.source]));
+        const targetNode = useStore(useCallback((store) => store.nodeInternals.get(props.target), [props.target]));
+
+        const {sx, sy, tx, ty} = getEdgeParams(sourceNode, targetNode);
+
+        const xDelta = Math.max(sx,tx) - Math.min(sx,tx);
+        const yDelta = Math.max(sy,ty) - Math.min(sy,ty);
 
 
-    const sign = sx > tx ? -1 : 1;
+        const sign = sx > tx ? -1 : 1;
 
-    const perpendicularX = yDelta;
-    const perpendicularY = -xDelta;
+        const perpendicularX = yDelta;
+        const perpendicularY = -xDelta;
 
-    const middleX = sx + sign * (xDelta/2 + perpendicularX/2);
-    const labelX = sx + sign * (xDelta/2 + perpendicularX/4);
-    const middleY = sy + sign * (yDelta/2 + perpendicularY/2);
-    const labelY = sy + sign * (yDelta/2 + perpendicularY/4);
+        const middleX = sx + sign * (xDelta/2 + perpendicularX/2);
+        labelX = sx + sign * (xDelta/2 + perpendicularX/4);
+        const middleY = sy + sign * (yDelta/2 + perpendicularY/2);
+        labelY = sy + sign * (yDelta/2 + perpendicularY/4);
 
-    // TODO: make self-references visible, move labels more towards edge
+        path = `M ${sx} ${sy} Q ${middleX} ${middleY}, ${tx} ${ty}`;
+    }
+
+
+    // TODO: move labels more towards edge
     return <>
-        {
-            props.source === props.target
-                ? <BaseEdge path={`M ${sx} ${sy} C ${sx - 60} ${sy + 60}, ${sx - 60} ${sy - 60}, ${sx - 17} ${sy - 17}`} {...props} />
-                : <BaseEdge path={`M ${sx} ${sy} Q ${middleX} ${middleY}, ${tx} ${ty}`} {...props} />
-        }
+        <BaseEdge path={path} {...props} />
         <EdgeLabelRenderer>
             <div style={{
                 position: 'absolute',
