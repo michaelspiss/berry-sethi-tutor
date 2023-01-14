@@ -14,7 +14,6 @@ const useStyles = createStyles(() => ({
         position: "relative",
     },
     handle: {
-        bottom: "20px !important",
         visibility: "hidden",
     },
     finalRing: {
@@ -40,9 +39,15 @@ export default function StateNode(props: NodeProps) {
             }
             {props.data.isFinal && <div className={classes.finalRing}/>}
             {props.data.label}
+            <Handle type="target"
+                    position={Position.Left}
+                    id="t"
+                    className={classes.handle}
+                    style={{pointerEvents: "none"}}
+            />
             <Handle type="source"
-                    position={Position.Bottom}
-                    id="a"
+                    position={Position.Right}
+                    id="s"
                     className={classes.handle}
                     style={{pointerEvents: "none"}}
             />

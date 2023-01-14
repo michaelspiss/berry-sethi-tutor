@@ -39,3 +39,11 @@ body, #root {
     cursor: default;
     user-select: none;
 }
+
+#automaton .react-flow__handle-right {
+    right: -4px;
+}
+
+#automaton .react-flow__handle-left {
+    left: -4px;
+}

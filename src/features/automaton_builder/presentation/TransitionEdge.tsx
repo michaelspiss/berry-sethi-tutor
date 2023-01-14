@@ -74,16 +74,16 @@ export function getEdgeParams(source, target) {
 }
 
 export default function TransitionEdge(props: EdgeProps) {
-    const {sourceX, sourceY} = props;
+    const {targetX, targetY} = props;
 
     let path : string;
     let labelX: number;
     let labelY: number;
 
     if(props.source === props.target) {
-        path = `M ${sourceX-5} ${sourceY+21} C ${sourceX-10} ${sourceY + 60}, ${sourceX - 40} ${sourceY + 50}, ${sourceX - 16} ${sourceY+16}`;
-        labelX = sourceX - 25;
-        labelY = sourceY + 45;
+        path = `M ${targetX+15} ${targetY+21} C ${targetX+10} ${targetY + 60}, ${targetX - 25} ${targetY + 50}, ${targetX + 6} ${targetY+12}`;
+        labelX = targetX - 5;
+        labelY = targetY + 45;
     } else {
         const sourceNode = useStore(useCallback((store) => store.nodeInternals.get(props.source), [props.source]));
         const targetNode = useStore(useCallback((store) => store.nodeInternals.get(props.target), [props.target]));
