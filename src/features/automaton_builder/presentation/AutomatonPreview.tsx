@@ -1,4 +1,4 @@
-import ReactFlow, {Background, Edge, MarkerType, Node, ReactFlowInstance, ReactFlowProvider} from "reactflow";
+import ReactFlow, {Background, Controls, Edge, MarkerType, Node, ReactFlowInstance, ReactFlowProvider} from "reactflow";
 import useAutomaton from "@/automaton_builder/domain/useAutomaton";
 import StateNode from "@/automaton_builder/presentation/StateNode";
 import TransitionEdge from "@/automaton_builder/presentation/TransitionEdge";
@@ -119,14 +119,14 @@ const Flow = (props: {height: number, width: number}) => {
 
         effect().then(_ => {});
         const fV = setTimeout(() => {
-            reactFlow?.fitView({duration: 200});
+            reactFlow?.fitView({duration: 200, padding: 0.1});
         }, 300);
         return () => clearTimeout(fV);
     }, [states, transitions]);
 
     useEffect(() => {
         const fV = setTimeout(() => {
-            reactFlow?.fitView({duration: 200});
+            reactFlow?.fitView({duration: 200, padding: 0.1});
         }, 250);
         return () => clearTimeout(fV);
     }, [props.width, props.height]);
@@ -138,12 +138,14 @@ const Flow = (props: {height: number, width: number}) => {
                           rf.fitView()
                       }}
                       nodesConnectable={false}
+                      fitViewOptions={{duration: 200, padding: 0.1}}
                       nodesDraggable={false}
                       nodeTypes={nodeTypes}
                       edgeTypes={edgeTypes}
                       nodes={nodes}
                       edges={edges}>
         <Background/>
+        <Controls showInteractive={false}/>
     </ReactFlow>
 }
 
