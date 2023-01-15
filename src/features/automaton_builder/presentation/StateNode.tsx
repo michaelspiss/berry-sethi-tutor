@@ -34,7 +34,7 @@ export default function StateNode(props: NodeProps) {
         <div className={classes.node}>
             {
                 props.data.label === "•r" && <svg style={{position: "absolute", left: -30}}>
-                    <line x1={0} y1={21} x2={30} y2={21} strokeWidth={1} stroke={"#000"} markerEnd={"url(#arrowMarker)"}></line>
+                    <line x1={0} y1={21} x2={28} y2={21} strokeWidth={1} stroke={"#b1b1b7"} markerEnd={"url(#automaton__type=arrowclosed)"}></line>
                 </svg>
             }
             {props.data.isFinal && <div className={classes.finalRing}/>}
