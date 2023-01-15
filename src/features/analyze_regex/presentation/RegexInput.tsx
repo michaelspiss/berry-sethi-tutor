@@ -55,7 +55,7 @@ export default function RegexInput(props: RegexInputProps) {
     const {classes} = useStyles();
     const regexValue = useAppStateStore((state) => state.regex)
     const inputRef = useEventListener('input', () => {
-        const newRegexValue = inputRef.current!.value.trim().replaceAll("\r\n", "").replaceAll("\n", "");
+        const newRegexValue = inputRef.current!.value.trim().replaceAll("\r\n", "").replaceAll("\n", "").replaceAll(".", "");
         if(newRegexValue !== regexValue) {
             props.resetErrorPos();
             useAppStateStore.setState({regex: newRegexValue});
