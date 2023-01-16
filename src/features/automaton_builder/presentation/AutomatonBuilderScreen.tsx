@@ -8,6 +8,7 @@ import useAppStateStore from "@/layout/stores/appStateStore";
 import RegexHighlighter from "@/analyze_regex/presentation/RegexHighlighter";
 import useAutomaton from "@/automaton_builder/domain/useAutomaton";
 import {useFocusTrap} from "@mantine/hooks";
+import VerificationErrors from "@/tree_builder/presentation/VerificationErrors";
 
 const useStyles = createStyles(() => ({
     wrapper: {
@@ -26,6 +27,7 @@ const useStyles = createStyles(() => ({
     graphWrapper: {
         display: "flex",
         flexGrow: 1,
+        position: "relative",
         "&.stacked": {
             flexDirection: "column",
         }
@@ -35,6 +37,13 @@ const useStyles = createStyles(() => ({
         maxWidth: 300,
         boxSizing: "border-box",
     },
+    errors: {
+        position: "absolute",
+        top: 0,
+        right: 0,
+        maxHeight: "100%",
+        zIndex: 10000,
+    }
 }))
 
 const onFinalStatesChange : ChangeEventHandler<HTMLInputElement> = (event) => {
@@ -74,6 +83,9 @@ export default function AutomatonBuilderScreen() {
                 </pre>
             </ScrollArea>
             <div className={cx(classes.graphWrapper, {["stacked"]: displayGraphsStacked})}>
+                <div className={classes.errors}>
+                    <VerificationErrors />
+                </div>
                 <InteractiveTreeBuilder/>
                 <AutomatonPreview/>
             </div>

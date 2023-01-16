@@ -157,7 +157,7 @@ const Flow = (props: { reactFlowWrapper: React.RefObject<HTMLDivElement> }) => {
         <Background/>
         <Controls showInteractive={false}/>
         <Panel position={"top-right"} style={{maxHeight: "100%", paddingBottom: 0}}>
-            <VerificationErrors/>
+            {solveStep !== 7 && <VerificationErrors/>}
         </Panel>
         <Panel position={"bottom-center"}>
             {steps[solveStep].canEditNodes ? <TreeElementsPanel/> : null}
