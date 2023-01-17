@@ -104,7 +104,7 @@ const Flow = (props: {height: number, width: number}) => {
                     label: edge.labels[0]?.text,
                     data: {
                         ...points,
-                        labelPosition: {x: laidOutEdge?.labels?.[0]?.x ?? 0, y: laidOutEdge?.labels?.[0]?.y},
+                        labelPosition: {x: laidOutEdge?.labels?.[0]?.x ?? 0, y: laidOutEdge?.labels?.[0]?.y ?? 0},
                     },
                     type: "transition",
                     markerEnd: {
