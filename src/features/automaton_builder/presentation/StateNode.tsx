@@ -5,9 +5,10 @@ const useStyles = createStyles(() => ({
     node: {
         border: "2px solid #000",
         borderRadius: "50%",
-        width: 46,
+        minWidth: 46,
         height: 46,
-        lineHeight: "39px",
+        padding: 4,
+        lineHeight: "31px",
         textAlign: "center",
         fontSize: "22px",
         background: "#fff",
