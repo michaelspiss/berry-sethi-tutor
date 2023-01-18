@@ -14,11 +14,12 @@ const edgeTypes = {
     transition: TransitionEdge,
 }
 
-const Flow = (props: {height: number, width: number}) => {
+export const transitionRegex = new RegExp(/\( *([^,( ]+) *, *([^, ]+) *, *([^,) ]+) *\) *,?/g);
+
+const Flow = (props: { height: number, width: number }) => {
     const [nodes, setNodes] = useState<Node[]>([]);
     const [edges, setEdges] = useState<Edge[]>([]);
-    const [reactFlow, setReactFlow] = useState<ReactFlowInstance|null>(null);
-    const transitionRegex = new RegExp(/^\( *([^, ]+) *, *([^, ]+) *, *([^,) ]+) *\) *,? *$/);
+    const [reactFlow, setReactFlow] = useState<ReactFlowInstance | null>(null);
     const automaton = useAutomaton();
 
     const finalStates = useMemo(() => automaton.finalStates
@@ -43,24 +44,23 @@ const Flow = (props: {height: number, width: number}) => {
         type: "state",
     })), [automaton.states, finalStates]);
 
-    const transitions: Edge[] = useMemo(() => [...new Set(
-        automaton.transitions
-            .split(",\n")
-            .map(transition => transition.trim())
-            .filter(transition => transitionRegex.test(transition))
-    )].map(transition => {
-        const result = transitionRegex.exec(transition)!;
-        return {
-            id: `${result[1]}-${result[2]}-${result[3]}`,
-            source: result[1],
-            target: result[3],
-            label: result[2],
-            markerEnd: {
-                type: MarkerType.ArrowClosed
-            },
-            type: "transition",
+    const transitions: Edge[] = useMemo(() => {
+        const map: { [key: string]: Edge } = {};
+        for(const match of automaton.transitions.matchAll(transitionRegex)) {
+            const id = `${match[1]}-${match[2]}-${match[3]}`;
+            map[id] = {
+                id: id,
+                source: match[1],
+                target: match[3],
+                label: match[2],
+                markerEnd: {
+                    type: MarkerType.ArrowClosed
+                },
+                type: "transition"
+            }
         }
-    }), [automaton.transitions])
+        return Object.values(map);
+    }, [automaton.transitions])
 
     useEffect(() => {
         const effect = async () => {
@@ -68,7 +68,12 @@ const Flow = (props: {height: number, width: number}) => {
             const nodes = states.map(s => ({id: s.id, width: s.width ?? 46, height: s.height ?? 46}));
             const edges = transitions
                 .filter(t => states.some(c => c.id === t.source) && states.some(c => c.id === t.target))
-                .map(e => ({id: e.id, sources: [e.source], targets: [e.target], labels: [{text: e.label as string|undefined}]}))
+                .map(e => ({
+                    id: e.id,
+                    sources: [e.source],
+                    targets: [e.target],
+                    labels: [{text: e.label as string | undefined}]
+                }))
 
             const graph = {
                 id: "root",
@@ -77,8 +82,8 @@ const Flow = (props: {height: number, width: number}) => {
                 edges: edges,
             }
 
-            const laidOutNodes : Node[] = [];
-            const laidOutEdges : Edge[] = [];
+            const laidOutNodes: Node[] = [];
+            const laidOutEdges: Edge[] = [];
 
             const laidOut = await elk.layout(graph)
             states.forEach(node => {
@@ -117,7 +122,8 @@ const Flow = (props: {height: number, width: number}) => {
             setEdges(laidOutEdges);
         }
 
-        effect().then(_ => {});
+        effect().then(_ => {
+        });
         const fV = setTimeout(() => {
             reactFlow?.fitView({duration: 200, padding: 0.1});
         }, 300);
@@ -154,7 +160,7 @@ export default function AutomatonPreview() {
 
     return <div style={{flexGrow: 1}} ref={ref}>
         <ReactFlowProvider>
-            <Flow height={height} width={width} />
+            <Flow height={height} width={width}/>
         </ReactFlowProvider>
     </div>
 }
