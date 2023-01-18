@@ -1,4 +1,4 @@
-import create from "zustand";
+import {create} from "zustand";
 import {RegexTreeItem} from "@/analyze_regex/domain/models/regexTree";
 import React from "react";
 
