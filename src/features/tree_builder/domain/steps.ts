@@ -31,6 +31,7 @@ import verifyNextReached from "@/tree_builder/domain/step6/verifyNextReached";
 import verifyLastReached from "@/tree_builder/domain/step7/verifyLastReached";
 import useTree from "@/tree_builder/domain/useTree";
 import solveBuildAutomaton from "@/tree_builder/domain/step8/solveBuildAutomaton";
+import verifyAutomaton from "@/tree_builder/domain/step8/verifyAutomaton";
 
 interface StepDescription {
     title: string,
@@ -205,11 +206,12 @@ const steps: StepDescription[] = [
         prepare: () => {
             const center = setTimeout(() => {
                 const treeReactFlow = useTree.getState().reactFlow;
-                treeReactFlow.fitView();
-                treeReactFlow.zoomOut();
+                treeReactFlow?.fitView();
+                treeReactFlow?.zoomOut();
             }, 200);
             return () => clearTimeout(center);
         },
+        verifier: verifyAutomaton,
         solver: solveBuildAutomaton,
         cleanup: () => {},
         canMoveNodes: false,
