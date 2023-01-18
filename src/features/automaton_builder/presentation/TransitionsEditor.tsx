@@ -64,8 +64,6 @@ export default function TransitionsEditor() {
     const styledContentRef = useRef<HTMLDivElement>(null);
 
     return <div className={classes.wrapper}>
-        {/* TODO: split lines, parse lines, build automaton */}
-        {/* TODO: Add header: "Enter a normal dot for entry/exit handle position"? Add toggle layout button here? */}
         <Textarea
             classNames={{root: classes.inputRoot, input: classes.input, wrapper: classes.inputWrapper}}
             defaultValue={value}
