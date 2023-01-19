@@ -2,22 +2,28 @@ import {VerificationError, VerificationResult} from "@/tree_builder/domain/steps
 import useTree from "@/tree_builder/domain/useTree";
 import useAutomaton from "@/automaton_builder/domain/useAutomaton";
 import {getIncomers} from "reactflow";
+import {transitionRegex} from "@/automaton_builder/presentation/AutomatonPreview";
+
+type Transition = { id: string, source: string, terminal: string, target: string }
 
 export default function verifyAutomaton(): VerificationResult {
     const errors: VerificationError[] = [];
     const nodes = useTree.getState().nodes;
     const edges = useTree.getState().edges;
     const terminals = nodes.filter(node => node.type === "terminal");
+    const indices = terminals.map(t => t.data.terminalIndex.toString());
     const automatonState = useAutomaton.getState();
     const startState = "•r";
 
+    // states list verification
     // •r is never included in the checks, because it is added by default
     const userStates = automatonState.states.split(",").map(t => t.trim()).filter(t => t.length !== 0);
     const userIndices = userStates.map(s => s.replace(/•$/, ""));
-    const correctIndices = terminals.filter(t => t.data.label !== "ε").map(t => t.data.terminalIndex.toString());
+    const correctIndices = terminals.filter(t => t.data.label !== "ε").map(t => t.data.terminalIndex.toString()) as string[];
+    const correctStates = [startState, ...correctIndices.map(i => i + "•")];
     const epsilonTransitionIndices = terminals.filter(t => t.data.label === "ε").map(t => t.data.terminalIndex.toString());
 
-    const unknownIndices = userIndices.filter(i => !correctIndices.includes(i) && !epsilonTransitionIndices.includes(i));
+    const unknownIndices = userIndices.filter(i => !indices.includes(i));
     if (unknownIndices.length !== 0) {
         errors.push({
             title: "Unknown terminal index in state name",
@@ -54,22 +60,22 @@ export default function verifyAutomaton(): VerificationResult {
         })
     }
 
-    if(errors.length === 0) {
-        if(userStates.length !== correctIndices.length) {
+    if (errors.length === 0) {
+        if (userStates.length !== correctIndices.length) {
             errors.push({
                 title: "Missing state(s)",
                 message: <>All indices of terminals except epsilon are separate states.
-                Your states list is missing at least one.</>
-            })
-        }
+                    Your states list is missing at least one.</>
+            });
 
-        // @ts-ignore
-        return {nodes, edges, errors};
+            // @ts-ignore
+            return {nodes, edges, errors};
+        }
     }
 
     if (errors.length === 0) {
         const correctStates = terminals.filter(t => t.data.label !== "ε").map(t => t.data.terminalIndex + "•");
-        if (correctStates.length !== userStates.length || !userStates.map(s => correctStates.includes(s)).reduce((a, c) => a && c, true)) {
+        if (correctStates.length !== userStates.length || userStates.some(s => !correctStates.includes(s))) {
             errors.push({
                 title: "States incorrect",
                 message: <>At least one state violates the rules for creating states from the syntax tree.
@@ -83,10 +89,126 @@ export default function verifyAutomaton(): VerificationResult {
         }
     }
 
+    // final states verification
     const syntaxTreeEdges = edges.filter(edge => edge.data.step === 0);
     const rootNode = nodes.find(node => getIncomers(node, nodes, syntaxTreeEdges).length === 0)!;
 
+    const userFinalStates = automatonState.finalStates.split(",").map(t => t.trim()).filter(t => t.length !== 0);
+    const correctFinalStates = (rootNode.data.lastReached as number[]).map(n => n.toString()).map(i => i + "•");
+    if (rootNode.data.canBeEmpty) {
+        correctFinalStates.push(startState);
+    }
 
+    const finalStateNotInStates = userFinalStates.filter(s => !correctStates.includes(s));
+    if (finalStateNotInStates.length !== 0) {
+        errors.push({
+            title: "Final state not in states list",
+            message: <>A state set as final is not defined in the states list. Check if the spelling matches, add the
+                missing state(s), or remove the violating final
+                state(s): <code>{finalStateNotInStates.join(", ")}</code></>
+        })
+    }
+
+    const isRootMissing = rootNode.data.canBeEmpty ? !userFinalStates.includes(startState) : false;
+    if (errors.length === 0) {
+        const finalStateIsNotFinal = userFinalStates.filter(s => !correctFinalStates.includes(s));
+        if (finalStateIsNotFinal.length !== 0) {
+            errors.push({
+                title: "State in final states list is not final",
+                message: <>Only states which have their terminal index in the root node's last reached list and if the
+                    root node can be empty, the start state, are final states. Try removing violating states from the
+                    final states list: <code>{finalStateIsNotFinal.join(", ")}</code></>
+            })
+        }
+
+        if (isRootMissing) {
+            errors.push({
+                title: "Root node is missing",
+                message: <>Final states is missing {startState}. As the syntax tree's root node can be empty, no input
+                    is valid input for the regular expression.</>
+            })
+        }
+    }
+
+    const correctFinalStatesMissing = correctFinalStates.filter(s => !userFinalStates.includes(s));
+    if (correctFinalStatesMissing.length !== 0 && !(isRootMissing && correctFinalStatesMissing.length !== 1)) {
+        if (errors.length === 0 || (isRootMissing && errors.length > 1)) {
+            errors.push({
+                title: "Final states are missing",
+                message: <>All states which have their terminal index included in the root node's last visited list are
+                    final states. If the root node can be empty, the start state {startState} is added as well.
+                    Try adding the missing states.</>
+            })
+        }
+    }
+
+    if (errors.length !== 0) {
+        // @ts-ignore
+        return {nodes, edges, errors};
+    }
+
+    // transitions verification
+    const validTerminals = terminals.map(t => t.data.label).filter(t => t !== "ε");
+
+    const userTransitionsMatches = [...automatonState.transitions.matchAll(transitionRegex)];
+    const uniqueUserTransitions = Object.values(userTransitionsMatches.map(match => ({
+        id: `${match[1]}-${match[2]}-${match[3]}`,
+        source: match[1],
+        target: match[3],
+        terminal: match[2],
+    } as Transition)).reduce<{ [key: string]: Transition }>((a, c) => {
+        a[c.id] = c;
+        return a;
+    }, {}))
+
+    if (userTransitionsMatches.length > uniqueUserTransitions.length) {
+        errors.push({
+            title: "Duplicate transition",
+            message: <>Your transitions list contains at least one duplicate. Try removing it/them.</>
+        })
+    }
+
+    const invalidTerminals = [...new Set(uniqueUserTransitions.map(t => t.terminal).filter(t => !validTerminals.includes(t)))];
+    if(invalidTerminals.length !== 0) {
+        errors.push({
+            title: "Unknown terminal in transition",
+            message: <>At least one terminal consumed by a transition is not part of the
+                alphabet: <code>{invalidTerminals.join(", ")}</code>. Try replacing them with valid input.</>
+        })
+    }
+
+    const invalidTransitionStates = [...new Set([
+        ...uniqueUserTransitions.map(t => t.source).filter(t => !correctStates.includes(t)),
+        ...uniqueUserTransitions.map(t => t.target).filter(t => !correctStates.includes(t)),
+    ])];
+    if(invalidTransitionStates.length !== 0) {
+        errors.push({
+            title: "Unknown state in transition",
+            message: <>At least one transition targets/originates from an unknown
+                state: <code>{invalidTransitionStates.join(", ")}</code>. Try checking their spelling, or replacing
+                them with valid states.</>
+        })
+    }
+
+    const doesTransitionExist = (source: string, terminal: string, target: string) => {
+        const id = `${source}-${terminal}-${target}`;
+        return uniqueUserTransitions.some(t => t.id === id);
+    }
+
+
+    // TODO: check root->start
+    // TODO: check state->state
+    // TODO: check wrong
+
+    if(errors.length === 0) {
+        if(automatonState.transitions.replaceAll(transitionRegex, "").replaceAll(/[,\n]/g, "").length !== 0) {
+            errors.push({
+                title: "Transitions input contains invalid data",
+                message: <>Some input could not be recognized. Try removing everything that's not a comma or a
+                    transition in the following format: <code>(state, terminal, state)</code></>
+            })
+        }
+    }
 
     // @ts-ignore
     return {nodes, edges, errors: errors.length === 0 ? undefined : errors};

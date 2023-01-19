@@ -2,6 +2,7 @@ import {SolverResult} from "@/tree_builder/domain/steps";
 import {Edge, Node} from "reactflow";
 import useAutomaton from "@/automaton_builder/domain/useAutomaton";
 
+// FIXME: epsilon states are not handled correctly
 export default function solveBuildAutomaton(nodes: Node[], edges: Edge[]) : SolverResult {
     const terminals = nodes.filter(node => node.type === "terminal");
     const syntaxTreeEdges = edges.filter(edge => edge.data.step === 0);
