@@ -27,7 +27,11 @@ interface AppState {
     /**
      * Overrides the step's "canSelectElements" attribute temporarily
      */
-    disableSelect: boolean
+    disableSelect: boolean,
+    /**
+     * Displays an overlay on successful completion of automaton creation
+     */
+    isDone: boolean,
 }
 
 const useAppStateStore = create<AppState>(() => ({
@@ -36,6 +40,7 @@ const useAppStateStore = create<AppState>(() => ({
     regexModel: null,
     solveStep: -1,
     disableSelect: false,
+    isDone: false,
 }))
 
 export default useAppStateStore

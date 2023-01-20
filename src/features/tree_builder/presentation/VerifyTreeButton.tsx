@@ -19,6 +19,8 @@ export default function VerifyTreeButton() {
             if(steps[solveStep + 1] !== undefined) {
                 nextSolveStep++;
                 steps[solveStep + 1]?.prepare?.call(null, result.nodes, result.edges);
+            } else {
+                useAppStateStore.setState({isDone: true});
             }
             setNodes(result.nodes);
             setEdges(result.edges);

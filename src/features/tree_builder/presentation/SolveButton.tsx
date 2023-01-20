@@ -21,6 +21,8 @@ export default function SolveButton() {
         if(steps[solveStep + 1] !== undefined) {
             nextSolveStep++;
             steps[solveStep + 1]?.prepare?.call(null, styledNodes, result.edges);
+        } else {
+            useAppStateStore.setState({isDone: true});
         }
         setNodes(styledNodes);
         setEdges(result.edges);

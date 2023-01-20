@@ -21,8 +21,8 @@ import VerifyTreeButton from "@/tree_builder/presentation/VerifyTreeButton";
 import NodeAttributeLegend from "@/tree_builder/presentation/NodeAttributeLegend";
 import AutomatonBuilderScreen from "@/automaton_builder/presentation/AutomatonBuilderScreen";
 import TreeBuilderScreen from "@/tree_builder/presentation/screens/TreeBuilderScreen";
-import useTree from "@/tree_builder/domain/useTree";
-import useAutomaton from "@/automaton_builder/domain/useAutomaton";
+import backToHome from "./backToHome";
+import CompletionModal from "@/tree_builder/presentation/CompletionModal";
 
 export default function App() {
     const solveStep = useAppStateStore((state) => state.solveStep);
@@ -39,23 +39,7 @@ export default function App() {
                               <Group position={"apart"}>
                                   <Center style={{height: mantineThemeOther.headerHeight}} inline>
                                       {solveStep === -1 ? null :
-                                          <ActionIcon onClick={() => {
-                                              useAppStateStore.setState({
-                                                  solveStep: -1,
-                                                  isSimplified: false,
-                                                  verificationErrors: undefined,
-                                                  disableSelect: false,
-                                              })
-                                              useTree.setState({
-                                                  nodes: [],
-                                                  edges: [],
-                                              })
-                                              useAutomaton.setState({
-                                                  states: "",
-                                                  finalStates: "",
-                                                  transitions: "",
-                                              })
-                                          }}>
+                                          <ActionIcon onClick={backToHome}>
                                               <IconArrowBack size={16}/>
                                           </ActionIcon>
                                       }
@@ -107,6 +91,7 @@ export default function App() {
                         ? <AutomatonBuilderScreen/>
                         : <TreeBuilderScreen/>}
             </AppShell>
+            <CompletionModal/>
         </MantineProvider>
     );
 }
