@@ -152,6 +152,9 @@ const Flow = (props: { reactFlowWrapper: React.RefObject<HTMLDivElement> }) => {
         deleteKeyCode={steps[solveStep]?.canEditNodes || steps[solveStep]?.canConnectNodes ? ['Backspace', 'Delete'] : null}
         selectionKeyCode={null}
         zoomOnDoubleClick={false}
+        fitViewOptions={{
+            padding: .2,
+        }}
         connectionLineType={solveStep === 0 ? ConnectionLineType.Bezier : ConnectionLineType.Straight}
         proOptions={{hideAttribution: solveStep >= 7}}
         multiSelectionKeyCode={null}>

@@ -144,7 +144,7 @@ const Flow = (props: { height: number, width: number }) => {
                           rf.fitView()
                       }}
                       nodesConnectable={false}
-                      fitViewOptions={{duration: 200, padding: 0.1}}
+                      fitViewOptions={{duration: 200, padding: 0.2}}
                       nodesDraggable={false}
                       nodeTypes={nodeTypes}
                       edgeTypes={edgeTypes}
