@@ -1,6 +1,5 @@
 import {VerificationError, VerificationResult} from "@/tree_builder/domain/steps";
-import {Edge, Node} from "reactflow";
-import {getOutgoers} from "../../../../../../react-flow/packages/reactflow";
+import {Edge, getOutgoers, Node} from "reactflow";
 import arraysAreEqual from "@/tree_builder/domain/arraysAreEqual";
 import {Kbd} from "@mantine/core";
 
