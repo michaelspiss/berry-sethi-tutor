@@ -143,13 +143,13 @@ const Flow = (props: { reactFlowWrapper: React.RefObject<HTMLDivElement> }) => {
         edgeTypes={edgeTypes}
         onNodeClick={(_, node) => steps[solveStep].onNodeClick?.call(null, node, reactFlowInstance!)}
         selectNodesOnDrag={false}
-        elementsSelectable={steps[solveStep].canSelectElements && !disableSelect}
+        elementsSelectable={steps[solveStep]?.canSelectElements && !disableSelect}
         onPaneClick={() => disableSelect && useAppStateStore.setState({disableSelect: false})}
-        nodesDraggable={steps[solveStep].canMoveNodes}
-        nodesConnectable={steps[solveStep].canConnectNodes}
-        nodesFocusable={steps[solveStep].canEditNodes}
-        connectionMode={steps[solveStep].canSourceConnectToSource ? ConnectionMode.Loose : ConnectionMode.Strict}
-        deleteKeyCode={steps[solveStep].canEditNodes || steps[solveStep].canConnectNodes ? ['Backspace', 'Delete'] : null}
+        nodesDraggable={steps[solveStep]?.canMoveNodes}
+        nodesConnectable={steps[solveStep]?.canConnectNodes}
+        nodesFocusable={steps[solveStep]?.canEditNodes}
+        connectionMode={steps[solveStep]?.canSourceConnectToSource ? ConnectionMode.Loose : ConnectionMode.Strict}
+        deleteKeyCode={steps[solveStep]?.canEditNodes || steps[solveStep]?.canConnectNodes ? ['Backspace', 'Delete'] : null}
         selectionKeyCode={null}
         zoomOnDoubleClick={false}
         connectionLineType={solveStep === 0 ? ConnectionLineType.Bezier : ConnectionLineType.Straight}
@@ -160,7 +160,7 @@ const Flow = (props: { reactFlowWrapper: React.RefObject<HTMLDivElement> }) => {
             {solveStep !== 7 && <VerificationErrors/>}
         </Panel>
         <Panel position={"bottom-center"}>
-            {steps[solveStep].canEditNodes ? <TreeElementsPanel/> : null}
+            {steps[solveStep]?.canEditNodes ? <TreeElementsPanel/> : null}
         </Panel>
     </ReactFlow>
 }

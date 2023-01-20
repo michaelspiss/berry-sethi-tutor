@@ -9,7 +9,7 @@ import NodeAttributes from "@/tree_builder/presentation/NodeAttributes";
 export default function OperatorNode(props: NodeProps) {
     const {classes} = useNodeStyles();
     const solveStep = useAppStateStore((state) => state.solveStep);
-    const canEditNodes = steps[solveStep].canEditNodes;
+    const canEditNodes = steps[solveStep]?.canEditNodes;
 
     const switchOperator = (operator: string) => {
         props.data.setLabel(operator);

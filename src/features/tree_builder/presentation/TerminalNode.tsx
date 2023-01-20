@@ -15,7 +15,7 @@ export function terminalLengthIsValid(terminal: string) {
 export default function TerminalNode(props: NodeProps) {
     const {classes} = useNodeStyles();
     const solveStep = useAppStateStore((state) => state.solveStep);
-    const canEditNodes = steps[solveStep].canEditNodes;
+    const canEditNodes = steps[solveStep]?.canEditNodes;
 
     return (
         <>
