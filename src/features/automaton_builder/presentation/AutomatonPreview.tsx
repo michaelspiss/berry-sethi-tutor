@@ -83,7 +83,7 @@ const Flow = (props: { height: number, width: number }) => {
             }
 
             const laidOutNodes: Node[] = [];
-            const laidOutEdges: Edge[] = [];
+            const laidOutEdges: Edge[] = [{id: "", source: "", target: "", markerEnd: {type: MarkerType.ArrowClosed}}];
 
             const laidOut = await elk.layout(graph)
             states.forEach(node => {
