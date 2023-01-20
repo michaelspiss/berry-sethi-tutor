@@ -33,6 +33,7 @@ export default function App() {
 
     return (
         <MantineProvider withGlobalStyles withNormalizeCSS theme={{
+            primaryShade: 7,
             other: mantineThemeOther,
         }}>
             <AppShell padding={0}
