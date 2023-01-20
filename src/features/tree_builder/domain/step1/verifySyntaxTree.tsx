@@ -58,7 +58,6 @@ function allNodesHaveExactlyOneParent(nodes: Node[], edges: Edge[], errors: Veri
 }
 
 function allNodesHaveValidLabels(nodes: Node[], errors: VerificationError[]) {
-    // TODO: check if terminal characters even exist
     const emptyNodes = nodes.filter((node) => !node.data.label || node.data.label === "");
     if (emptyNodes.length !== 0) {
         errors.push({
@@ -171,8 +170,8 @@ function orderNodesByHorizontalPositionRec(rootNode: Node, nodes: Node[], edges:
 
 function allTerminalsExistAndAreInCorrectOrder(rootNode: Node, nodes: Node[], edges: Edge[], errors: VerificationError[]) {
     const model = useAppStateStore.getState().regexModel;
-    // FIXME: terminals are sorted by creation date, rather than appearance
-    const graphTerminals = nodes.filter((node) => getOutgoers(node, nodes, edges).length === 0).map(node => node.data.label);
+    const graphAsTreeModel = graphToTreeModel(rootNode, nodes, edges);
+    const graphTerminals = graphAsTreeModel.getTerminals();
     const modelTerminals = model!.getTerminals();
 
     const allTerminalsExist = [...graphTerminals].sort().toString() === [...modelTerminals].sort().toString();
@@ -187,7 +186,7 @@ function allTerminalsExistAndAreInCorrectOrder(rootNode: Node, nodes: Node[], ed
                 to <RegexHighlighter regex={graphRegex} inline/></>,
         });
     } else if (!terminalsInCorrectOrder) {
-        const graphRegex = graphToTreeModel(rootNode, nodes, edges).getRegex();
+        const graphRegex = graphAsTreeModel.getRegex();
         errors.push({
             title: "Graph's terminals are in incorrect order",
             message: <>The regex requires the terminals to be in the following order: {modelTerminals.join(", ")}. Your

@@ -1,4 +1,5 @@
 import {Edge, getIncomers, getOutgoers, Node} from "reactflow";
+import setDataDfs from "@/tree_builder/domain/setDataDfs";
 
 /**
  * Positions nodes so that they can be read
@@ -14,13 +15,16 @@ export default function layOutSyntaxTree(nodes: Node[], edges: Edge[]) {
 
     rootNode.position = {x: 0, y: 0};
 
+    let index = 0;
+    setDataDfs(nodes, edges, (node) => node.type === "terminal" ? {index: index++} : {})
+
     layoutYRecursive(rootNode, nodes, edges, nodeHeight, gapHeight, 0);
 
-    const terminals = nodes.filter((node) => node.type === "terminal");
+    const terminals = nodes
+        .sort((nodeA, nodeB) => (nodeA.data.index ?? 0) - (nodeB.data.index ?? 0))
+        .filter((node) => node.type === "terminal");
     for(let i = 0; i < terminals.length; i++) {
-        terminals[i].position = { y: terminals[i].position.y, x: i * (nodeWidth + gapWidth)};
-    }
-    for(let i = 0; i < terminals.length; i++) {
+        delete terminals[i].data.index;
         layoutXRecursive(terminals[i], nodes, edges, nodeWidth, gapWidth, i * (nodeWidth + gapWidth));
     }
 }
@@ -44,7 +48,7 @@ function layoutYRecursive(activeNode: Node, nodes: Node[], edges: Edge[], nodeHe
 }
 
 /**
- *Adjusts the x coordinate of all nodes based on their children. Terminals need to be laid out first.
+ * Adjusts the x coordinate of all nodes based on their children. Terminals need to be laid out first.
  * @param activeNode
  * @param nodes
  * @param edges
