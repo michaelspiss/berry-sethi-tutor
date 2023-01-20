@@ -1,7 +1,8 @@
 import {createStyles, Textarea} from "@mantine/core";
 import {useElementSize} from "@mantine/hooks";
 import useAutomaton from "@/automaton_builder/domain/useAutomaton";
-import {ChangeEventHandler, useRef} from "react";
+import {ChangeEventHandler, ReactElement, useMemo, useRef} from "react";
+import {transitionRegex} from "@/automaton_builder/presentation/AutomatonPreview";
 
 const useStyles = createStyles(theme => ({
     wrapper : {
@@ -38,6 +39,18 @@ const useStyles = createStyles(theme => ({
         fontFamily: "Consolas,Monaco,Lucida Console,Liberation Mono,DejaVu Sans Mono,Bitstream Vera Sans Mono,Courier New",
         fontSize: 14,
         caretColor: "black",
+    },
+    transitionError: {
+        background: theme.fn.rgba(theme.colors.red[3], .4),
+    },
+    transitionCommaOrParenthesis: {
+        color: theme.colors.gray[6],
+    },
+    transitionState: {
+        color: "black",
+    },
+    transitionTerminal: {
+        color: theme.colors.blue[7],
     }
 }))
 
@@ -63,6 +76,39 @@ export default function TransitionsEditor() {
     const {ref: sizeRef, width, height} = useElementSize();
     const styledContentRef = useRef<HTMLDivElement>(null);
 
+    const styledTransitions = useMemo(() => {
+        const styled : ReactElement[] = [];
+        const matches = [...value.matchAll(transitionRegex), {index: value.length, 0: undefined}]
+        let i = 0;
+        for(let match of matches) {
+            if(match.index !== i) {
+                const substring = value.substring(i, match.index);
+                styled.push(<span key={"te" + i} className={classes.transitionError}>{substring}</span>);
+            }
+            if(match[0] === undefined) {
+                continue;
+            }
+            i = match.index!;
+            const splitMatch = match[0].split(",")
+            const sourcePart = splitMatch[0].split(match[1]);
+            const terminalPart = splitMatch[1].split(match[2]);
+            const targetPart = splitMatch[2].split(match[3]);
+            styled.push(<span key={"te" + i} className={classes.transitionCommaOrParenthesis}>
+                {sourcePart[0]}
+                <span className={classes.transitionState}>{match[1]}</span>
+                {sourcePart[1] + "," + terminalPart[0]}
+                <span className={classes.transitionTerminal}>{match[2]}</span>
+                {terminalPart[1] + "," + targetPart[0]}
+                <span className={classes.transitionState}>{match[3]}</span>
+                {targetPart[1]}
+                {splitMatch[3] !== undefined && "," + splitMatch[3]}
+            </span>);
+            i += match[0].length
+        }
+
+        return styled;
+    }, [value]);
+
     return <div className={classes.wrapper}>
         <Textarea
             classNames={{root: classes.inputRoot, input: classes.input, wrapper: classes.inputWrapper}}
@@ -76,7 +122,7 @@ export default function TransitionsEditor() {
             }}
         />
         <div className={classes.styled} style={{width, height}} ref={styledContentRef}>
-            {value /* TODO: format */}
+            {styledTransitions}
         </div>
     </div>
 }
