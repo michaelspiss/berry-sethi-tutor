@@ -32,6 +32,7 @@ import verifyLastReached from "@/tree_builder/domain/step7/verifyLastReached";
 import useTree from "@/tree_builder/domain/useTree";
 import solveBuildAutomaton from "@/tree_builder/domain/step8/solveBuildAutomaton";
 import verifyAutomaton from "@/tree_builder/domain/step8/verifyAutomaton";
+import useAutomaton from "@/automaton_builder/domain/useAutomaton";
 
 interface StepDescription {
     title: string,
@@ -54,6 +55,7 @@ interface StepDescription {
     canConnectNodes: boolean,
     canSourceConnectToSource: boolean,
     canSelectElements: boolean,
+    reset: () => void,
 }
 
 export interface VerificationError {
@@ -111,6 +113,7 @@ const steps: StepDescription[] = [
         canConnectNodes: true,
         canSourceConnectToSource: false,
         canSelectElements: true,
+        reset: () => useTree.setState({nodes: [], edges: []}),
     }, {
         // Step 2
         title: "Draw possible paths",
@@ -127,6 +130,7 @@ const steps: StepDescription[] = [
         canConnectNodes: true,
         canSourceConnectToSource: true,
         canSelectElements: true,
+        reset: () => useTree.setState({edges: useTree.getState().edges.filter(edge => edge.data.step === 0)})
     }, {
         // Step 3
         title: "Enumerate leaves",
@@ -143,6 +147,15 @@ const steps: StepDescription[] = [
         canConnectNodes: false,
         canSourceConnectToSource: true,
         canSelectElements: false,
+        reset: () => {
+            useEnumerateLeaves.setState({nextIndex: 0});
+            useTree.setState({
+                nodes: useTree.getState().nodes.map(node => ({
+                    ...node,
+                    data: {...node.data, terminalIndex: undefined}
+                }))
+            })
+        }
     }, {
         // Step 4
         title: "Set empty attributes",
@@ -157,6 +170,14 @@ const steps: StepDescription[] = [
         canConnectNodes: false,
         canSourceConnectToSource: true,
         canSelectElements: false,
+        reset: () => {
+            useTree.setState({
+                nodes: useTree.getState().nodes.map(node => ({
+                    ...node,
+                    data: {...node.data, canBeEmpty: true}
+                }))
+            })
+        }
     }, {
         // Step 5
         title: "Collect may-set of first reached read states",
@@ -171,6 +192,14 @@ const steps: StepDescription[] = [
         canConnectNodes: false,
         canSourceConnectToSource: true,
         canSelectElements: true,
+        reset: () => {
+            useTree.setState({
+                nodes: useTree.getState().nodes.map(node => ({
+                    ...node,
+                    data: {...node.data, firstReached: []}
+                }))
+            })
+        }
     }, {
         // Step 6
         title: "Collect may-set of next reached read states",
@@ -185,6 +214,14 @@ const steps: StepDescription[] = [
         canConnectNodes: false,
         canSourceConnectToSource: true,
         canSelectElements: true,
+        reset: () => {
+            useTree.setState({
+                nodes: useTree.getState().nodes.map(node => ({
+                    ...node,
+                    data: {...node.data, nextReached: []}
+                }))
+            })
+        }
     }, {
         // Step 7
         title: "Collect may-set of last reached read states",
@@ -199,6 +236,14 @@ const steps: StepDescription[] = [
         canConnectNodes: false,
         canSourceConnectToSource: true,
         canSelectElements: true,
+        reset: () => {
+            useTree.setState({
+                nodes: useTree.getState().nodes.map(node => ({
+                    ...node,
+                    data: {...node.data, lastReached: []}
+                }))
+            })
+        }
     }, {
         // Step 8
         title: "Create automaton",
@@ -213,12 +258,20 @@ const steps: StepDescription[] = [
         },
         verifier: verifyAutomaton,
         solver: solveBuildAutomaton,
-        cleanup: () => {},
+        cleanup: () => {
+        },
         canMoveNodes: false,
         canEditNodes: false,
         canConnectNodes: false,
         canSourceConnectToSource: true,
         canSelectElements: false,
+        reset: () => {
+            useAutomaton.setState({
+                transitions: "",
+                finalStates: "",
+                states: "",
+            })
+        }
     }
 ]
 

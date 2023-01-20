@@ -1,6 +1,7 @@
 import {
     ActionIcon,
     AppShell,
+    Button,
     Center,
     Group,
     Header,
@@ -23,6 +24,7 @@ import AutomatonBuilderScreen from "@/automaton_builder/presentation/AutomatonBu
 import TreeBuilderScreen from "@/tree_builder/presentation/screens/TreeBuilderScreen";
 import backToHome from "./backToHome";
 import CompletionModal from "@/tree_builder/presentation/CompletionModal";
+import steps from "@/tree_builder/domain/steps";
 
 export default function App() {
     const solveStep = useAppStateStore((state) => state.solveStep);
@@ -62,6 +64,7 @@ export default function App() {
                                       }</Center>
                                       <Center style={{height: mantineThemeOther.headerHeight}}>
                                           <Group>
+                                              <Button onClick={steps[solveStep]?.reset} color={"red"}>Reset step</Button>
                                               <VerifyTreeButton/>
                                               <SolveButton/>
                                           </Group>

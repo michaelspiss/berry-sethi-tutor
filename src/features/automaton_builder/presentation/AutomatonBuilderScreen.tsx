@@ -3,7 +3,7 @@ import {createStyles, ScrollArea, TextInput} from "@mantine/core";
 import InteractiveTreeBuilder from "@/tree_builder/presentation/InteractiveTreeBuilder";
 import HintBar from "@/layout/presentation/HintBar";
 import AutomatonPreview from "@/automaton_builder/presentation/AutomatonPreview";
-import {ChangeEventHandler} from "react";
+import {ChangeEventHandler, useEffect, useRef} from "react";
 import useAppStateStore from "@/layout/stores/appStateStore";
 import RegexHighlighter from "@/analyze_regex/presentation/RegexHighlighter";
 import useAutomaton from "@/automaton_builder/domain/useAutomaton";
@@ -65,6 +65,18 @@ export default function AutomatonBuilderScreen() {
     const finalStates = useAutomaton(state => state.finalStates);
     const focusTrap = useFocusTrap();
 
+    const statesRef = useRef<HTMLInputElement>(null);
+    const finalStatesRef = useRef<HTMLInputElement>(null);
+
+    useEffect(() => {
+        if(states === "") {
+            statesRef.current && (statesRef.current.value = "")
+        }
+        if(finalStates === "") {
+            finalStatesRef.current && (finalStatesRef.current.value = "")
+        }
+    }, [states, finalStates])
+
     return <div className={classes.wrapper} ref={focusTrap}>
         <HintBar/>
         <div className={classes.horizontalWrapper}>
@@ -74,6 +86,7 @@ export default function AutomatonBuilderScreen() {
                     r=<RegexHighlighter regex={useAppStateStore.getState().regex} inline/><br/>
                     A<sub>r</sub>=(Q,Σ,δ,I,F)<br/>
                     Q={"{"}<TextInput data-autofocus defaultValue={states} onChange={onStatesChange}
+                                      ref={statesRef}
                                       styles={{withIcon: {paddingLeft: 26}}}
                                       icon={<span style={{color: "black", fontSize: 14,}}>•r,</span>}/>{"}"}<br/>
                     Σ={"{" + [...new Set(useAppStateStore.getState().regexModel?.getTerminals())].filter(t => t !== "ε").sort().join(",") + "}"}<br/>
