@@ -34,7 +34,7 @@ export default function StateNode(props: NodeProps) {
     return (
         <div className={classes.node}>
             {
-                props.data.label === "•r" && <svg style={{position: "absolute", left: -30}}>
+                props.data.label === "•r" && <svg style={{position: "absolute", left: -30, top: 0}}>
                     <line x1={0} y1={21} x2={28} y2={21} strokeWidth={1} stroke={"#b1b1b7"} markerEnd={"url(#automaton__type=arrowclosed)"}></line>
                 </svg>
             }
