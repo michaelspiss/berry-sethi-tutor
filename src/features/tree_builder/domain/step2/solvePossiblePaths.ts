@@ -56,7 +56,6 @@ export default function solvePossiblePaths(nodes: Node[], edges: Edge[]): Solver
                 addEdge(edges, children[1].id, "step2r", node.id, "step2r");
                 break;
             default:
-                // TODO: color code?
                 addEdge(edges, node.id, "step2l", node.id, "step2r");
         }
     })
