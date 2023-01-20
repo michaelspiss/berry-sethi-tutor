@@ -10,7 +10,7 @@ export default function SolveButton() {
     const setEdges = useTree(state => state.setEdges);
     const {classes, cx} = useNodeStyles()
 
-    return <Button color="green" onClick={() => {
+    return <Button onClick={() => {
         const result = steps[solveStep].solver(useTree.getState().nodes, useTree.getState().edges);
         const styledNodes = result.nodes.map((node) => {
             node.className = cx(classes.node, node.type === 'operator' && classes.operatorNode)

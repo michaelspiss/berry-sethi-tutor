@@ -65,8 +65,8 @@ export default function App() {
                                       <Center style={{height: mantineThemeOther.headerHeight}}>
                                           <Group>
                                               <Button onClick={steps[solveStep]?.reset} color={"red"}>Reset step</Button>
-                                              <VerifyTreeButton/>
                                               <SolveButton/>
+                                              <VerifyTreeButton/>
                                           </Group>
                                       </Center>
                                   </>
