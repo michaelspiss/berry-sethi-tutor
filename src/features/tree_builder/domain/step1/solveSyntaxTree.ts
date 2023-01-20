@@ -20,7 +20,6 @@ export default function solveSyntaxTree(nodes: Node[], edges: Edge[]): SolverRes
  * @param type
  */
 function addNode(nodes: Node[], id: string, symbol: string, type: string) {
-    console.log("Added node", symbol, index);
     nodes.push({
         id: id,
         position: {x: index++, y: 0},

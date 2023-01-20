@@ -17,7 +17,6 @@ export default function layOutSyntaxTree(nodes: Node[], edges: Edge[]) {
 
     let index = 0;
     setDataDfs(nodes, edges, (node) => {
-        console.log("Assigned index", index, node.data.label)
         return node.type === "terminal" ? {index: index++} : {}
     })
 
