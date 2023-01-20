@@ -14,6 +14,7 @@ export default function StepHelp(props: {children: ReactNode}) {
         </ActionIcon>
         <Modal opened={isOpen}
                onClose={() => setIsOpen(false)}
+               overlayBlur={8}
                title={`Step ${solveStep + 1}: ${steps[solveStep].title}`}>
             {props.children}
         </Modal>
