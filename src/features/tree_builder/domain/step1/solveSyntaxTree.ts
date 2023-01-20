@@ -4,7 +4,10 @@ import useAppStateStore from "@/layout/stores/appStateStore";
 import {RegexTreeGroup, RegexTreeItem, RegexTreeQuantifier} from "@/analyze_regex/domain/models/regexTree";
 import operatorSymbols from "@/tree_builder/domain/operatorSymbols";
 
+let index = 0;
+
 export default function solveSyntaxTree(nodes: Node[], edges: Edge[]): SolverResult {
+    index = 0;
     const model = useAppStateStore.getState().regexModel;
     return buildTreeFromModel(model!);
 }
@@ -17,9 +20,10 @@ export default function solveSyntaxTree(nodes: Node[], edges: Edge[]): SolverRes
  * @param type
  */
 function addNode(nodes: Node[], id: string, symbol: string, type: string) {
+    console.log("Added node", symbol, index);
     nodes.push({
         id: id,
-        position: {x: 0, y: 0},
+        position: {x: index++, y: 0},
         data: {
             label: symbol,
         },
@@ -55,11 +59,8 @@ function getGroupAsBinaryTree(group: RegexTreeGroup, id: string): SolverResult {
     const groupSymbol = group.getItemAsSymbol();
     const treeData : SolverResult = {nodes: [], edges: []};
 
-    for (let i = 0; i < group.children.length - 2; i++) {
-        addNode(treeData.nodes, id + "." + i, groupSymbol, "operator");
-    }
-
-    const groupNodeIds = [id].concat(treeData.nodes.map(node => node.id));
+    const length = Math.max(group.children.length - 2, 0);
+    const groupNodeIds = [id].concat([...Array(length).keys()].map(i => id + "." + i))
 
     for (let i = 0; i < groupNodeIds.length - 1; i++) {
         addEdge(treeData.edges, groupNodeIds[i], groupNodeIds[i + 1]);
@@ -69,6 +70,10 @@ function getGroupAsBinaryTree(group: RegexTreeGroup, id: string): SolverResult {
         const childTree = buildTreeFromModel(group.children[i], groupNodeIds[i] ?? groupNodeIds.pop());
         treeData.nodes = treeData.nodes.concat(childTree.nodes);
         treeData.edges = treeData.edges.concat(childTree.edges);
+    }
+
+    for (let i = 0; i < group.children.length - 2; i++) {
+        addNode(treeData.nodes, id + "." + i, groupSymbol, "operator");
     }
 
     return treeData;

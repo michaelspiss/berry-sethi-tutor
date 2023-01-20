@@ -16,7 +16,10 @@ export default function layOutSyntaxTree(nodes: Node[], edges: Edge[]) {
     rootNode.position = {x: 0, y: 0};
 
     let index = 0;
-    setDataDfs(nodes, edges, (node) => node.type === "terminal" ? {index: index++} : {})
+    setDataDfs(nodes, edges, (node) => {
+        console.log("Assigned index", index, node.data.label)
+        return node.type === "terminal" ? {index: index++} : {}
+    })
 
     layoutYRecursive(rootNode, nodes, edges, nodeHeight, gapHeight, 0);
 
