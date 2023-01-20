@@ -89,7 +89,7 @@ export default function RegexInputScreen() {
                 </Group>
                 <Text size={"sm"} pb={"md"}>Or try one of the lecture examples: <RegexExample
                     regex={"(a|b)*db|c*"}/>, <RegexExample regex={"a(ab*)*|b|a*"}/>, <RegexExample regex={"ε|(ba)c(a|b)*"}/>, <RegexExample
-                    regex={"(ab|ε)*"}/>, <RegexExample regex={"(a|b)*aa|b"}/>, </Text>
+                    regex={"(ab|ε)*"}/>, <RegexExample regex={"(a|b)*aa|b"}/></Text>
             </form>
             {!error ? null : <DefaultError title={error.title} message={error.message}/>}
             <LectureConventions/>
