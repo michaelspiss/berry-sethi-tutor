@@ -31,7 +31,7 @@ export function getNextReached(node: Node, nodes: Node[], pathEdges: Edge[]): st
 
 function traverseAndReturnNextReachedTerminals(visitedHandles: string[], edge: Edge, nodes: Node[], pathEdges: Edge[]): string[] {
     const node = nodes.find(node => node.id === edge.target)!;
-    if (node.type === "terminal") {
+    if (node.type === "terminal" && node.data.label !== "ε") {
         return [node.data.terminalIndex]
     }
 

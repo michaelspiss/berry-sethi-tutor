@@ -10,6 +10,10 @@ export default function verifyNextReached(nodes: Node[], edges: Edge[]): Verific
     const tooManyTerminals: string[] = [];
     const lastDontReadEmpty: string[] = [];
     const terminalReadsItselfWithoutLoopBack: string[] = [];
+    const nextReachedContainsEpsilon : Set<string> = new Set();
+
+    const epsilonTerminalIndices = nodes.filter(n => n.type === "terminal" && n.data.label === "ε")
+        .map(t => t.data.terminalIndex) as number[];
 
     nodes.forEach(node => {
         const reachableNodes = getNextReached(node, nodes, pathEdges);
@@ -25,6 +29,11 @@ export default function verifyNextReached(nodes: Node[], edges: Edge[]): Verific
         node.data.nextReached.forEach((userNextReached: string) => {
             if (!reachableNodes.includes(userNextReached)) {
                 tooManyTerminals.push(node.id);
+            }
+        })
+        epsilonTerminalIndices.forEach(e => {
+            if(node.data.nextReached.includes(e)) {
+                nextReachedContainsEpsilon.add(node.id);
             }
         })
         if (node.type === "terminal"
@@ -54,14 +63,22 @@ export default function verifyNextReached(nodes: Node[], edges: Edge[]): Verific
         })
     }
 
-    // TODO: does this work for aepsilon ?
-    if(lastDontReadEmpty.length !== 0) {
+    if(lastDontReadEmpty.length !== 0 && nextReachedContainsEpsilon.size === 0) {
         errors.push({
-            title: 'Nodes have next reached even though they cannot read anything',
+            title: 'Nodes have next reached even though they cannot reach anything',
             message: <>Some nodes cannot reach any terminals from their exit point.
-                These should have an empty react reached list. Try looking especially at the nodes on
+                These should have an empty next reached list. Try looking especially at the nodes on
                 the far right of the graph.</>,
             causes: lastDontReadEmpty,
+        })
+    }
+
+    if(nextReachedContainsEpsilon.size !== 0) {
+        errors.push({
+            title: "Next reached contains epsilon terminal",
+            message: <>Epsilon terminals do not read anything and can thus never be a next reached read state.
+                Try removing all indices of epsilon terminals from the lists.</>,
+            causes: [...nextReachedContainsEpsilon],
         })
     }
 
