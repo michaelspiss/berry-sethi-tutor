@@ -153,6 +153,7 @@ const Flow = (props: { reactFlowWrapper: React.RefObject<HTMLDivElement> }) => {
         selectionKeyCode={null}
         zoomOnDoubleClick={false}
         connectionLineType={solveStep === 0 ? ConnectionLineType.Bezier : ConnectionLineType.Straight}
+        proOptions={{hideAttribution: solveStep >= 7}}
         multiSelectionKeyCode={null}>
         <Background/>
         <Controls showInteractive={false}/>
