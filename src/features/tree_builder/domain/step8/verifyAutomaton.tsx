@@ -169,7 +169,7 @@ export default function verifyAutomaton(): VerificationResult {
     }
 
     const invalidTerminals = [...new Set(uniqueUserTransitions.map(t => t.terminal).filter(t => !validTerminals.includes(t)))];
-    if(invalidTerminals.length !== 0) {
+    if (invalidTerminals.length !== 0) {
         errors.push({
             title: "Unknown terminal in transition",
             message: <>At least one terminal consumed by a transition is not part of the
@@ -181,7 +181,7 @@ export default function verifyAutomaton(): VerificationResult {
         ...uniqueUserTransitions.map(t => t.source).filter(t => !correctStates.includes(t)),
         ...uniqueUserTransitions.map(t => t.target).filter(t => !correctStates.includes(t)),
     ])];
-    if(invalidTransitionStates.length !== 0) {
+    if (invalidTransitionStates.length !== 0) {
         errors.push({
             title: "Unknown state in transition",
             message: <>At least one transition targets/originates from an unknown
@@ -190,18 +190,73 @@ export default function verifyAutomaton(): VerificationResult {
         })
     }
 
+    if (errors.length !== 0) {
+        // @ts-ignore
+        return {nodes, edges, errors};
+    }
+
+    const transitionsWithWrongTerminal = uniqueUserTransitions.filter(t => {
+        const targetIndex = t.target.replace(/•$/, "");
+        const targetNode = terminals.find(terminal => terminal.data.terminalIndex.toString() === targetIndex)!;
+        return t.terminal !== targetNode.data.label;
+    });
+    if(transitionsWithWrongTerminal.length !== 0) {
+        errors.push({
+            title: "Transition uses wrong terminal",
+            message: <>Transitions always go to the exit handle of a terminal, consuming it in the process.
+                At least one transition consumes a terminal, which does not match the terminal index defined in the
+                target state.</>
+        })
+    }
+
+    if (errors.length !== 0) {
+        // @ts-ignore
+        return {nodes, edges, errors};
+    }
+
+    const correctTransitions : string[] = [];
     const doesTransitionExist = (source: string, terminal: string, target: string) => {
         const id = `${source}-${terminal}-${target}`;
+        correctTransitions.push(id);
         return uniqueUserTransitions.some(t => t.id === id);
     }
 
+    const firstReachedTerminals = (rootNode.data.firstReached as number[]).map(n => terminals.find(t => t.data.terminalIndex === n)!);
+    const missingTransitionsFromRoot = firstReachedTerminals.filter(t => !doesTransitionExist(startState, t.data.label, t.data.terminalIndex + "•"));
+    if (missingTransitionsFromRoot.length !== 0) {
+        errors.push({
+            title: "Missing transition from start state",
+            message: <>At least one transition originating from {startState} is missing.
+                The root state must have transitions to all states listed in the root node's first reached list.</>
+        })
+    }
 
-    // TODO: check root->start
-    // TODO: check state->state
-    // TODO: check wrong
+    const transitionOriginationTerminals = correctIndices.map(s => terminals.find(t => t.data.terminalIndex === parseInt(s))!);
+    const missingTransitionsFromTerminal = transitionOriginationTerminals.flatMap(origination => {
+        const nextReached = (origination.data.nextReached as number[]).map(n => terminals.find(t => t.data.terminalIndex === n)!);
+        return nextReached.filter(n => !doesTransitionExist(origination.data.terminalIndex + "•", n.data.label, n.data.terminalIndex + "•"))
+    })
 
-    if(errors.length === 0) {
-        if(automatonState.transitions.replaceAll(transitionRegex, "").replaceAll(/[,\n]/g, "").length !== 0) {
+    if (missingTransitionsFromTerminal.length !== 0) {
+        errors.push({
+            title: "Missing transition from terminal",
+            message: <>At least one transition originating from a terminal is missing. Check all terminals and if a
+                transition to their next read states exist.</>
+        })
+    }
+
+    const wrongTransitions = uniqueUserTransitions.map(t => `${t.source}-${t.terminal}-${t.target}`).filter(t => !correctTransitions.includes(t));
+    if(wrongTransitions.length !== 0) {
+        errors.push({
+            title: "Incorrect transition",
+            message: <>At least one transition defines an incorrect state change. Valid transitions go from the start
+                state {startState} to all its first reached and from all terminals which are not ε to their
+                next reached.</>
+        })
+    }
+
+    if (errors.length === 0) {
+        if (automatonState.transitions.replaceAll(transitionRegex, "").replaceAll(/[,\n]/g, "").length !== 0) {
             errors.push({
                 title: "Transitions input contains invalid data",
                 message: <>Some input could not be recognized. Try removing everything that's not a comma or a
