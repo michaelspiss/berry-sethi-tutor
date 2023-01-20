@@ -66,7 +66,6 @@ const Flow = (props: { reactFlowWrapper: React.RefObject<HTMLDivElement> }) => {
         [setNodes])
 
     const onEdgesChange = useCallback((changes: EdgeChange[]) =>
-            // TODO: prevent changes to edges from a previous step
             setEdges((edges) => applyEdgeChanges(changes, edges)),
         [setEdges, solveStep]
     );

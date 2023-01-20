@@ -22,7 +22,6 @@ export default function TerminalNode(props: NodeProps) {
             <NodeToolbar nodeId={props.id} isVisible={canEditNodes && props.selected} position={Position.Left}>
                 <Stack className={"nodrag"}>
                     <button onClick={() => {
-                        // TODO: make prettier
                         const terminal = window.prompt("Please enter a single or escaped (e.g. \\*) character");
                         if (!terminal || !terminalLengthIsValid(terminal)) {
                             alert("Please enter exactly one, or an escaped character.");

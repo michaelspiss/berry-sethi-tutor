@@ -198,7 +198,6 @@ export default function verifyPossiblePaths(nodes: Node[], edges: Edge[]): Verif
     if (missing.length !== 0) {
         errors.push({
             title: "Nodes are missing edges",
-            // TODO: implement help
             message: <>Nodes are missing paths to be correct. You alternatively also may have mixed up operator paths.
                 To see the edges defined for each type of operator, open help.</>,
             causes: missing,
@@ -208,7 +207,6 @@ export default function verifyPossiblePaths(nodes: Node[], edges: Edge[]): Verif
     if (tooMany.length !== 0) {
         errors.push({
             title: "Nodes have too many edges",
-            // TODO: implement help
             message: <>Nodes have incorrect paths. You alternatively also may have mixed up operator paths. To see the
                 edges defined for each type of operator, open help.</>,
             causes: tooMany

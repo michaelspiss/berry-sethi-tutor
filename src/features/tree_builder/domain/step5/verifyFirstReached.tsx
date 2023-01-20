@@ -3,7 +3,6 @@ import {Kbd} from "@mantine/core";
 import {Edge, getOutgoers, Node} from "reactflow";
 import arraysAreEqual from "@/tree_builder/domain/arraysAreEqual";
 
-// TODO: replace "read" with "reached" everywhere?
 export default function verifyFirstReached(nodes: Node[], edges: Edge[]): VerificationResult {
     const errors: VerificationError[] = [];
     const step1edges = edges.filter(edge => edge.data.step === 0);
