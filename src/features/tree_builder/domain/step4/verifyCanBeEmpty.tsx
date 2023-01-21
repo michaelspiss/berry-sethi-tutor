@@ -46,7 +46,7 @@ export default function verifyCanBeEmpty(nodes: Node[], edges: Edge[]): Verifica
         errors.push({
             title: "Reading epsilon does not read empty",
             message: <>At least one ε (epsilon) terminal does not read empty. ε means "read nothing" is thus always
-                reads empty. Try setting all ε terminal "can be empty" attributes to true</>,
+                reads empty. Try setting all ε terminal "can read empty" attributes to true</>,
             causes: epsilonNotEmpty,
         })
     }
@@ -61,7 +61,7 @@ export default function verifyCanBeEmpty(nodes: Node[], edges: Edge[]): Verifica
     if (operatorEmptyUnequalChild.length !== 0) {
         errors.push({
             title: "+ does not have the same value as its child",
-            message: <>At least one "can be empty" value is different from its child. "One or more" (+) can only repeat
+            message: <>At least one "can read empty" value is different from its child. "One or more" (+) can only repeat
                 its child and thus can only be empty if the child can be.</>,
             causes: operatorEmptyUnequalChild,
         })
@@ -75,7 +75,7 @@ export default function verifyCanBeEmpty(nodes: Node[], edges: Edge[]): Verifica
     }
     if (concatDoesNotReadEmptyWithEmptyChild.length !== 0) {
         errors.push({
-            title: "Concatenation does not read empty even though all children can be empty",
+            title: "Concatenation does not read empty even though all children can read empty",
             message: <>Concatenations can read empty if all their children read empty, but at least one concatenation
                 where this applies is set to "does not read empty".</>,
             causes: concatDoesNotReadEmptyWithEmptyChild,

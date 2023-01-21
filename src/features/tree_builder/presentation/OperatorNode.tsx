@@ -33,7 +33,7 @@ export default function OperatorNode(props: NodeProps) {
             icon = <div style={{height: 6, width: 6, background: "black", borderRadius: "50%"}}/>
             break;
         default:
-            icon = null
+            icon = props.data.label
     }
 
     return (

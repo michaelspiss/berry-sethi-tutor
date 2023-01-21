@@ -9,7 +9,10 @@ export default function FirstReachedStatesHelper() {
     const nodes = useTree(state => state.nodes);
     const selected_nodes = nodes.filter(node => node.selected);
     const help = <StepHelp>
-        TODO: step help
+        The first reached read states set contains all ids of terminals in a subtree which may be the first to consume
+        a character. While terminals can only read themselves first, ε-terminals must never be in this list, as they
+        cannot read anything. ε-terminals always have an empty first reached list. Be aware that the second operand of
+        a concatenation may also be the first reached if the first can read empty!
     </StepHelp>
 
     useHotkeys([

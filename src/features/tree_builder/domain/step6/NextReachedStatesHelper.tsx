@@ -9,7 +9,10 @@ export default function NextReachedStatesHelper() {
     const nodes = useTree(state => state.nodes)
     const selected_nodes = nodes.filter(node => node.selected);
     const help = <StepHelp>
-        TODO: step help
+        The next reached read states list contains all ids of terminals which may be the next to consume a character,
+        after the current node. This can be achieved by starting at a node's exit handle and following all orange paths
+        until a terminal is reached, while ignoring ε terminals. ε-terminals must never be in this list, as they do not
+        consume any characters.
     </StepHelp>
 
     useHotkeys([

@@ -116,7 +116,7 @@ export default function verifyAutomaton(): VerificationResult {
             errors.push({
                 title: "State in final states list is not final",
                 message: <>Only states which have their terminal index in the root node's last reached list and if the
-                    root node can be empty, the start state, are final states. Try removing violating states from the
+                    root node can read empty, the start state, are final states. Try removing violating states from the
                     final states list: <code>{finalStateIsNotFinal.join(", ")}</code></>
             })
         }
@@ -124,7 +124,7 @@ export default function verifyAutomaton(): VerificationResult {
         if (isRootMissing) {
             errors.push({
                 title: "Root node is missing",
-                message: <>Final states is missing {startState}. As the syntax tree's root node can be empty, no input
+                message: <>Final states is missing {startState}. As the syntax tree's root node can read empty, no input
                     is valid input for the regular expression.</>
             })
         }
@@ -136,7 +136,7 @@ export default function verifyAutomaton(): VerificationResult {
             errors.push({
                 title: "Final states are missing",
                 message: <>All states which have their terminal index included in the root node's last visited list are
-                    final states. If the root node can be empty, the start state {startState} is added as well.
+                    final states. If the root node can read empty, the start state {startState} is added as well.
                     Try adding the missing states.</>
             })
         }

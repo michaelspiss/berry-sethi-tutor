@@ -98,8 +98,8 @@ export default function verifyFirstReached(nodes: Node[], edges: Edge[]): Verifi
 
     if (concatenationsConcatIfFirstCanBeEmpty.length !== 0) {
         errors.push({
-            title: "Concatenation's first reached must include items from both children if first can be empty",
-            message: <>If the first child has the can be empty attribute set to true, the second child's first reached
+            title: "Concatenation's first reached must include items from both children if first can read empty",
+            message: <>If the first child has the can read empty attribute set to true, the second child's first reached
                 terminals may also be the concatenation's first reached. Thus, the concatenation's first reached read
                 states must include all items of both children's first reached attributes.</>,
             causes: concatenationsConcatIfFirstCanBeEmpty,
@@ -109,7 +109,7 @@ export default function verifyFirstReached(nodes: Node[], edges: Edge[]): Verifi
     if (concatenationsFirstChildOnly.length !== 0) {
         errors.push({
             title: "Concatenation's first reached read states must equal that of the first child",
-            message: <>As long as the first child's can be empty attribute is not set to true and the first child's
+            message: <>As long as the first child's can read empty attribute is not set to true and the first child's
                 first reached read states are not empty, a concatenation's first reached list equals that of its first
                 child.</>,
             causes: concatenationsFirstChildOnly,

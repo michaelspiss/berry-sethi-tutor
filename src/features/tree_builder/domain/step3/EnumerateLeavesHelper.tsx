@@ -23,7 +23,9 @@ export default function EnumerateLeavesHelper() {
             Select terminals in the order they appear in the regular expression. Press <Kbd py={2}>Esc</Kbd> to restart
         </Group>
         <StepHelp>
-            TODO: step help
+            As multiple terminals may be the same, each gets a unique identifier. This is, as per lecture convention,
+            their 0-indexed position. Due to the syntax tree's nature, the order of the leafs left-to-right is the
+            same as in the original regular expression.
         </StepHelp>
     </>
 }

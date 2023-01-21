@@ -101,8 +101,8 @@ export default function verifyLastReached(nodes: Node[], edges: Edge[]): Verific
 
     if (concatenationsConcatIfSecondCanBeEmpty.length !== 0) {
         errors.push({
-            title: "Concatenation's last reached must include items from both children if second can be empty",
-            message: <>If the second child has the can be empty attribute set to true, the first child's last reached
+            title: "Concatenation's last reached must include items from both children if second can read empty",
+            message: <>If the second child has the can read empty attribute set to true, the first child's last reached
                 terminals may also be the concatenation's last reached. Thus, the concatenation's last reached read
                 states must include all items of both children's last reached attributes.</>,
             causes: concatenationsConcatIfSecondCanBeEmpty,
@@ -112,7 +112,7 @@ export default function verifyLastReached(nodes: Node[], edges: Edge[]): Verific
     if (concatenationsSecondChildOnly.length !== 0) {
         errors.push({
             title: "Concatenation's last reached read states must equal that of the second child",
-            message: <>As long as the second child's can be empty attribute is not set to true and the second child's
+            message: <>As long as the second child's can read empty attribute is not set to true and the second child's
                 last reached read states are not empty, a concatenation's last reached list equals that of its second
                 child.</>,
             causes: concatenationsSecondChildOnly,

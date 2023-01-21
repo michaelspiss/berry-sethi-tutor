@@ -9,7 +9,10 @@ export default function LastReachedStatesHelper() {
     const nodes = useTree(state => state.nodes);
     const selected_nodes = nodes.filter(node => node.selected);
     const help = <StepHelp>
-        TODO: step help
+        The last reached read states set contains all ids of terminals in a subtree which may be the last to consume
+        a character. While terminals can only read themselves last, ε-terminals must never be in this list, as they
+        cannot read anything. ε-terminals always have an empty last reached list. Be aware that the first operand of
+        a concatenation may also be the last reached if the second can read empty!
     </StepHelp>
 
     useHotkeys([
