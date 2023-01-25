@@ -23,11 +23,11 @@ export default function SyntaxTreeHelper() {
                 <tbody>
                     <tr>
                         <td><RegexHighlighter regex={"*"} inline/></td>
-                        <td>Repeats the preceding group/terminal zero to unlimited times</td>
+                        <td>Matches the preceding group/terminal zero to unlimited times</td>
                     </tr>
                     <tr>
                         <td><RegexHighlighter regex={"+"} inline/></td>
-                        <td>Repeats the preceding group/terminal one to unlimited times</td>
+                        <td>Matches the preceding group/terminal one to unlimited times</td>
                     </tr>
                     <tr>
                         <td><RegexHighlighter regex={"?"} inline/></td>
