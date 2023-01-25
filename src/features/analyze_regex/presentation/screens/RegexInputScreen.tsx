@@ -38,11 +38,15 @@ export default function RegexInputScreen() {
 
         setIsLoading(true);
         try {
-            const regexModel = parseRegex(regex);
+            let regexModel = parseRegex(regex);
             setError(null);
             const simplifiedRegex = regexModel.getRegex();
             if (simplifiedRegex !== regex) {
-                useAppStateStore.setState({regex: simplifiedRegex, isSimplified: true})
+                useAppStateStore.setState({
+                    regex: simplifiedRegex,
+                    isSimplified: true,
+                });
+                regexModel = parseRegex(simplifiedRegex);
             }
             useAppStateStore.setState({regexModel, solveStep: 0});
         } catch (e) {
