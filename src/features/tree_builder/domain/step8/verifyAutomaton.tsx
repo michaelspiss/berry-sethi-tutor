@@ -148,7 +148,9 @@ export default function verifyAutomaton(): VerificationResult {
     }
 
     // transitions verification
-    const validTerminals = terminals.map(t => t.data.label).filter(t => t !== "ε");
+    const validTerminals = terminals.map(t => t.data.label).filter(t => t !== "ε").map(t => {
+        return t.startsWith("\\") ? t.substring(1) : t;
+    });
 
     const userTransitionsMatches = [...automatonState.transitions.matchAll(transitionRegex)];
     const uniqueUserTransitions = Object.values(userTransitionsMatches.map(match => ({
@@ -173,7 +175,8 @@ export default function verifyAutomaton(): VerificationResult {
         errors.push({
             title: "Unknown terminal in transition",
             message: <>At least one terminal consumed by a transition is not part of the
-                alphabet: <code>{invalidTerminals.join(", ")}</code>. Try replacing them with valid input.</>
+                alphabet: <code>{invalidTerminals.join(", ")}</code>. Try replacing them with valid input. If you used
+                an escaped terminal like <code>\*</code>, remove the backslash.</>
         })
     }
 
@@ -198,7 +201,8 @@ export default function verifyAutomaton(): VerificationResult {
     const transitionsWithWrongTerminal = uniqueUserTransitions.filter(t => {
         const targetIndex = t.target.replace(/•$/, "");
         const targetNode = terminals.find(terminal => terminal.data.terminalIndex.toString() === targetIndex)!;
-        return t.terminal !== targetNode.data.label;
+        const targetTerminal = targetNode.data.label.startsWith("\\") ? targetNode.data.label.substring(1) : targetNode.data.label;
+        return t.terminal !== targetTerminal;
     });
     if(transitionsWithWrongTerminal.length !== 0) {
         errors.push({
@@ -216,6 +220,7 @@ export default function verifyAutomaton(): VerificationResult {
 
     const correctTransitions : string[] = [];
     const doesTransitionExist = (source: string, terminal: string, target: string) => {
+        terminal = terminal.startsWith("\\") ? terminal.substring(1) : terminal;
         const id = `${source}-${terminal}-${target}`;
         correctTransitions.push(id);
         return uniqueUserTransitions.some(t => t.id === id);

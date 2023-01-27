@@ -55,7 +55,7 @@ export default function App() {
                                               {
                                                   isSimplified ? <Tooltip
                                                       withArrow
-                                                      label={"Redundant groups have been removed"}>
+                                                      label={"Redundancies have been removed"}>
                                                       <Center pt={2}>
                                                           <IconAlertTriangle size={16} color={"orange"}/>
                                                       </Center>

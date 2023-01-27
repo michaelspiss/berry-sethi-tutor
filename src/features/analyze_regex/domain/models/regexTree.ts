@@ -67,8 +67,12 @@ export class RegexTreeTerminal extends RegexTreeItem {
         this.index = index;
     }
 
+    private getUnescapedSymbol() {
+        return this.symbol.startsWith("\\") ? this.symbol.substring(1) : this.symbol;
+    }
+
     getPossibleStrings(): Set<string> {
-        return new Set([this.symbol])
+        return new Set([this.getUnescapedSymbol()])
     }
 
     getItemAsSymbol(): string {
@@ -80,6 +84,9 @@ export class RegexTreeTerminal extends RegexTreeItem {
     }
 
     getRegex(): string {
+        if(this.symbol.startsWith("\\") && !["*", "|", "(", ")", "?", "+", "\\", "ε"].includes(this.symbol.substring(1))) {
+            return this.symbol.substring(1);
+        }
         return this.symbol;
     }
 }

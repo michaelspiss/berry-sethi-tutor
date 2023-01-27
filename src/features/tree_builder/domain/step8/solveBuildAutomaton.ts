@@ -14,12 +14,14 @@ export default function solveBuildAutomaton(nodes: Node[], edges: Edge[]) : Solv
     const finalStates = root.data.canBeEmpty ? ["•r"].concat(rootLastReached) : rootLastReached;
 
     const rootTransitions = (root.data.firstReached as string[]).map(t => {
-        const terminal = terminals.find(terminal => terminal.data.terminalIndex === t)?.data.label ?? "";
+        let terminal = terminals.find(terminal => terminal.data.terminalIndex === t)?.data.label ?? "";
+        terminal = terminal.startsWith("\\") ? terminal.substring(1) : terminal;
         return `(•r, ${terminal}, ${t}•)`
     })
 
     const terminalTransitions = terminals.flatMap(terminal => (terminal.data.nextReached as string[]).map(next => {
-        const nextTerminal = terminals.find(n => n.data.terminalIndex === next)?.data.label ?? "";
+        let nextTerminal = terminals.find(n => n.data.terminalIndex === next)?.data.label ?? "";
+        nextTerminal = nextTerminal.startsWith("\\") ? nextTerminal.substring(1) : nextTerminal;
         return `(${terminal.data.terminalIndex}•, ${nextTerminal}, ${next}•)`
     }))
 
