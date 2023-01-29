@@ -91,8 +91,8 @@ export default function TransitionsEditor() {
             i = match.index!;
             const splitMatch = match[0].split(",")
             const sourcePart = splitMatch[0].split(match[1]);
-            const terminalPart = splitMatch[1].split(match[2]);
-            const targetPart = splitMatch[2].split(match[3]);
+            const terminalPart = match[2] === "," ? [splitMatch[1], splitMatch[2]] : splitMatch[1].split(match[2]);
+            const targetPart = match[2] === "," ? splitMatch[3].split(match[3]) : splitMatch[2].split(match[3]);
             styled.push(<span key={"te" + i} className={classes.transitionCommaOrParenthesis}>
                 {sourcePart[0]}
                 <span className={classes.transitionState}>{match[1]}</span>
@@ -101,7 +101,7 @@ export default function TransitionsEditor() {
                 {terminalPart[1] + "," + targetPart[0]}
                 <span className={classes.transitionState}>{match[3]}</span>
                 {targetPart[1]}
-                {splitMatch[3] !== undefined && "," + splitMatch[3]}
+                {(match[2] === "," && splitMatch[4] !== undefined && "," + splitMatch[4]) || (match[2] !== "," && splitMatch[3] !== undefined && "," + splitMatch[3])}
             </span>);
             i += match[0].length
         }

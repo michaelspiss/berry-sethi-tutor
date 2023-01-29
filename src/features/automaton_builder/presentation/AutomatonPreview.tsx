@@ -14,7 +14,7 @@ const edgeTypes = {
     transition: TransitionEdge,
 }
 
-export const transitionRegex = new RegExp(/\( *([^,( ]+) *, *([^, ]+) *, *([^,) ]+) *\) *,?/g);
+export const transitionRegex = new RegExp(/\( *([^,( ]+) *, *([^, ]+|,) *, *([^,) ]+) *\) *,?/g);
 
 const Flow = (props: { height: number, width: number }) => {
     const [nodes, setNodes] = useState<Node[]>([]);
