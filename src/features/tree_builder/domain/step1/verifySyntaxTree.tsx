@@ -28,8 +28,8 @@ function hasExactlyOneRoot(nodes: Node[], edges: Edge[], errors: VerificationErr
     if (nodesWithoutParent.length === 0) {
         errors.push({
             title: "Missing root node",
-            message: <>All nodes have at least one parent, but one needs to be the entry point without any.<br/><br/>You
-                have a circular path, which is not valid for trees. Try removing it.</>
+            message: <>All nodes have at least one parent, but one needs to be the entry point without any.<br/>The
+                graph contains a circular path, which is not valid for trees. Try removing it.</>
         })
         return null;
     } else if (nodesWithoutParent.length > 1) {
