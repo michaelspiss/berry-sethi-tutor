@@ -61,8 +61,8 @@ export default function PossiblePathsHelper() {
         Connect entry and exit handles (left, right) to show all possible tree traversal options
         <StepHelp>
             Each node has an entry and exit handle, which describe the possible flows from and to it.
-            Each operator has a distinct flow:
-            <div style={{width: "100%", height: 400, cursor: "pointer !important"}}>
+            Each node type has a distinct flow:
+            <div style={{width: "100%", height: 400, pointerEvents: "none", cursor: "pointer !important"}}>
                 <ReactFlowProvider>
                     <ReactFlow
                         id={"paths-help"}
