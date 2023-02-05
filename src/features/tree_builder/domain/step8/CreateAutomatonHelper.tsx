@@ -10,8 +10,8 @@ export default function CreateAutomatonHelper() {
             <b>Start state:</b> •r<br/>
             <b>Final states:</b> states from the last reached list of the syntax tree's root node and the start state •r if the
             root node can read empty<br/>
-            <b>Transitions:</b> from start state •r to all off the syntax tree's root's first reached and from all terminals
-            which are states to all their next reached
+            <b>Transitions:</b> from start state •r to all of the syntax tree's root's first reached states and from all other states
+            to all their next reached
         </StepHelp>
     </>
 }
