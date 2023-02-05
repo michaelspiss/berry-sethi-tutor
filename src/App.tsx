@@ -46,7 +46,7 @@ export default function App() {
                                               <IconArrowBack size={16}/>
                                           </ActionIcon>
                                       }
-                                      <span>Berry Sethi Tutor</span>
+                                      <span>Berry-Sethi Tutor</span>
                                   </Center>
                                   {solveStep === -1 ? null : <>
                                       <Center style={{height: mantineThemeOther.headerHeight}}>{
