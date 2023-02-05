@@ -70,12 +70,8 @@ export default function AutomatonBuilderScreen() {
     const finalStatesRef = useRef<HTMLInputElement>(null);
 
     useEffect(() => {
-        if(states === "") {
-            statesRef.current && (statesRef.current.value = "")
-        }
-        if(finalStates === "") {
-            finalStatesRef.current && (finalStatesRef.current.value = "")
-        }
+        statesRef.current && (statesRef.current.value = states);
+        finalStatesRef.current && (finalStatesRef.current.value = finalStates);
     }, [states, finalStates])
 
     const alphabet = useMemo(() => {
