@@ -4,7 +4,8 @@ export const useAttributeStyles = createStyles((theme) => ({
     attribute: {
         position: "absolute",
         fontSize: theme.spacing.sm,
-        width: theme.spacing.xl * 2,
+        width: 34,
+        wordBreak: "break-all",
         lineHeight: theme.spacing.md + "px",
         zIndex: 10,
         textShadow: "1px 0 #fff, -1px 0 #fff, 0 1px #fff, 0 -1px #fff, 0px 0px #fff, -0px -0px #fff, 0px -0px #fff, -0px 0px #fff;"
