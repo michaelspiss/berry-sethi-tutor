@@ -81,6 +81,8 @@ function buildRegexTreeRec(regex: string, startAt: number = 0, recLevel: number 
             case '\\':
                 if(++state.position < regex.length) {
                     addTerminal("\\" + regex.at(state.position)!, state, treeRoot);
+                } else {
+                    throw RegexErrors.danglingEscape(--state.position);
                 }
                 break;
             default:

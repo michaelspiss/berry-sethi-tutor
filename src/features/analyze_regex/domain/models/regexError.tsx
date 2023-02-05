@@ -148,5 +148,22 @@ export const RegexErrors = {
             </>,
             position,
         );
+    },
+    danglingEscape: (position: number) => {
+        return new RegexError(
+            "Escape is missing a symbol",
+            <>
+                Your regular expression's last character is a backslash.<br/>
+                <Code>\</Code> escapes the next character, treating it as a terminal instead of a metacharacter.
+                Try adding another character after <Code>\</Code> or removing it.<br/>
+                If you intended to use <Code>\</Code> as a terminal, escape it by replacing it with another backslash:
+                <Group my={"xs"}>
+                    <RegexHighlighter regex={"a\\"} errorPosition={1} />
+                    <IconArrowRight size={16}/>
+                    <RegexHighlighter regex={"a\\\\"} />
+                </Group>
+            </>,
+            position,
+        )
     }
 }
