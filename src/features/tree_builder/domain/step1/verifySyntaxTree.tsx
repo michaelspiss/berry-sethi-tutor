@@ -182,7 +182,7 @@ function allTerminalsExistAndAreInCorrectOrder(rootNode: Node, nodes: Node[], ed
         errors.push({
             title: "Graph is missing terminals",
             message: <>The regex requires the terminals {modelTerminals.join(", ")}. Your graph only
-                provides {graphTerminals.join(", ")}. Try adjusting the terminals. Your graph currently evaluates
+                provides {graphTerminals.join(", ")}. Try adding the missing terminals. Your graph currently evaluates
                 to <RegexHighlighter regex={graphRegex} inline/></>,
         });
     } else if (!terminalsInCorrectOrder) {
