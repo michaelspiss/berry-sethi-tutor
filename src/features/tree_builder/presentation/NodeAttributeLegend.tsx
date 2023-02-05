@@ -6,6 +6,8 @@ const useStyles = createStyles(() => ({
     attribute: {
         lineHeight: 1,
         fontSize: 12,
+        wordBreak: "normal",
+        width: 50,
     },
     node: {
         transform: "scale(1)",
