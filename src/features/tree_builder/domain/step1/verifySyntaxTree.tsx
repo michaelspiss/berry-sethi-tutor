@@ -34,10 +34,10 @@ function hasExactlyOneRoot(nodes: Node[], edges: Edge[], errors: VerificationErr
         return null;
     } else if (nodesWithoutParent.length > 1) {
         errors.push({
-            title: "Graph is not connected",
+            title: "Graph has multiple roots",
             causes: nodesWithoutParent.map(node => node.id),
-            message: <>Your graph contains multiple nodes without parents, which makes it disconnected. Trees must
-                always be connected.<br/><br/>Try either merging the top level nodes or connecting them.</>
+            message: <>Your graph contains multiple nodes without parents, but trees can only have one node with
+                this property - the root node.<br/><br/>Try either merging these nodes or connecting them.</>
         })
         return null;
     }
