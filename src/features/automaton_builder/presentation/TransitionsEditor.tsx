@@ -77,6 +77,8 @@ export default function TransitionsEditor() {
     const styledContentRef = useRef<HTMLDivElement>(null);
 
     const styledTransitions = useMemo(() => {
+        sizeRef.current && (sizeRef.current.value = value)
+
         const styled : ReactElement[] = [];
         const matches = [...value.matchAll(transitionRegex), {index: value.length, 0: undefined}]
         let i = 0;
