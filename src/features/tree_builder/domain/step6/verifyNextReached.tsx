@@ -1,9 +1,8 @@
 import {Edge, Node} from "reactflow";
 import {VerificationError, VerificationResult} from "@/tree_builder/domain/steps";
-import {getNextReached} from "@/tree_builder/domain/step6/solveNextReachedStates";
+import solveNextReachedStates from "@/tree_builder/domain/step6/solveNextReachedStates";
 
 export default function verifyNextReached(nodes: Node[], edges: Edge[]): VerificationResult {
-    const pathEdges = edges.filter(edge => edge.data.step === 1);
     const errors: VerificationError[] = [];
 
     const notEnoughTerminals: string[] = [];
@@ -15,8 +14,11 @@ export default function verifyNextReached(nodes: Node[], edges: Edge[]): Verific
     const epsilonTerminalIndices = nodes.filter(n => n.type === "terminal" && n.data.label === "ε")
         .map(t => t.data.terminalIndex) as number[];
 
+    const nodesCopy = nodes.map(node => ({...node, data: {...node.data}}));
+    const solvedNodes = solveNextReachedStates(nodesCopy, edges).nodes;
+
     nodes.forEach(node => {
-        const reachableNodes = getNextReached(node, nodes, pathEdges);
+        const reachableNodes = solvedNodes.find(solved => solved.id === node.id)!.data.nextReached as string[];
         if (reachableNodes.length === 0 && node.data.nextReached.length !== 0) {
             lastDontReadEmpty.push(node.id);
             return;
