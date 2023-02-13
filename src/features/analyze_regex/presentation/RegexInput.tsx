@@ -64,7 +64,7 @@ export default function RegexInput(props: RegexInputProps) {
             onBlur={event => event.currentTarget.focus()}
             classNames={{root: classes.inputRoot, input: classes.input}}
             onChange={(event) => {
-                const newRegexValue = event.currentTarget.value.trim().replaceAll(/[\r\n.]/g, "");
+                const newRegexValue = event.currentTarget.value.trim().replaceAll(/[\r\n.·]/g, "");
                 if (newRegexValue !== regexValue) {
                     props.resetErrorPos();
                     useAppStateStore.setState({regex: newRegexValue});
