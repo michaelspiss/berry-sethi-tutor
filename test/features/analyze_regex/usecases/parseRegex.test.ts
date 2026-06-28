@@ -136,12 +136,8 @@ describe('escaping', () => {
         expect(terminal.index).toBe(0);
     })
 
-    test('ignores backslash if last character in string', () => {
-        const tree = parseRegex("\\a\\");
-        expect(tree).toBeInstanceOf(RegexTreeTerminal);
-        const terminal = tree as RegexTreeTerminal;
-        expect(terminal.symbol).toBe("\\a");
-        expect(terminal.index).toBe(0);
+    test('throws if backslash is last character in string', () => {
+        expect(() => parseRegex("\\a\\")).toThrowError();
     })
 })
 
