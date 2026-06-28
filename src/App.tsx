@@ -25,11 +25,13 @@ import TreeBuilderScreen from "@/tree_builder/presentation/screens/TreeBuilderSc
 import backToHome from "./backToHome";
 import CompletionModal from "@/tree_builder/presentation/CompletionModal";
 import steps from "@/tree_builder/domain/steps";
+import {useElementSize} from "@mantine/hooks";
 
 export default function App() {
     const solveStep = useAppStateStore((state) => state.solveStep);
     const regexValue = useAppStateStore((state) => state.regex);
     const isSimplified = useAppStateStore(state => state.isSimplified);
+    const {height, ref} = useElementSize();
 
     return (
         <MantineProvider withGlobalStyles withNormalizeCSS theme={{
@@ -38,8 +40,8 @@ export default function App() {
         }}>
             <AppShell padding={0}
                       header={
-                          <Header height={mantineThemeOther.headerHeight} px={"xs"}>
-                              <Group position={"apart"}>
+                          <Header height={height} px={"xs"}>
+                              <Group position={"apart"} ref={ref}>
                                   <Center style={{height: mantineThemeOther.headerHeight}} inline>
                                       {solveStep === -1 ? null :
                                           <ActionIcon onClick={backToHome}>
@@ -49,7 +51,7 @@ export default function App() {
                                       <span>Berry-Sethi Tutor</span>
                                   </Center>
                                   {solveStep === -1 ? null : <>
-                                      <Center style={{height: mantineThemeOther.headerHeight}}>{
+                                      <Center style={{minHeight: mantineThemeOther.headerHeight}}>{
                                           <Group>
                                               <RegexHighlighter regex={regexValue}/>
                                               {
@@ -64,7 +66,7 @@ export default function App() {
                                           </Group>
                                       }</Center>
                                       <Center style={{height: mantineThemeOther.headerHeight}}>
-                                          <Group>
+                                          <Group position={"right"}>
                                               <Button onClick={steps[solveStep]?.reset} color={"red"}>Reset step</Button>
                                               <SolveButton/>
                                               <VerifyTreeButton/>

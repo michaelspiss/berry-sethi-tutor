@@ -16,7 +16,7 @@ export default function SyntaxTreeHelper() {
             <Table>
                 <thead>
                     <tr>
-                        <th style={{width: 70}}>Symbol</th>
+                        <th style={{wordBreak: "keep-all"}}>Symbol</th>
                         <th>Meaning</th>
                     </tr>
                 </thead>

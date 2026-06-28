@@ -31,31 +31,34 @@ export default function TreeElementsPanel() {
     }
 
     return <Group className={classes.panel} spacing={"xl"}>
-        <Stack spacing={0}>
-            <Center>
-                <div className={"operatorNode " + cx(classes.node, nodeClasses.node, nodeClasses.operatorNode)}
-                     onDragStart={(event) => onDragStart(event, 'operator')}
-                     draggable>
-                    <div className={nodeClasses.nodeContent}>
-                        <IconAsterisk />
+        <Center style={{flexGrow: 1}}>
+            <Stack spacing={0}>
+                <Center>
+                    <div className={"operatorNode " + cx(classes.node, nodeClasses.node, nodeClasses.operatorNode)}
+                         onDragStart={(event) => onDragStart(event, 'operator')}
+                         draggable>
+                        <div className={nodeClasses.nodeContent}>
+                            <IconAsterisk />
+                        </div>
                     </div>
-                </div>
-            </Center>
-            Operator Node
-        </Stack>
-        <Stack spacing={0}>
-            <Center>
-                <div className={"terminalNode " + cx(classes.node, nodeClasses.node)}
-                     style={{overflow: "hidden"}}
-                     onDragStart={(event) => onDragStart(event, 'terminal')}
-                     draggable>
-                    <div className={nodeClasses.nodeContent}>
-                        a
+                </Center>
+                Operator Node
+            </Stack>
+        </Center>
+        <Center style={{flexGrow: 1}}>
+            <Stack spacing={0}>
+                <Center>
+                    <div className={"terminalNode " + cx(classes.node, nodeClasses.node)}
+                         style={{overflow: "hidden"}}
+                         onDragStart={(event) => onDragStart(event, 'terminal')}
+                         draggable>
+                        <div className={nodeClasses.nodeContent}>
+                            a
+                        </div>
                     </div>
-                </div>
-            </Center>
-            Terminal Node
-        </Stack>
-
+                </Center>
+                Terminal Node
+            </Stack>
+        </Center>
     </Group>
 }
