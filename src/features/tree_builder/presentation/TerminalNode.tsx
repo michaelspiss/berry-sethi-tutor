@@ -37,6 +37,11 @@ export default function TerminalNode(props: NodeProps) {
                     <button onClick={() => props.data.deleteNode()}>Delete node</button>
                 </Stack>
             </NodeToolbar>
+            <NodeToolbar nodeId={props.id} isVisible={canEditNodes && props.selected} position={Position.Bottom}>
+                <Stack className={"nodrag"}>
+                    <button onClick={() => props.data.setLabel("ε")}>Set to ε</button>
+                </Stack>
+            </NodeToolbar>
             <Handle type={"target"}
                     position={Position.Top}
                     style={solveStep === 0 ? undefined : {pointerEvents: "none", visibility: "hidden"}}
